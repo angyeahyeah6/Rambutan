@@ -25,6 +25,7 @@ export default {
 </script>
 
 <style>
+
 element.style {
   --primary-color: #f2c94c;
   --my-gray-1: #e0e0e0;

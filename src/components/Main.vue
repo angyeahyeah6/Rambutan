@@ -8,18 +8,17 @@
     
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
         <a-list-item slot="renderItem" slot-scope="item">
-            <a-card style="margin-top:40px">
+            <a-card class="card-home">
                 <p>{{item.title}}</p>
-                <div style="display:flex;">
-                    <div style="display:block">
+                <a-space align="baseline">
+                    <div>
                         <h1>Netflix</h1>
                     </div>
-                    <div style="bottom:0;">
+                    <div>
                         <p>premium</p>
                     </div>
-                </div>
+                </a-space>
                 <p>Owe NT$ 720</p>
-                
             </a-card>
         </a-list-item>
   </a-list>
@@ -68,5 +67,9 @@ export default {
     border-radius: 50px;
     padding: 8px, 16px, 8px, 16px;
 }
-
+.card-home{
+    height: 179px;
+    border-radius: 10px;
+    margin-top: 40px;
+}
 </style>
