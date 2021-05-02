@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <Nav />
+    <Nav ></Nav>
   </div>
   
 </template>
 
 <script>
-import Nav from "./components/Nav";
+import Nav from "./components/Nav.vue";
 // import HelloWorld from './components/HelloWorld.vue' 
 export default {
   name: "App",
