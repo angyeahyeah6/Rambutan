@@ -1,11 +1,14 @@
 <template>
   <div>
     <a-row>
-        <a-button type="primary" class="btn-primary">+ Add Room</a-button>
+        <a-button type="primary" class="btn-primary" @click="() => (addModalVisible = true)" >
+            + Add Room
+            <AddRoomDialog :visible="addModalVisible" @closeModal="() => (addModalVisible = false)"/>
+        </a-button>
+        
         <a-button type="default" class="btn-primary">+ Add Room</a-button>
         <a-button type="default" class="btn-primary">+ Add Room</a-button>
     </a-row>
-    
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
         <a-list-item slot="renderItem" slot-scope="item">
             <a-card class="card-home">
@@ -46,15 +49,17 @@ const data = [
     title: 'Title 6',
   },
 ];
-import globe from "../assets/globe.png";
+import AddRoomDialog from "./AddRoomDialog"
 export default {
-    
-  data() {
-    return {
-      globe,
-      data,
-    };
-  },
+    components:{
+        AddRoomDialog
+    },
+    data() {
+        return {
+            data,
+            addModalVisible: false,
+        };
+    }
 };
 </script>
 <style scoped>
