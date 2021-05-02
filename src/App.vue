@@ -1,16 +1,6 @@
 <template>
   <div id="app">
-<<<<<<< Updated upstream
     <Nav />
-=======
-    <img alt="Vue logo" src="./assets/logo.png">
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-   
-    <a-button type="primary">
-      Primary
-    </a-button>
-    
->>>>>>> Stashed changes
   </div>
   
 </template>
