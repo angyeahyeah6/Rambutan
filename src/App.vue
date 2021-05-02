@@ -17,12 +17,23 @@ export default {
 </script>
 
 <style>
+:root{
+  --primary-color:#f2c94c;
+  --my-gray-1: #e0e0e0;
+  --my-gray-2: #c4c4c4;
+  --my-gray-3: #828282;
+} 
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  font-family: Noto Sans TC;
+}
+h1{
+  font-size:30px;
+} 
+text{
+  font-size:16px;
+}
+small{
+  font-size: 14px;
 }
 </style>
