@@ -6,12 +6,13 @@
 </template>
 
 <script>
-import Nav from "./components/Nav.vue";
+import Nav from "./components/Nav";
 // import HelloWorld from './components/HelloWorld.vue' 
 export default {
   name: "App",
-  components: 
+  components: {
     Nav,
+  }
 }
 </script>
 
