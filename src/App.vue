@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <Nav ></Nav>
+    <Nav></Nav>
     <div class="main-container">
-      <a-row :gutter="[20,20]">
+      <a-row :gutter="[20, 20]">
         <a-col :span="24">
           <Main></Main>
         </a-col>
-    </a-row>
+      </a-row>
     </div>
   </div>
 </template>
@@ -14,18 +14,16 @@
 <script>
 import Nav from "./components/Nav";
 import Main from "./components/Main";
-// import HelloWorld from './components/HelloWorld.vue' 
 export default {
   name: "App",
   components: {
     Nav,
-    Main
-  }
-}
+    Main,
+  },
+};
 </script>
 
 <style>
-
 element.style {
   --primary-color: #f2c94c;
   --my-gray-1: #e0e0e0;
@@ -50,7 +48,7 @@ text {
 small {
   font-size: 14px;
 }
-.main-container{
+.main-container {
   margin-right: 130px;
   margin-left: 130px;
   max-width: 1180px;

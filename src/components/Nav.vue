@@ -1,20 +1,34 @@
 <template>
   <div id="nav">
+    <img class="nav-home-btn" :src="home" />
     <div class="nav-logo">Logo</div>
+    <div class="nav-right-container">
+      <img class="nav-globe-btn" :src="globe" />
+      <div class="nav-profile-btn">
+        <img class="nav-profile-img" :src="profile" />
+      </div>
+    </div>
+    <!-- <div class="nav-logo">Logo</div>
     <div class="nav-right-container">
       <img class="nav-lang-btn" :src="globe" />
       <div class="nav-login-btn">Login in</div>
       <div class="nav-signup-btn">Sign up</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import globe from "../assets/globe.png";
+import profile from "../assets/profile.png";
+import home from "../assets/home.png";
+import circle from "../assets/circle.png";
 export default {
   data() {
     return {
       globe,
+      profile,
+      home,
+      circle,
     };
   },
 };
@@ -30,11 +44,16 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.nav-logo {
+.nav-home-btn {
+  width: 30px;
   margin-left: 130px;
 }
+.nav-logo {
+  /* margin-left: 130px; */
+  font-size: 30px;
+}
 .nav-right-container {
-  width: 322.5px;
+  width: 115.5px;
   margin-right: 130px;
 
   display: flex;
@@ -42,7 +61,21 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.nav-lang-btn {
+.nav-globe-btn {
+  width: 25px;
+}
+.nav-profile-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background-color: #e0e0e0;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+/* .nav-lang-btn {
   width: 25px;
 }
 .nav-login-btn {
@@ -68,5 +101,5 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
+} */
 </style>
