@@ -39,16 +39,104 @@
         <div class="info-admin"></div>
       </div>
     </div>
-    <div class="info-table"></div>
+    <div class="info-table">
+      <a-table :columns="columns" :data-source="data">
+        <a slot="name" slot-scope="text">{{ text }}</a>
+        <span slot="tags" slot-scope="tags">
+          <a-tag
+            v-for="tag in tags"
+            :key="tag"
+            :color="
+              tag === 'loser'
+                ? 'volcano'
+                : tag.length > 5
+                ? 'geekblue'
+                : 'green'
+            "
+          >
+            {{ tag.toUpperCase() }}
+          </a-tag>
+        </span>
+        <!-- <span slot="action" slot-scope="text, record">
+          <a>Invite 一 {{ record.name }}</a>
+          <a-divider type="vertical" />
+          <a>Delete</a>
+          <a-divider type="vertical" />
+          <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
+        </span> -->
+      </a-table>
+    </div>
   </div>
 </template>
 
 <script>
 import setting from "../assets/setting.png";
+const columns = [
+  {
+    title: "User",
+    key: "user",
+    dataIndex: "user",
+    scopedSlots: { customRender: "user" },
+  },
+  {
+    title: "Interval",
+    key: "interval",
+    dataIndex: "interval",
+    scopedSlots: { customRender: "interval" },
+  },
+  {
+    title: "Date",
+    key: "date",
+    dataIndex: "date",
+    scopedSlots: { customRender: "date" },
+  },
+  {
+    title: "State",
+    key: "state",
+    dataIndex: "state",
+    scopedSlots: { customRender: "state" },
+  },
+  {
+    title: "Payment Deadline",
+    key: "deadline",
+    scopedSlots: { customRender: "deadline" },
+  },
+  {
+    title: "Actions",
+    key: "action",
+    scopedSlots: { customRender: "action" },
+  },
+];
+const data = [
+  {
+    key: "1",
+    user: "Angela yeah",
+    age: 32,
+    address: "New York No. 1 Lake Park",
+    tags: ["nice", "developer"],
+  },
+  {
+    key: "2",
+    user: "Frank",
+    age: 42,
+    address: "London No. 1 Lake Park",
+    tags: ["loser"],
+  },
+  {
+    key: "3",
+    user: "Kevin",
+    age: 32,
+    address: "Sidney No. 1 Lake Park",
+    tags: ["cool", "teacher"],
+  },
+];
 export default {
   data() {
     return {
       setting,
+
+      data,
+      columns,
     };
   },
 };
@@ -166,6 +254,6 @@ export default {
   background-color: blue;
 }
 .info-table {
-  background-color: green;
+  // background-color: green;
 }
 </style>
