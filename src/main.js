@@ -1,11 +1,13 @@
 import Vue from "vue";
 import App from "./App.vue";
-import { Button, Table } from "ant-design-vue";
+import { Button, Table, Icon, Rate } from "ant-design-vue";
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.less";
 Vue.config.productionTip = false;
 Vue.use(Button);
 Vue.use(Table);
+Vue.use(Icon);
+Vue.use(Rate);
 Vue.use(Antd);
 new Vue({
   render: (h) => h(App),

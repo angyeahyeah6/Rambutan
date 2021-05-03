@@ -6,7 +6,7 @@
           <div class="info-title">
             <div class="info-service-name">Youtube</div>
             <div class="info-level">Premium</div>
-            <img class="info-setting-btn" :src="setting" />
+            <a-icon type="setting" />
           </div>
 
           <div class="info-detail">
@@ -35,42 +35,40 @@
         </div>
       </div>
       <div class="info-right">
-        <div class="info-announ"></div>
-        <div class="info-admin"></div>
+        <div class="info-card info-announce">
+          <div class="info-card-title">Announcement</div>
+          <textarea />
+        </div>
+        <div class="info-card info-admin">
+          <div class="info-card-title">Admin Info</div>
+          <div class="info-card-content">
+            <div class="info-profile-name">
+              <img :src="user" />
+              <div class="info-name">
+                <div>Carolyn</div>
+                <a-rate :default-value="2.5" allow-half />
+              </div>
+            </div>
+            <div class="info-profile-contact">
+              <div>carolyn@gmail.com</div>
+              <div>(812) 1234-567890</div>
+            </div>
+          </div>
+          <div class="info-import-btn-container">
+            <div class="info-import-btn">Import bank info</div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="info-table">
-      <a-table :columns="columns" :data-source="data">
-        <a slot="name" slot-scope="text">{{ text }}</a>
-        <span slot="tags" slot-scope="tags">
-          <a-tag
-            v-for="tag in tags"
-            :key="tag"
-            :color="
-              tag === 'loser'
-                ? 'volcano'
-                : tag.length > 5
-                ? 'geekblue'
-                : 'green'
-            "
-          >
-            {{ tag.toUpperCase() }}
-          </a-tag>
-        </span>
-        <!-- <span slot="action" slot-scope="text, record">
-          <a>Invite 一 {{ record.name }}</a>
-          <a-divider type="vertical" />
-          <a>Delete</a>
-          <a-divider type="vertical" />
-          <a class="ant-dropdown-link"> More actions <a-icon type="down" /> </a>
-        </span> -->
-      </a-table>
+      <a-table :columns="columns" :data-source="data"> </a-table>
     </div>
   </div>
 </template>
 
 <script>
-import setting from "../assets/setting.png";
+import user from "../assets/user.png";
+
 const columns = [
   {
     title: "User",
@@ -111,29 +109,20 @@ const data = [
   {
     key: "1",
     user: "Angela yeah",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
   },
   {
     key: "2",
     user: "Frank",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
   },
   {
     key: "3",
     user: "Kevin",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
   },
 ];
 export default {
   data() {
     return {
-      setting,
+      user,
 
       data,
       columns,
@@ -144,14 +133,20 @@ export default {
 
 <style lang="less" scoped>
 #info {
-  display: flex;
-  flex-direction: column;
-  // justify-content:
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: flex-start;
+  // align-items: space-between;
 }
 .info-container {
   // background-color: yellow;
   width: 100%;
-  height: 400px;
+  height: 350px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 .info-left {
   width: 50%;
@@ -181,6 +176,10 @@ export default {
       margin-right: 40px;
       font-weight: 400;
     }
+    .anticon {
+      font-size: 25px;
+      cursor: pointer;
+    }
   }
 }
 
@@ -209,6 +208,8 @@ export default {
 
 .info-plan {
   height: 50%;
+  margin-top: 30px;
+
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -229,10 +230,11 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    cursor: not-allowed;
   }
 
   .info-plan-detail-container {
-    margin-top: 40px;
+    // margin-top: 40px;
 
     display: flex;
     flex-direction: row;
@@ -245,15 +247,86 @@ export default {
 
     .info-plan-label,
     .info-plan-date {
-      margin-bottom: 30px;
+      margin-top: 30px;
     }
   }
 }
 
 .info-right {
-  background-color: blue;
+  // background-color: blue;
+  width: 50%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+
+  .info-card {
+    width: 48%;
+    height: 97%;
+    border: #d9d9d9 solid 1px;
+    border-radius: 10px;
+    padding: 30px;
+    color: #828282;
+
+    .info-card-title {
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    textarea {
+      width: 100%;
+      height: 60%;
+      border-color: #d9d9d9;
+      border-radius: 2px;
+    }
+    .info-import-btn-container {
+      margin-top: 70px;
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+
+      .info-import-btn {
+        font-size: 14px;
+        color: #000000;
+        width: 132px;
+        height: 32px;
+        border: #d9d9d9 solid 1px;
+        border-radius: 50px;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+  .info-announce {
+    margin-right: 20px;
+  }
+  .info-card-content {
+    .info-profile-name {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      img {
+        width: 50px;
+        margin-right: 20px;
+      }
+    }
+    .info-profile-contact {
+      margin-top: 10px;
+      div {
+        margin-top: 20px;
+      }
+    }
+  }
 }
 .info-table {
   // background-color: green;
+  margin-top: 60px;
 }
 </style>
