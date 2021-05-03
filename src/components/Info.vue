@@ -281,7 +281,8 @@ export default {
       border-radius: 2px;
     }
     .info-import-btn-container {
-      margin-top: 70px;
+      // margin-top: 70px;
+      width: 100%;
 
       display: flex;
       flex-direction: row;
@@ -307,7 +308,14 @@ export default {
   .info-announce {
     margin-right: 20px;
   }
+  .info-admin {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
   .info-card-content {
+    height: 70%;
     .info-profile-name {
       display: flex;
       flex-direction: row;
