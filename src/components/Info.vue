@@ -295,6 +295,7 @@ export default {
         height: 32px;
         border: #d9d9d9 solid 1px;
         border-radius: 50px;
+        cursor: pointer;
 
         display: flex;
         flex-direction: row;
