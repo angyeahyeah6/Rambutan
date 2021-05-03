@@ -105,10 +105,10 @@ export default {
       }],
       money:[{
         "index":1,
-        "value": 300
+        "value": "NT$300"
       }, {
         "index":2,
-        "value": 720
+        "value": "NT$700"
       }],
       timetype:[{
         "index":1,

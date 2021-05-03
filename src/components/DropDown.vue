@@ -7,7 +7,7 @@
     </a-menu>
     <div class="dd-button-container">
       <a-button block> 
-        {{ title }} 
+        {{ select }} 
         <a-icon type="down" /> 
       </a-button>
     </div>
@@ -19,14 +19,22 @@ export default {
   data(){
     return{
       iconType:"user",
+      select:this.title
     }
   },
   methods:{
     handleMenuClick(e) {
-      console.log(e)
-      this.title = this.menulist[e.key-1].value;
+      this.select = this.menulist[e.key-1].value
+      this.$emit("selectValue", this.menulist[e.key-1].value);
     },
-  }
+  },
+  watch: {
+    title(newVal) {
+      if (newVal) {
+        this.select = this.title
+      }
+    },
+  },
 };
 </script>
 <style scoped>
