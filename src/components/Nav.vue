@@ -1,11 +1,22 @@
 <template>
   <div id="nav">
-    <img class="nav-home-btn" :src="home" />
+    <a-icon @click="goToHomePage()" class="nav-home-btn" type="home" />
     <div class="nav-logo">Logo</div>
     <div class="nav-right-container">
-      <img class="nav-globe-btn" :src="globe" />
-      <div class="nav-profile-btn">
-        <img class="nav-profile-img" :src="profile" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 0 24 24"
+        width="25px"
+        fill="#C4C4C4"
+      >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-.61.08-1.21.21-1.78L8.99 15v1c0 1.1.9 2 2 2v1.93C7.06 19.43 4 16.07 4 12zm13.89 5.4c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.4z"
+        />
+      </svg>
+      <div class="nav-profile-btn" @click="goToProfilePage()">
+        <img :src="user" />
       </div>
     </div>
     <!-- <div class="nav-logo">Logo</div>
@@ -19,25 +30,38 @@
 
 <script>
 import globe from "../assets/globe.png";
-import profile from "../assets/profile.png";
 import home from "../assets/home.png";
-import circle from "../assets/circle.png";
+import user from "../assets/user.png";
 export default {
   data() {
     return {
       globe,
-      profile,
       home,
-      circle,
+      user,
     };
+  },
+  methods: {
+    goToHomePage() {
+      this.$router.push("/Main");
+    },
+    goToProfilePage() {
+      this.$router.push("/Info");
+    },
   },
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 #nav {
   height: 60px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  position: fixed;
+  z-index: 200;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  margin-bottom: 60px;
 
   display: flex;
   flex-direction: row;
@@ -45,8 +69,10 @@ export default {
   align-items: center;
 }
 .nav-home-btn {
-  width: 30px;
+  font-size: 30px;
+  color: #c4c4c4;
   margin-left: 130px;
+  cursor: pointer;
 }
 .nav-logo {
   /* margin-left: 130px; */
@@ -59,21 +85,30 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-}
-.nav-globe-btn {
-  width: 25px;
-}
-.nav-profile-btn {
-  width: 35px;
-  height: 35px;
-  border-radius: 100%;
-  background-color: #e0e0e0;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  svg {
+    cursor: pointer;
+  }
+
+  .nav-profile-btn {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-color: #e0e0e0;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 35px;
+      height: 35px;
+    }
+  }
 }
+
 /* .nav-lang-btn {
   width: 25px;
 }
