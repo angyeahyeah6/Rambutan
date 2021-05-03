@@ -24,7 +24,7 @@
     </a-row>
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
       <a-list-item slot="renderItem" slot-scope="item">
-        <a-card class="card-home">
+        <a-card class="card-home" @click="goToInfoPage()">
           <p>{{ item.title }}</p>
           <a-space align="baseline">
             <div>
@@ -89,6 +89,9 @@ export default {
     closeEnterRoomModal(val) {
       this.enterModalVisible = val;
     },
+    goToInfoPage() {
+      this.$router.push("/Info");
+    },
   },
 };
 </script>
@@ -106,5 +109,6 @@ export default {
   height: 179px;
   border-radius: 10px;
   margin-top: 40px;
+  cursor: pointer;
 }
 </style>
