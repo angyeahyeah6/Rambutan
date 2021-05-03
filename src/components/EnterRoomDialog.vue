@@ -7,10 +7,11 @@
   >
     <div class="block-container">
       <p>Room PIN</p>
-      <a-input class="input-room" style="width: 100%" />
-      <div class="btn-container">
-        <a-button class="btn-primary" key="add Room" type="primary">
-          add Room
+      <a-input placeholder="Room Number" v-model="roomNumber" class="erd-room" style="width: 100%" />
+      <p v-if= "showWarning" class="erd-warning">The PIN is incorrect </p>
+      <div class="erd-btn-container">
+        <a-button class="btn-primary" key="add Room" type="primary" @click="goToInfoPage()">
+          Enter Room
         </a-button>
       </div>
     </div>
@@ -22,6 +23,8 @@ export default {
   data() {
     return {
       isVisible: false,
+      roomNumber:"",
+      showWarning:false
     };
   },
   watch: {
@@ -30,19 +33,34 @@ export default {
         this.isVisible = this.visible;
       }
     },
+    roomNumber: function(val){
+      if(val){
+        this.showWarning = false
+      }
+      else{
+        this.showWarning = true
+      }
+    }
   },
   methods: {
     closeModal: function() {
       this.$emit("closeEnterModal", this.isVisible);
     },
+    goToInfoPage() {
+      this.$router.push("/Info");
+    },
   },
 };
 </script>
 <style scoped>
+.erd-warning{
+  margin-top: 10px;
+  color:red;
+}
 .block-container {
   padding: 26px;
 }
-.input-room {
+.erd-room {
   height: 32px;
   width: 395px;
   border-radius: 2px;
@@ -54,7 +72,7 @@ export default {
   margin-bottom: 20px;
   border-radius: 50px;
 }
-.btn-container {
+.erd-btn-container {
   margin-top: 100px;
   justify-content: flex-end;
   display: flex;

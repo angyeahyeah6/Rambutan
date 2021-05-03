@@ -27,16 +27,16 @@
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
       <a-list-item slot="renderItem" slot-scope="item">
         <a-card class="card-home" @click="goToInfoPage()">
-          <p>{{ item.title }}</p>
+          <p>{{ item.identity }}</p>
           <a-space align="baseline">
             <div>
-              <h1>Netflix</h1>
+              <h1>{{ item.app }}</h1>
             </div>
             <div>
-              <p>premium</p>
+              <p>{{ item.version }}</p>
             </div>
           </a-space>
-          <p>Owe NT$ 720</p>
+          <p v-if="item.status">Owe NT$ {{item.owe}}</p>
         </a-card>
       </a-list-item>
     </a-list>
@@ -45,23 +45,52 @@
 
 <script>
 const data = [
-  {
-    title: "Title 1",
+	{
+    identity: "admin",
+		app: "Youtube",
+		version:"Premuim",
+		status:true,
+		owe:720
   },
   {
-    title: "Title 2",
+    identity: "member",
+		app: "Netflix",
+		version:"Premuim",
+		status:false
   },
-  {
-    title: "Title 3",
+	{
+    identity: "admin",
+		app: "Spotify",
+		version:"standard",
+		status:true,
+		owe:300
   },
-  {
-    title: "Title 4",
+	{
+    identity: "admin",
+		app: "Notion",
+		version:"family plan",
+		status:false,
   },
-  {
-    title: "Title 5",
+	{
+    identity: "admin",
+		app: "Slack",
+		version:"two plan",
+		status:true,
+		owe:100
   },
-  {
-    title: "Title 6",
+	{
+    identity: "member",
+		app: "NSO",
+		version:"family plan",
+		status:true,
+		owe:300
+  },
+	{
+    identity: "admin",
+		app: "Play Station",
+		version:"family plan",
+		status:true,
+		owe:300
   },
 ];
 import AddRoomDialog from "./AddRoomDialog";
