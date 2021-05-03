@@ -55,6 +55,13 @@ export default {
 #nav {
   height: 60px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  position: fixed;
+  z-index: 200;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  margin-bottom: 60px;
 
   display: flex;
   flex-direction: row;
