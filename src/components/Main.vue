@@ -3,11 +3,14 @@
     <a-row>
         <a-button type="primary" class="btn-primary" @click="() => (addModalVisible = true)" >
             + Add Room
-            <AddRoomDialog :visible="addModalVisible" @closeModal="() => (addModalVisible = false)"/>
+            <AddRoomDialog :visible="addModalVisible" @closeAddModal="() => (addModalVisible = false)"/>
         </a-button>
         
-        <a-button type="default" class="btn-primary">+ Add Room</a-button>
-        <a-button type="default" class="btn-primary">+ Add Room</a-button>
+        <a-button type="default" class="btn-primary" @click="() => (enterModalVisible = true)">
+            Enter Room
+            <EnterRoomDialog :visible="enterModalVisible" @closeEnterModal="() => (enterModalVisible = false)" />
+        </a-button>
+        <a-button type="default" class="btn-primary">Find Plan Online</a-button>
     </a-row>
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
         <a-list-item slot="renderItem" slot-scope="item">
@@ -50,14 +53,17 @@ const data = [
   },
 ];
 import AddRoomDialog from "./AddRoomDialog"
+import EnterRoomDialog from "./EnterRoomDialog"
 export default {
     components:{
-        AddRoomDialog
+        AddRoomDialog,
+        EnterRoomDialog
     },
     data() {
         return {
             data,
             addModalVisible: false,
+            enterModalVisible: false
         };
     }
 };

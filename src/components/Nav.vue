@@ -55,7 +55,6 @@ export default {
 .nav-right-container {
   width: 115.5px;
   margin-right: 130px;
-
   display: flex;
   flex-direction: row;
   justify-content: space-between;

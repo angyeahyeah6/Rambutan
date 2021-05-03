@@ -30,24 +30,6 @@ element.style {
   --my-gray-2: #c4c4c4;
   --my-gray-3: #828282;
 }
-
-#app {
-  font-family: "Roboto", "sans-serif";
-  width: 100vw;
-  height: 100vh;
-}
-body {
-  margin: 0 !important;
-}
-h1 {
-  font-size: 30px;
-}
-text {
-  font-size: 16px;
-}
-small {
-  font-size: 14px;
-}
 .main-container {
   margin-right: 130px;
   margin-left: 130px;
