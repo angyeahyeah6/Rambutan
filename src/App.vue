@@ -4,8 +4,7 @@
     <div class="main-container">
       <a-row :gutter="[20, 20]">
         <a-col :span="24">
-          <!-- <Main /> -->
-          <Info />
+          <router-view />
         </a-col>
       </a-row>
     </div>
@@ -14,14 +13,10 @@
 
 <script>
 import Nav from "./components/Nav";
-// import Main from "./components/Main";
-import Info from "./components/Info";
 export default {
   name: "App",
   components: {
     Nav,
-    // Main,
-    Info,
   },
 };
 </script>
