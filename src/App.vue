@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Nav />
+    <Nav class="app-nav" />
     <div class="main-container">
       <a-row :gutter="[20, 20]">
         <a-col :span="24">
@@ -34,6 +34,7 @@ element.style {
   width: 100vw;
   height: 100vh;
 }
+
 body {
   margin: 0 !important;
 }
@@ -50,6 +51,6 @@ small {
   margin-right: 130px;
   margin-left: 130px;
   max-width: 1180px;
-  margin-top: 40px;
+  margin-top: 100px;
 }
 </style>
