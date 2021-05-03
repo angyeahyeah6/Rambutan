@@ -20,7 +20,9 @@
           @closeEnterModal="closeEnterRoomModal()"
         />
       </a-button>
-      <a-button type="default" class="btn-primary">Find Plan Online</a-button>
+      <a-button type="default" class="btn-primary find-plan-btn"
+        >Find Plan Online</a-button
+      >
     </a-row>
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
       <a-list-item slot="renderItem" slot-scope="item">
@@ -104,6 +106,9 @@ export default {
   margin-bottom: 20px;
   border-radius: 50px;
   padding: 8px, 16px, 8px, 16px;
+}
+.find-plan-btn {
+  width: 170px;
 }
 .card-home {
   height: 179px;
