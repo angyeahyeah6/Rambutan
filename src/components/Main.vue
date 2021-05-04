@@ -1,7 +1,11 @@
 <template>
   <div>
     <a-row>
-      <a-button type="primary" class="btn-primary" @click="openAddRoomModal()">
+      <a-button
+        type="primary"
+        class="addroom-btn btn-primary"
+        @click="openAddRoomModal()"
+      >
         + Add Room
         <AddRoomDialog
           :visible="addModalVisible"
@@ -149,7 +153,7 @@ export default {
   color: black;
   font-weight: bold;
 }
-.btn-primary:hover {
+.addroom-btn:hover {
   color: @my-grey-3;
 }
 .find-plan-btn {
