@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "NODE_ENV=development && npm i @vue/cli-service",
-    "start": "vue-cli-service serve",
+    "start": "npm run serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build && webpack --config webpack.config.js",
     "lint": "vue-cli-service lint"
