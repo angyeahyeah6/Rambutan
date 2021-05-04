@@ -36,7 +36,7 @@
               <p>{{ item.version }}</p>
             </div>
           </a-space>
-          <p v-if="item.status">Owe NT$ {{item.owe}}</p>
+          <p v-if="item.status">Owe NT$ {{ item.owe }}</p>
         </a-card>
       </a-list-item>
     </a-list>
@@ -45,57 +45,58 @@
 
 <script>
 const data = [
-	{
+  {
     identity: "admin",
-		app: "Youtube",
-		version:"Premuim",
-		status:true,
-		owe:720
+    app: "Youtube",
+    version: "Premuim",
+    status: true,
+    owe: 720,
   },
   {
     identity: "member",
-		app: "Netflix",
-		version:"Premuim",
-		status:false
+    app: "Netflix",
+    version: "Premuim",
+    status: false,
   },
-	{
+  {
     identity: "admin",
-		app: "Spotify",
-		version:"standard",
-		status:true,
-		owe:300
+    app: "Spotify",
+    version: "standard",
+    status: true,
+    owe: 300,
   },
-	{
+  {
     identity: "admin",
-		app: "Notion",
-		version:"family plan",
-		status:false,
+    app: "Notion",
+    version: "family plan",
+    status: false,
   },
-	{
+  {
     identity: "admin",
-		app: "Slack",
-		version:"two plan",
-		status:true,
-		owe:100
+    app: "Slack",
+    version: "two plan",
+    status: true,
+    owe: 100,
   },
-	{
+  {
     identity: "member",
-		app: "NSO",
-		version:"family plan",
-		status:true,
-		owe:300
+    app: "NSO",
+    version: "family plan",
+    status: true,
+    owe: 300,
   },
-	{
+  {
     identity: "admin",
-		app: "Play Station",
-		version:"family plan",
-		status:true,
-		owe:300
+    app: "Play Station",
+    version: "family plan",
+    status: true,
+    owe: 300,
   },
 ];
 import AddRoomDialog from "./AddRoomDialog";
 import EnterRoomDialog from "./EnterRoomDialog";
 export default {
+  name: "Main",
   components: {
     AddRoomDialog,
     EnterRoomDialog,
@@ -123,6 +124,15 @@ export default {
     goToInfoPage() {
       this.$router.push("/Info");
     },
+  },
+  mounted() {
+    // work around
+    if (localStorage.getItem("reloaded")) {
+      localStorage.removeItem("reloaded");
+    } else {
+      localStorage.setItem("reloaded", "1");
+      location.reload();
+    }
   },
 };
 </script>
