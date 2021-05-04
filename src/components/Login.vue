@@ -14,81 +14,84 @@
             <div class="l-center-container">
                 <p>or</p>
             </div>
-						<a-form
-						:form="form"
-						@submit="handleSubmit"
-						hasFeedback
-						:style="{ radius:'2px'}"
-						>
-						<div class="l-form-item">
-							<p>email</p>
-							<a-form-item>
-								<a-input
-									v-decorator="[
-										'userName',
-										{ rules: [{
-												required: true, message: 'Account is required.'
-											},{ 
-												validator: checkAccountExist }
-									]},]">
-									<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
-								</a-input>
-							</a-form-item>
-						</div>
-						<div class="l-form-item">
-							<p>password</p>
-							<a-form-item>
-								<a-input
-									v-decorator="[
-										'password',
-										{ rules: [{
-												required: true, message: 'Password  is required.'
-											},{ 
-												validator: checkPasswordValid }
-									]},]">
-								</a-input>
-							</a-form-item>
-						</div>
-						<div class="l-center-container">
-							<p style="color:#1890FF">Forgot password?</p>
-						</div>
-						<div class="l-center-container">
-							<a-space>
-								<p>Don’t have an account?</p>
-								<p style="color:#1890FF">Sign up</p>
-							</a-space>
-						</div>
-						<div class="l-btn-container">
-							<a-button class="btn-primary" key="add Room" type="primary" @click="goToInfoPage()">
-								Log in
+				<a-form
+					:form="form"
+					@submit="handleSubmit"
+					hasFeedback
+					:style="{ radius:'2px'}"
+					>
+					<div class="l-form-item">
+						<p>email</p>
+						<a-form-item>
+							<a-input
+								v-decorator="[
+									'userName',
+									{ rules: [{
+											required: true, message: 'Account is required.'
+										},{ 
+											validator: checkAccountExist }
+								]},]">
+								<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
+							</a-input>
+						</a-form-item>
+					</div>
+					<div class="l-form-item">
+						<p>password</p>
+						<a-form-item>
+							<a-input
+								v-decorator="[
+									'password',
+									{ rules: [{
+											required: true, message: 'Password  is required.'
+										},{ 
+											validator: checkPasswordValid }
+								]},]">
+							</a-input>
+						</a-form-item>
+					</div>
+					<div class="l-center-container">
+						<p style="color:#1890FF">Forgot password?</p>
+					</div>
+					<div class="l-center-container">
+						<a-space algin="baseline" >
+							<div>Don’t have an account?</div>
+							<a-button type="link" @click="goToSignUp()" style="color:#1890FF; padding-left:0px">
+								Sign up
 							</a-button>
-						</div>
-					</a-form>
+						</a-space>
+					</div>
+					<div class="l-btn-container">
+						<a-button class="btn-primary" key="add Room" type="primary" @click="goToInfoPage()">
+							Log in
+						</a-button>
+					</div>
+				</a-form>
         </div>
     </a-modal>
 </template>
 <script>
 export default {
 	data(){
-			return{
-					visible:true,
-					form: this.$form.createForm(this)
-			}
+		return{
+			visible:true,
+			form: this.$form.createForm(this)
+		}
 	},
 	methods:{
 		checkAccountExist(rule, value, callback) {
-        if(value!="carolyn@gmail.com"){
+		if(value!="carolyn@gmail.com"){
 					callback("This account dose not exist")
 				}
-    },
+		},
 		checkPasswordValid(rule, value, callback){
 			if(value != "carolyn"){
 				callback("The password is incorrect")
 			}
-		}
-
-	}
-
+		},
+		goToSignUp() {
+			this.$router.push("/SignUp")
+		},
+	},
 }
   
 </script>

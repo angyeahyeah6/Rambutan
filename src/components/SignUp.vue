@@ -69,7 +69,7 @@
 				</a-space>
 			</div>
 			<div class="su-btn-container">
-				<a-button class="btn-primary" key="add Room" type="primary" @click="goToInfoPage()">
+				<a-button class="btn-primary" key="add Room" type="primary" @click="goToLogin()">
 					Sign Up
 				</a-button>
 			</div>
@@ -86,11 +86,14 @@ export default {
 			}
 	},
 	methods:{
-		checkAccountExist(rule, value, callback) {
+	checkAccountExist(rule, value, callback) {
         if(value!="carolyn@gmail.com"){
 					callback("This account already exist")
 				}
-    }
+    },
+	goToLogin(){
+		this.$router.push("/Main")
+	}
 	}
 
 }
