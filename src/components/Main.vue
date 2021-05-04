@@ -135,6 +135,8 @@ export default {
   margin-bottom: 20px;
   border-radius: 50px;
   padding: 8px, 16px, 8px, 16px;
+  color: black;
+  font-weight: bold;
 }
 .find-plan-btn {
   width: 170px;

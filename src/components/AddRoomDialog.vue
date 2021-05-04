@@ -169,5 +169,7 @@ p {
   height: 40px;
   width: 130px;
   border-radius: 50px;
+  color: black;
+  font-weight: bold;
 }
 </style>

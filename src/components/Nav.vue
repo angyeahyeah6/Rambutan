@@ -16,7 +16,7 @@
         />
       </svg>
       <div class="nav-profile-btn">
-        <img :src="user" />
+        <img :src="user" @click="goToProfilePage()"/>
       </div>
     </div>
     <!-- <div class="nav-logo">Logo</div>
@@ -43,6 +43,9 @@ export default {
   methods: {
     goToHomePage() {
       this.$router.push("/Main");
+    },
+    goToProfilePage() {
+      this.$router.push("/Profile");
     },
   },
 };

@@ -1,22 +1,36 @@
 <template>
   <div id="app">
     <Nav class="app-nav" />
-    <div class="main-container">
+    <div v-if="islogin" class="main-container">
       <a-row :gutter="[20, 20]">
         <a-col :span="24">
           <router-view />
         </a-col>
       </a-row>
     </div>
+    <div v-else class="main-container">
+      <Login v-if="hasaccout"></Login>
+      <SignUp v-else></SignUp>
+    </div>
   </div>
 </template>
 
 <script>
 import Nav from "./components/Nav";
+import Login from "./components/Login";
+import SignUp from './components/SignUp';
 export default {
   name: "App",
   components: {
     Nav,
+    Login,
+    SignUp,
+  },
+  data() {
+    return {
+      islogin:true,
+      hasaccout:true
+    };
   },
 };
 </script>

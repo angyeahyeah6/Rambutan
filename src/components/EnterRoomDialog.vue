@@ -71,6 +71,8 @@ export default {
   width: 130px;
   margin-bottom: 20px;
   border-radius: 50px;
+  color: black;
+  font-weight: bold;
 }
 .erd-btn-container {
   margin-top: 100px;
