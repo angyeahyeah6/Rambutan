@@ -61,7 +61,7 @@
 						</a-space>
 					</div>
 					<div class="l-btn-container">
-						<a-button class="btn-primary" key="add Room" type="primary" @click="goToInfoPage()">
+						<a-button class="btn-primary" key="add Room" type="primary" @click="goToMainPage()">
 							Log in
 						</a-button>
 					</div>
@@ -91,6 +91,9 @@ export default {
 		goToSignUp() {
 			this.$router.push("/SignUp")
 		},
+		goToMainPage(){
+			this.$router.push("/Main");
+		}
 	},
 }
   

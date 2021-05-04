@@ -4,7 +4,7 @@ import VueRouter from "vue-router";
 import routes from "./router";
 import { Button, Table, Icon, Rate } from "ant-design-vue";
 import Antd from "ant-design-vue";
-import "ant-design-vue/dist/antd.less";
+import "../ant-design-vue/dist/antd.less";
 Vue.config.productionTip = false;
 Vue.use(Button);
 Vue.use(Table);
