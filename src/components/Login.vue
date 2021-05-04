@@ -3,7 +3,6 @@
     v-model="visible"
     :closable="false"
     :footer="false"
-    @ok="handleOk"
     :width="495"
     :body-style="{ padding: '50px', paddingTop: '50px', height: '600px' }"
   >
@@ -15,12 +14,7 @@
       <div class="l-center-container">
         <p>or</p>
       </div>
-      <a-form
-        :form="form"
-        @submit="handleSubmit"
-        hasFeedback
-        :style="{ radius: '2px' }"
-      >
+      <a-form :form="form" hasFeedback :style="{ radius: '2px' }">
         <div class="l-form-item">
           <p>email</p>
           <a-form-item>
@@ -127,7 +121,8 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
+@import "../../ant-design-vue/dist/antd.less";
 .l-block-container {
   width: 395px;
   height: 379px;
@@ -150,6 +145,10 @@ p {
   width: 130px;
   margin-bottom: 20px;
   border-radius: 50px;
+  color: @primary-button-text;
+}
+.btn-primary:hover {
+  color: @my-grey-3;
 }
 .l-btn-container {
   margin-top: 22px;
