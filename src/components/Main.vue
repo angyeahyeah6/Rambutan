@@ -136,7 +136,8 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
+@import "../../ant-design-vue/dist/antd.less";
 .btn-primary {
   height: 40px;
   width: 130px;
@@ -147,6 +148,9 @@ export default {
   padding: 8px, 16px, 8px, 16px;
   color: black;
   font-weight: bold;
+}
+.btn-primary:hover {
+  color: @my-grey-3;
 }
 .find-plan-btn {
   width: 170px;
