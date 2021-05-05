@@ -139,7 +139,6 @@ p {
   width: 130px;
   margin-bottom: 20px;
   border-radius: 50px;
-  color: @primary-button-text;
 }
 .btn-primary:hover {
   color: @my-grey-3;
