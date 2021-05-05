@@ -22,7 +22,7 @@
           <DropDown title="NT$" :menulist="currency" />
           <a-input-number v-model="month" :min="1" :max="10" />
           <p>/</p>
-          <a-input-number v-model="date" :min="1" :max="10" />
+          <DropDown title="month" :menulist="timeSlot" />
         </a-space>
       </div>
       <div class="ard-block-container">
@@ -117,6 +117,24 @@ export default {
         {
           index: 2,
           value: "US",
+        },
+      ],
+      timeSlot: [
+        {
+          index: 1,
+          value: "year",
+        },
+        {
+          index: 2,
+          value: "month",
+        },
+        {
+          index: 3,
+          value: "week",
+        },
+        {
+          index: 4,
+          value: "day",
         },
       ],
       timetype: [
