@@ -24,12 +24,9 @@
                 {
                   rules: [
                     {
-                      required: true,
                       message: 'Account is required.',
                     },
-                    {
-                      validator: checkAccountExist,
-                    },
+                    {},
                   ],
                 },
               ]"
@@ -51,12 +48,9 @@
                 {
                   rules: [
                     {
-                      required: true,
                       message: 'Password  is required.',
                     },
-                    {
-                      validator: checkPasswordValid,
-                    },
+                    {},
                   ],
                 },
               ]"

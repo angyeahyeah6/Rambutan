@@ -3,7 +3,6 @@
     v-model="visible"
     :closable="false"
     :footer="false"
-    @ok="handleOk"
     :width="495"
     :body-style="{ padding: '50px', paddingTop: '50px', height: '600px' }"
   >
@@ -15,12 +14,7 @@
       <div class="su-center-container">
         <p>or</p>
       </div>
-      <a-form
-        :form="form"
-        @submit="handleSubmit"
-        hasFeedback
-        :style="{ radius: '2px' }"
-      >
+      <a-form :form="form" hasFeedback :style="{ radius: '2px' }">
         <div class="su-form-item">
           <p>name</p>
           <a-form-item>
@@ -79,9 +73,7 @@
                       required: true,
                       message: 'Password  is required.',
                     },
-                    {
-                      validator: checkPasswordValid,
-                    },
+                    {},
                   ],
                 },
               ]"
@@ -92,7 +84,9 @@
         <div class="su-center-container">
           <a-space>
             <p>Already have an account?</p>
-            <p style="color:#1890FF">Log in</p>
+            <p style="color:#1890FF; cursor:pointer;" @click="goToLogin()">
+              Log in
+            </p>
           </a-space>
         </div>
         <div class="su-btn-container">
@@ -100,7 +94,7 @@
             class="btn-primary"
             key="add Room"
             type="primary"
-            @click="goToLogin()"
+            @click="goToMain()"
           >
             Sign Up
           </a-button>
@@ -124,6 +118,9 @@ export default {
       }
     },
     goToLogin() {
+      this.$router.push("/Login");
+    },
+    goToMain() {
       this.$router.push("/Main");
     },
   },

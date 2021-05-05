@@ -32,27 +32,21 @@ export default {
   },
   data() {
     return {
-      islogin:false,
-      hasaccout:true,
-      isRouterAlive:true
+      islogin: false,
+      hasaccout: true,
+      isRouterAlive: true,
     };
   },
-  methods:{
-    reload () {
-     this.isRouterAlive = false
-     this.$nextTick(() => (this.isRouterAlive = true))
-   }  
-  }
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(() => (this.isRouterAlive = true));
+    },
+  },
 };
 </script>
 
 <style>
-element.style {
-  --primary-color: #f2c94c;
-  --my-gray-1: #e0e0e0;
-  --my-gray-2: #c4c4c4;
-  --my-gray-3: #828282;
-}
 .main-container {
   margin-right: 130px;
   margin-left: 130px;
