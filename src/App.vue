@@ -50,7 +50,6 @@ export default {
 .main-container {
   margin-right: 130px;
   margin-left: 130px;
-  max-width: 1180px;
   margin-top: 100px;
 }
 </style>

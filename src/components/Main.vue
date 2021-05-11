@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main">
     <a-row>
       <a-button
         type="primary"
@@ -164,5 +164,11 @@ export default {
   border-radius: 10px;
   margin-top: 40px;
   cursor: pointer;
+}
+@media screen and (min-width: 768px) {
+  #main {
+    min-width: 1024px;
+    overflow: scroll;
+  }
 }
 </style>
