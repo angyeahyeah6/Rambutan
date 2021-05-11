@@ -1,24 +1,13 @@
-# antd-demo
+## Software development method - Bills Gate
 
-## Project setup
-```
-npm install
-```
+#### Desciption
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+This project is the frontend of a platform named "Bills Gate". <br/>
+Bills Gate is developed with frontend framework Vue.js, its deployment link will soon be public after the initial features are completely finished.<br/>
 
-### Compiles and minifies for production
-```
-npm run build
-```
+#### Run Locally
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Please follow the steps below to reproduce this project on your own device. <br/>
+Step1. Clone this project. <br/>
+Step2. Install required packages: `npm install`. <br/>
+Step3. Run it: `npm run serve`, and you can find it run on `http://localhost:8080`. <br/>
