@@ -20,7 +20,7 @@
           <a-form-item>
             <a-input
               v-decorator="[
-                'userName',
+                'email',
                 {
                   rules: [
                     {
@@ -78,7 +78,7 @@
             class="btn-primary"
             key="add Room"
             type="primary"
-            @click="goToMainPage()"
+            @click="postLogin()"
           >
             Log in
           </a-button>
@@ -88,6 +88,7 @@
   </a-modal>
 </template>
 <script>
+import api from "../api";
 export default {
   data() {
     return {
@@ -109,11 +110,26 @@ export default {
     goToSignUp() {
       this.$router.push("/SignUp");
     },
-    goToMainPage() {
+    goToMain() {
       this.$router.push("/Main");
     },
-  },
-};
+    postLogin(){
+      this.form.validateFields((err, values) => {
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values)
+        };
+        // console.log(values)
+        fetch(api + "/auth/signin", requestOptions)
+        .then(function(response){
+          console.log(response.status)
+        })
+        .then(() => this.goToMain())
+      });
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
