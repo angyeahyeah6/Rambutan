@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="info-plan">
-          <div class="round-btn">New Round</div>
+          <div class="round-btn" @click="openSettingRoomModal()">New Round</div>
           <div class="info-plan-detail-container">
             <div class="info-plan-label-container">
               <div class="info-plan-label">Plan Start</div>
@@ -63,11 +63,17 @@
     <div class="info-table">
       <a-table :columns="columns" :data-source="data"> </a-table>
     </div>
+
+    <AdminRoomSetting
+      :visible="isSettingRoomModalVisible"
+      @close="closeRoomSettingModal()"
+    />
   </div>
 </template>
 
 <script>
 import user from "../assets/user.png";
+import AdminRoomSetting from "./AdminRoomSetting";
 
 const columns = [
   {
@@ -120,13 +126,25 @@ const data = [
   },
 ];
 export default {
+  components: {
+    AdminRoomSetting,
+  },
   data() {
     return {
       user,
 
       data,
       columns,
+      isSettingRoomModalVisible: false,
     };
+  },
+  methods: {
+    openSettingRoomModal() {
+      this.isSettingRoomModalVisible = true;
+    },
+    closeRoomSettingModal(ele) {
+      this.isSettingRoomModalVisible = ele;
+    },
   },
 };
 </script>
