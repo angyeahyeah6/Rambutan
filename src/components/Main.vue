@@ -28,19 +28,20 @@
         >Find Plan Online</a-button
       >
     </a-row>
-    <a-list :grid="{ gutter: 20, column: 4 }" :data-source="data">
+    <a-list :grid="{ gutter: 20, column: 4 }" :data-source='rooms'>
       <a-list-item slot="renderItem" slot-scope="item">
-        <a-card class="card-home" @click="goToInfoPage()">
-          <p>{{ item.identity }}</p>
+        <a-card v-show="item.room_status=='created'" class="card-home" @click="goToInfoPage()">
+          <p v-if="item.is_host">admin</p>
+          <p v-else>member</p>
           <a-space align="baseline">
             <div>
-              <h1>{{ item.app }}</h1>
+              <h1>{{ item.service_name }}</h1>
             </div>
             <div>
-              <p>{{ item.version }}</p>
+              <p>{{ item.plan_name }}</p>
             </div>
           </a-space>
-          <p v-if="item.status">Owe NT$ {{ item.owe }}</p>
+          <p v-if="item.payment_status=='unpaid'">Owe NT$ {{ item.cost }}</p>
         </a-card>
       </a-list-item>
     </a-list>
@@ -48,55 +49,7 @@
 </template>
 
 <script>
-const data = [
-  {
-    identity: "admin",
-    app: "Youtube",
-    version: "Premuim",
-    status: true,
-    owe: 720,
-  },
-  {
-    identity: "member",
-    app: "Netflix",
-    version: "Premuim",
-    status: false,
-  },
-  {
-    identity: "admin",
-    app: "Spotify",
-    version: "standard",
-    status: true,
-    owe: 300,
-  },
-  {
-    identity: "admin",
-    app: "Notion",
-    version: "family plan",
-    status: false,
-  },
-  {
-    identity: "admin",
-    app: "Slack",
-    version: "two plan",
-    status: true,
-    owe: 100,
-  },
-  {
-    identity: "member",
-    app: "NSO",
-    version: "family plan",
-    status: true,
-    owe: 300,
-  },
-  {
-    identity: "admin",
-    app: "Play Station",
-    version: "family plan",
-    status: true,
-    owe: 300,
-  },
-];
+import api from "../api";
 import AddRoomDialog from "./AddRoomDialog";
 import EnterRoomDialog from "./EnterRoomDialog";
 export default {
@@ -107,7 +60,7 @@ export default {
   },
   data() {
     return {
-      data,
+      rooms:[],
       addModalVisible: false,
       enterModalVisible: false,
     };
@@ -128,6 +81,19 @@ export default {
     goToInfoPage() {
       this.$router.push("/Info");
     },
+    getRooms(){
+      fetch(api + "/rooms",
+        { 
+          method: "GET",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")}
+          
+        })
+      .then(response => response.json())
+      .then(response => {console.log(response.data); this.rooms = response.data; })
+    }
+  },
+  created(){
+    this.getRooms();  
   },
   mounted() {
     // work around
@@ -137,7 +103,9 @@ export default {
       localStorage.setItem("reloaded", "1");
       location.reload();
     }
+    
   },
+  
 };
 </script>
 <style lang="less" scoped>

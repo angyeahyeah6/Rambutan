@@ -2,7 +2,7 @@
   <a-dropdown>
     <a-menu slot="overlay" @click="handleMenuClick">
       <template v-for="item in menulist">
-      <a-menu-item :key="item.index" >{{item.value}}</a-menu-item>
+      <a-menu-item :key="item.id" >{{item.value}}</a-menu-item>
       </template>
     </a-menu>
     <div class="dd-button-container">
@@ -25,7 +25,10 @@ export default {
   methods:{
     handleMenuClick(e) {
       this.select = this.menulist[e.key-1].value
-      this.$emit("selectValue", this.menulist[e.key-1].value);
+      this.$emit("selectValue", {
+        id: this.menulist[e.key-1].id, 
+        value: this.menulist[e.key-1].value
+      });
     },
   },
   watch: {
