@@ -98,7 +98,27 @@
           </div>
         </div>
         <div v-if="selectedItem == '2'">
-          Member
+          <div v-for="ele in pinList" class="new-code" :key="ele.pinCode">
+            <img :src="question" />
+            <div class="pin-info">
+              <div class="pin">
+                <div class="label">Room PIN</div>
+                <div>{{ ele.pinCode }}</div>
+              </div>
+              <div class="note">
+                expire at {{ ele.expireDate }} {{ ele.expireTime }}
+              </div>
+            </div>
+            <copy-to-clipboard :text="ele.pinCode" @copy="handleCopy">
+              <a-button class="btn-primary btn-copy" type="default">
+                Copy
+              </a-button>
+            </copy-to-clipboard>
+          </div>
+
+          <div class="new-user" @click="generateNewPin()">
+            <img :src="add" />
+          </div>
         </div>
         <div v-if="selectedItem == '3'">
           <button class="btn-google-calendar">Add to Google Calendar</button>
@@ -114,6 +134,10 @@
 </template>
 
 <script>
+import CopyToClipboard from "vue-copy-to-clipboard";
+import add from "../assets/add.png";
+import question from "../assets/question.png";
+
 const planData = ["Youtube", "Netflix"];
 const planLevelData = {
   Youtube: ["Premium", "Famili"],
@@ -121,12 +145,24 @@ const planLevelData = {
 };
 const currencyData = ["NT", "US"];
 const periodData = ["month", "week"];
+
+const pinList = [
+  { pinCode: "222333", expireDate: "2075-01-01", expireTime: "05:20" },
+  { pinCode: "122334", expireDate: "2075-01-01", expireTime: "05:20" },
+  { pinCode: "223335", expireDate: "2075-01-01", expireTime: "05:20" },
+  { pinCode: "223335", expireDate: "2075-01-01", expireTime: "05:20" },
+];
 export default {
+  components: {
+    CopyToClipboard,
+  },
   props: { visible: { type: Boolean, default: false } },
   data() {
     return {
-      // isVisible: false,
-      isVisible: true,
+      add,
+      question,
+
+      isVisible: true, // default should be false
       selectedItem: "2", // default should be 1
       planData,
       planLevelData,
@@ -139,6 +175,8 @@ export default {
       period: periodData[0],
       people: 0,
       isRoomPublic: false,
+
+      pinList,
     };
   },
   watch: {
@@ -160,6 +198,9 @@ export default {
     },
     handleRoomPublic() {
       this.isRoomPublic = !this.isRoomPublic;
+    },
+    handleCopy(result) {
+      console.log(result);
     },
   },
 };
@@ -227,5 +268,47 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.new-code {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 30px;
+  img {
+    width: 50px;
+    margin-right: 25px;
+  }
+  .pin-info {
+    margin-right: 40px;
+    .pin {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .label {
+        margin-right: 30px;
+      }
+    }
+    .note {
+      color: @my-grey-3;
+    }
+  }
+  .btn-copy {
+    width: 70px;
+    margin-bottom: 0;
+    font-size: 14px !important;
+    font-weight: 400;
+  }
+}
+
+.new-user {
+  cursor: pointer;
+  img {
+    width: 50px;
+  }
 }
 </style>
