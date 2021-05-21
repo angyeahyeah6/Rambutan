@@ -162,7 +162,7 @@ export default {
       add,
       question,
 
-      isVisible: true, // default should be false
+      isVisible: false, // default should be false
       selectedItem: "2", // default should be 1
       planData,
       planLevelData,
