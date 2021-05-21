@@ -140,10 +140,10 @@ export default {
   },
   methods: {
     openSettingRoomModal() {
-      this.isSettingRoomModalVisible = true;
+      this.isSettingRoomModalVisible = !this.isSettingRoomModalVisible;
     },
-    closeRoomSettingModal(ele) {
-      this.isSettingRoomModalVisible = ele;
+    closeRoomSettingModal() {
+      this.isSettingRoomModalVisible = !this.isSettingRoomModalVisible;
     },
   },
 };

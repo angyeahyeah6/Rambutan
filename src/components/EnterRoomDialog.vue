@@ -7,10 +7,20 @@
   >
     <div class="block-container">
       <p>Room PIN</p>
-      <a-input placeholder="Room Number" v-model="roomNumber" class="erd-room" style="width: 100%" />
-      <p v-if= "showWarning" class="erd-warning">The PIN is incorrect </p>
+      <a-input
+        placeholder="Room Number"
+        v-model="roomNumber"
+        class="erd-room"
+        style="width: 100%"
+      />
+      <p v-if="showWarning" class="erd-warning">The PIN is incorrect</p>
       <div class="erd-btn-container">
-        <a-button class="btn-primary" key="add Room" type="primary" @click="goToInfoPage()">
+        <a-button
+          class="btn-primary"
+          key="add Room"
+          type="primary"
+          @click="goToInfoPage()"
+        >
           Enter Room
         </a-button>
       </div>
@@ -23,27 +33,25 @@ export default {
   data() {
     return {
       isVisible: false,
-      roomNumber:"",
-      showWarning:false
+      roomNumber: "",
+      showWarning: false,
     };
   },
   watch: {
     visible: function(val) {
+      this.isVisible = val;
+    },
+    roomNumber: function(val) {
       if (val) {
-        this.isVisible = this.visible;
+        this.showWarning = false;
+      } else {
+        this.showWarning = true;
       }
     },
-    roomNumber: function(val){
-      if(val){
-        this.showWarning = false
-      }
-      else{
-        this.showWarning = true
-      }
-    }
   },
   methods: {
     closeModal: function() {
+      this.isVisible = false;
       this.$emit("closeEnterModal", this.isVisible);
     },
     goToInfoPage() {
@@ -53,9 +61,9 @@ export default {
 };
 </script>
 <style scoped>
-.erd-warning{
+.erd-warning {
   margin-top: 10px;
-  color:red;
+  color: red;
 }
 .block-container {
   padding: 26px;

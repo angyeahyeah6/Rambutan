@@ -51,34 +51,47 @@
           <div class="content-item">
             <div class="content-title red">Plan Price</div>
             <a-select
-              :default-value="planData[0]"
+              v-model="currency"
+              :default-value="currencyData[0]"
               style="width: 110px; margin-right: 15px;"
-              @change="handlePlanChange"
             >
-              <a-select-option v-for="ele in planData" :key="ele">
+              <a-select-option v-for="ele in currencyData" :key="ele">
                 {{ ele }}
               </a-select-option>
             </a-select>
-            <a-input placeholder="" v-model="price" style="width: 110px;" />
+            <a-input v-model="price" placeholder="0" style="width: 110px;" />
             <span> / </span>
-            <a-select v-model="planLevel" style="width: 110px">
-              <a-select-option v-for="ele in plan" :key="ele">
+            <a-select
+              v-model="period"
+              :default-value="periodData[0]"
+              style="width: 110px"
+            >
+              <a-select-option v-for="ele in periodData" :key="ele">
                 {{ ele }}
               </a-select-option>
             </a-select>
           </div>
           <div class="content-item">
             <div class="content-title red">Split</div>
-            <a-input placeholder="" v-model="price" style="width: 110px;" />
+            <a-input placeholder="0" v-model="people" style="width: 110px;" />
             <span> people </span>
           </div>
           <div>
-            <a-checkbox @change="onChange" style="font-size: 16px">
+            <a-checkbox
+              style="font-size: 16px"
+              :checked="isRoomPublic"
+              @change="handleRoomPublic"
+            >
               Make this Room Public
             </a-checkbox>
           </div>
           <div class="btn-container">
-            <a-button class="btn-primary" key="Save" type="primary">
+            <a-button
+              class="btn-primary"
+              key="Save"
+              type="primary"
+              @click="close()"
+            >
               Save
             </a-button>
           </div>
@@ -97,29 +110,35 @@ const planLevelData = {
   Youtube: ["Premium", "Famili"],
   Netflix: ["Family"],
 };
+const currencyData = ["NT", "US"];
+const periodData = ["month", "week"];
 export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
     return {
-      // isVisible: false,
-      isVisible: true,
+      isVisible: false,
       selectedItem: "1",
       planData,
       planLevelData,
       plan: planLevelData[planData[0]],
       planLevel: planLevelData[planData[0]][0],
       price: 0,
+      currencyData,
+      periodData,
+      currency: currencyData[0],
+      period: periodData[0],
+      people: 0,
+      isRoomPublic: false,
     };
   },
   watch: {
     visible: function(val) {
-      if (val) {
-        this.isVisible = this.visible;
-      }
+      this.isVisible = val;
     },
   },
   methods: {
     close: function() {
+      this.isVisible = false;
       this.$emit("close", this.isVisible);
     },
     handleSettingState(e) {
@@ -128,6 +147,9 @@ export default {
     handlePlanChange(value) {
       this.plan = planLevelData[value];
       this.planLevel = planLevelData[value][0];
+    },
+    handleRoomPublic() {
+      this.isRoomPublic = !this.isRoomPublic;
     },
   },
 };
