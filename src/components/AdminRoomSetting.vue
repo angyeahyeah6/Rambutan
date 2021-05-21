@@ -87,18 +87,27 @@
           </div>
           <div class="btn-container">
             <a-button
-              class="btn-primary"
+              class="btn-primary btn-save"
               key="Save"
               type="primary"
+              :disabled="true"
               @click="close()"
             >
               Save
             </a-button>
           </div>
         </div>
-        <div v-if="selectedItem == '2'">Members</div>
-        <div v-if="selectedItem == '3'">Reminder</div>
-        <div v-if="selectedItem == '4'">Delete</div>
+        <div v-if="selectedItem == '2'">
+          Member
+        </div>
+        <div v-if="selectedItem == '3'">
+          <button class="btn-google-calendar">Add to Google Calendar</button>
+        </div>
+        <div v-if="selectedItem == '4'">
+          <a-button class="btn-primary" type="danger" ghost>
+            Delete Room
+          </a-button>
+        </div>
       </div>
     </div>
   </a-modal>
@@ -116,8 +125,9 @@ export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
     return {
-      isVisible: false,
-      selectedItem: "1",
+      // isVisible: false,
+      isVisible: true,
+      selectedItem: "2", // default should be 1
       planData,
       planLevelData,
       plan: planLevelData[planData[0]],
@@ -156,6 +166,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../ant-design-vue/dist/antd.less";
 .admin-room {
   display: flex;
   flex-direction: row;
@@ -194,11 +205,27 @@ export default {
 .btn-primary {
   height: 40px;
   width: 130px;
-  margin-top: 100px;
+  // margin-top: 100px;
   margin-bottom: 20px;
   border-radius: 50px;
   padding: 8px, 16px, 8px, 16px;
   color: black;
   font-weight: bold;
+}
+.btn-save {
+  margin-top: 100px;
+}
+.btn-google-calendar {
+  width: 200px;
+  height: 32px;
+  font-size: 14px;
+  border: solid @my-grey-1 1px;
+  border-radius: 50px;
+  background-color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 </style>
