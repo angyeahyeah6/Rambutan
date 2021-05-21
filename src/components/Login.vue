@@ -24,7 +24,7 @@
                 {
                   rules: [
                     {
-                      message: 'Account is required.',
+                      type: 'email', message: 'Account should be email',
                     },
                     {},
                   ],
@@ -50,7 +50,6 @@
                     {
                       message: 'Password  is required.',
                     },
-                    {},
                   ],
                 },
               ]"
@@ -97,16 +96,6 @@ export default {
     };
   },
   methods: {
-    checkAccountExist(rule, value, callback) {
-      if (value != "carolyn@gmail.com") {
-        callback("This account dose not exist");
-      }
-    },
-    checkPasswordValid(rule, value, callback) {
-      if (value != "carolyn") {
-        callback("The password is incorrect");
-      }
-    },
     goToSignUp() {
       this.$router.push("/SignUp");
     },
@@ -120,12 +109,15 @@ export default {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values)
         };
-        // console.log(values)
         fetch(api + "/auth/signin", requestOptions)
-        .then(function(response){
-          console.log(response.status)
+        .then(response => response.json())
+        .then((response) => {
+          localStorage.setItem("token", response.token);
         })
         .then(() => this.goToMain())
+        .catch((error) => {
+          console.log(error);
+        })
       });
     }
   }
