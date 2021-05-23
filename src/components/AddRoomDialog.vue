@@ -13,7 +13,7 @@
         <p>Plan Select *</p>
         <a-space :size="15">
           <DropDown :title="this.select.platforms" :menulist="platforms" 
-          @selectValue="(val) => {this.select.platforms = val.value;  }" />
+          @selectValue="(val) => {this.select.platforms = val.value;  this.select.serviceId = val.id}" />
           <DropDown :title="this.select.plans" :menulist="plans" 
           @selectValue="(val) => {this.select.plans = val.value;}"/>
         </a-space>
@@ -24,7 +24,7 @@
           <DropDown title="NT$" :menulist="currency" 
           @selectValue="(val) => {this.select.currency = val.value;}"/>
           <a-input-number v-model="this.select.price" :min="0"  
-          @onValueChange="(value) => {this.select.price = value}" />
+          @change="(value) => {this.select.price = value}" />
           <p>/</p>
           <DropDown :title="this.select.timeSlot" :menulist="timeSlot" 
           @selectValue="(val) => {this.select.timeSlot = val.value;}"/>
@@ -38,14 +38,16 @@
         </a-space>
       </div>
       <div style="margin-top:40px;">
-        <a-checkbox>Make this room public</a-checkbox>
+        <a-checkbox :checked="this.select.public"
+        @change="(val) => this.select.public = !this.select.public">
+          Make this room public</a-checkbox>
       </div>
       <div class="ard-button-container">
         <a-button
           class="btn-primary"
           key="add Room"
           type="primary"
-          @click="goToInfoPage()"
+          @click="createRoom()"
         >
           + Add Room
         </a-button>
@@ -64,12 +66,14 @@ export default {
   data() {
     return {
       select:{
+        serviceId: -1,
         platforms: "Platforms",
         plans: "Plan",
         price: 0,
         timeSlot: "month",
         currency: "NT",
-        peoplecnt: 4
+        peoplecnt: 4,
+        public: false
       },
       isVisible: false,
       platforms:[],
@@ -132,13 +136,11 @@ export default {
       .then(response => {
         const data = response.data
         data.forEach((ele) => {
-          console.log(ele)
           this.platforms.push({
             id: ele.id,
             value: ele.name
           })
         });
-        console.log(this.platforms);
       })
       .catch((err) => {
         console.log(err);
@@ -153,6 +155,23 @@ export default {
           
         })
       .then(response => response.json())
+    },
+    createRoom(){
+      const result = {
+        "max_count": this.select.peoplecnt,
+        "service_id": this.select.serviceId,
+        "plan_name": this.select.plans,
+        "is_public": this.select.public
+      }
+      if(this.select.serviceId > -1){
+        fetch(api + "/rooms",
+        { 
+          method: "POST",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+          body: JSON.stringify(result)
+        })
+      .then(response => console.log(response.status))
+      }
     }
   },
   watch: {

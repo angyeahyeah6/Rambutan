@@ -28,6 +28,7 @@
   </a-modal>
 </template>
 <script>
+import api from "../api";
 export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
@@ -48,6 +49,15 @@ export default {
         this.showWarning = true;
       }
     },
+    joinRoom(){
+      fetch(api + "/rooms/join",
+        { 
+          method: "POST",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+          body: JSON.stringify({"invitation_code": this.roomNumber})
+        })
+      .then(response => console.log(response.status))
+    }
   },
   methods: {
     closeModal: function() {

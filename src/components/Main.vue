@@ -89,7 +89,7 @@ export default {
           
         })
       .then(response => response.json())
-      .then(response => {console.log(response.data); this.rooms = response.data; })
+      .then(response => {this.rooms = response.data; })
     }
   },
   created(){
