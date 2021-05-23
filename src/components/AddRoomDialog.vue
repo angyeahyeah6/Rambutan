@@ -163,6 +163,7 @@ export default {
         "plan_name": this.select.plans,
         "is_public": this.select.public
       }
+      // console.log(result);
       if(this.select.serviceId > -1){
         fetch(api + "/rooms",
         { 
