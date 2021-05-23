@@ -24,7 +24,8 @@
                 {
                   rules: [
                     {
-                      type: 'email', message: 'Account should be email',
+                      type: 'email',
+                      message: 'Account should be email',
                     },
                     {},
                   ],
@@ -102,26 +103,27 @@ export default {
     goToMain() {
       this.$router.push("/Main");
     },
-    postLogin(){
+    postLogin() {
       this.form.validateFields((err, values) => {
         const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values)
+          body: JSON.stringify(values),
         };
         fetch(api + "/auth/signin", requestOptions)
-        .then(response => response.json())
-        .then((response) => {
-          localStorage.setItem("token", response.token);
-        })
-        .then(() => this.goToMain())
-        .catch((error) => {
-          console.log(error);
-        })
+          .then((response) => response.json())
+          .then((response) => {
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("email", values.email);
+          })
+          .then(() => this.goToMain())
+          .catch((error) => {
+            console.log(error);
+          });
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";

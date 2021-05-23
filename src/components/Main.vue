@@ -83,7 +83,7 @@ export default {
       this.enterModalVisible = val;
     },
     goToInfoPage() {
-      this.$router.push("/Info/5");
+      this.$router.push("/Info/9"); // should be automatically route to the new id
     },
     getRooms() {
       fetch(api + "/rooms", {

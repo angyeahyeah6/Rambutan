@@ -24,7 +24,7 @@
         <a-menu-item key="3">
           Reminder
         </a-menu-item>
-        <a-menu-item key="4">
+        <a-menu-item v-show="isAdmin" key="4">
           Delete
         </a-menu-item>
       </a-menu>
@@ -32,26 +32,13 @@
       <div class="admin-room-content">
         <div v-if="selectedItem == '1'">
           <div class="content-item">
-            <div class="content-title">Plan Select</div>
-            <a-select
-              :default-value="planData[0]"
-              style="width: 110px; margin-right: 15px;"
-              @change="handlePlanChange"
-            >
-              <a-select-option v-for="ele in planData" :key="ele">
-                {{ ele }}
-              </a-select-option>
-            </a-select>
-            <a-select v-model="planLevel" style="width: 110px">
-              <a-select-option v-for="ele in plan" :key="ele">
-                {{ ele }}
-              </a-select-option>
-            </a-select>
+            <div class="content-title">Plan Type</div>
+            <div>{{ serviceName }} : {{ planName }}</div>
           </div>
           <div class="content-item">
             <div class="content-title red">Plan Price</div>
             <a-select
-              v-model="currency"
+              v-model="currencySelected"
               :default-value="currencyData[0]"
               style="width: 110px; margin-right: 15px;"
             >
@@ -59,10 +46,15 @@
                 {{ ele }}
               </a-select-option>
             </a-select>
-            <a-input v-model="price" placeholder="0" style="width: 110px;" />
+            <a-input
+              v-model="planPrice"
+              placeholder="0"
+              style="width: 110px;"
+              disabled
+            />
             <span> / </span>
             <a-select
-              v-model="period"
+              v-model="periodSelected"
               :default-value="periodData[0]"
               style="width: 110px"
             >
@@ -90,41 +82,44 @@
               class="btn-primary btn-save"
               key="Save"
               type="primary"
-              :disabled="true"
-              @click="close()"
+              :disabled="isSaved && isChanged"
+              @click="saveSettings()"
             >
               Save
             </a-button>
           </div>
         </div>
         <div v-if="selectedItem == '2'">
+          <div class="new-user" @click="generateNewPin()">
+            <img :src="add" />
+          </div>
           <div v-for="ele in pinList" class="new-code" :key="ele.pinCode">
             <img :src="question" />
             <div class="pin-info">
               <div class="pin">
-                <div class="label">Room PIN</div>
-                <div>{{ ele.pinCode }}</div>
+                <div class="label">Room PIN: {{ ele }}</div>
               </div>
-              <div class="note">
+              <!-- <div class="note">
                 expire at {{ ele.expireDate }} {{ ele.expireTime }}
-              </div>
+              </div> -->
             </div>
-            <copy-to-clipboard :text="ele.pinCode" @copy="handleCopy">
+            <copy-to-clipboard :text="ele" @copy="handleCopy">
               <a-button class="btn-primary btn-copy" type="default">
                 Copy
               </a-button>
             </copy-to-clipboard>
-          </div>
-
-          <div class="new-user" @click="generateNewPin()">
-            <img :src="add" />
           </div>
         </div>
         <div v-if="selectedItem == '3'">
           <button class="btn-google-calendar">Add to Google Calendar</button>
         </div>
         <div v-if="selectedItem == '4'">
-          <a-button class="btn-primary" type="danger" ghost>
+          <a-button
+            class="btn-primary"
+            type="danger"
+            ghost
+            @click="deleteRoom()"
+          >
             Delete Room
           </a-button>
         </div>
@@ -137,6 +132,9 @@
 import CopyToClipboard from "vue-copy-to-clipboard";
 import add from "../assets/add.png";
 import question from "../assets/question.png";
+import axios from "axios";
+import api from "../api";
+// import _ from "lodash";
 
 const planData = ["Youtube", "Netflix"];
 const planLevelData = {
@@ -146,24 +144,63 @@ const planLevelData = {
 const currencyData = ["NT", "US"];
 const periodData = ["month", "week"];
 
-const pinList = [
-  { pinCode: "222333", expireDate: "2075-01-01", expireTime: "05:20" },
-  { pinCode: "122334", expireDate: "2075-01-01", expireTime: "05:20" },
-  { pinCode: "223335", expireDate: "2075-01-01", expireTime: "05:20" },
-  { pinCode: "223335", expireDate: "2075-01-01", expireTime: "05:20" },
-];
+// const pinList = [
+//   { pinCode: "222333", expireDate: "2075-01-01", expireTime: "05:20" },
+//   { pinCode: "122334", expireDate: "2075-01-01", expireTime: "05:20" },
+//   { pinCode: "223335", expireDate: "2075-01-01", expireTime: "05:20" },
+//   { pinCode: "223336", expireDate: "2075-01-01", expireTime: "05:20" },
+// ];
+const axiosClient = axios.create({
+  baseURL: api,
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+  },
+});
 export default {
   components: {
     CopyToClipboard,
   },
-  props: { visible: { type: Boolean, default: false } },
+  props: {
+    visible: { type: Boolean, default: false },
+    roomId: { type: String, default: "0" },
+    isAdmin: { type: Boolean, default: false },
+    serviceName: { type: String, default: "" },
+    planPrice: { type: Number, default: 1200 },
+    planName: { type: String, default: "" },
+    maxCount: { type: Number, default: 0 },
+    roundInfo: {
+      type: Object,
+      default: function() {
+        return {
+          ending_time: "",
+          payment_deadline: "",
+          round_interval: "",
+          starting_time: "",
+        };
+      },
+    },
+    members: {
+      type: Array[Object],
+      default: function() {
+        return [
+          {
+            payment_status: { type: String, default: "" },
+            user_id: { type: String, default: "" },
+            user_name: { type: String, default: "" },
+          },
+        ];
+      },
+    },
+  },
   data() {
     return {
       add,
       question,
 
       isVisible: false, // default should be false
-      selectedItem: "2", // default should be 1
+      selectedItem: "1", // default should be 1
       planData,
       planLevelData,
       plan: planLevelData[planData[0]],
@@ -171,21 +208,75 @@ export default {
       price: 0,
       currencyData,
       periodData,
-      currency: currencyData[0],
-      period: periodData[0],
+      currencySelected: currencyData[0],
+      periodSelected: periodData[0],
       people: 0,
       isRoomPublic: false,
 
-      pinList,
+      pinCodes: [],
+
+      isSaved: false,
+      isChanged: false,
+      settingData: {},
     };
   },
   watch: {
     visible: function(val) {
       this.isVisible = val;
     },
+    maxCount: function(val) {
+      this.people = val;
+    },
+    currencySelected: function(val) {
+      if (val) {
+        console.log("val", val);
+        this.isChanged = true;
+        this.isSaved = false;
+      } else {
+        this.isChanged = false;
+      }
+    },
+    periodSelected: function(val) {
+      if (val) {
+        console.log("val", val);
+        this.isChanged = true;
+        this.isSaved = false;
+      } else {
+        this.isChanged = false;
+      }
+    },
+    people: function(val) {
+      if (val) {
+        console.log("val", val);
+        this.isChanged = true;
+        this.isSaved = false;
+      } else {
+        this.isChanged = false;
+      }
+    },
+  },
+  computed: {
+    pinList: function() {
+      console.log("codes", JSON.parse(JSON.stringify(this.pinCodes)));
+      return JSON.parse(JSON.stringify(this.pinCodes));
+    },
   },
   methods: {
-    close: function() {
+    async saveSettings() {
+      this.settingData = {
+        currency: this.currencySelected,
+        period: this.periodSelected,
+        maxCount: this.people,
+      };
+      await axiosClient.patch(`/rooms/${this.roomId}`, {
+        max_count: parseInt(this.settingData.maxCount),
+        service_id: 3, // should be removed
+        plan_name: "family", // should be removed
+        is_public: true, // should be remove
+      });
+      this.isSaved = true;
+    },
+    close() {
       this.isVisible = false;
       this.$emit("close", this.isVisible);
     },
@@ -202,6 +293,26 @@ export default {
     handleCopy(result) {
       console.log(result);
     },
+    async generateNewPin() {
+      const { data: newPin } = await axiosClient.post(
+        `/rooms/${this.roomId}/invitation`
+      );
+      console.log("pin", newPin);
+      const pin = newPin.code;
+      console.log("p", pin);
+      this.pinCodes.unshift(pin);
+    },
+    async deleteRoom() {
+      await axiosClient.delete(`/rooms/${this.roomId}`);
+      this.$router.push("/Main");
+    },
+  },
+  async mounted() {
+    console.log("id", this.roomId);
+    const { data } = await axiosClient.get(`/rooms/${this.roomId}/invitation`);
+    const codes = data.data.map((code) => code.invitation_code);
+    this.pinCodes = codes;
+    console.log("m", codes);
   },
 };
 </script>
@@ -220,6 +331,8 @@ export default {
   padding: 26px;
   padding-left: 50px;
   width: 480px;
+  height: 450px;
+  overflow: scroll;
 }
 .ant-menu-item-selected {
   background-color: none !important;
@@ -233,11 +346,13 @@ export default {
     font-size: 16px;
     margin: 0 15px;
   }
+
+  .content-title {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
 }
-.content-title {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
+
 .btn-container {
   display: flex;
   flex-direction: row;
@@ -273,8 +388,9 @@ export default {
 .new-code {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  width: 84%;
   font-size: 14px;
   margin-bottom: 30px;
   img {
@@ -282,7 +398,7 @@ export default {
     margin-right: 25px;
   }
   .pin-info {
-    margin-right: 40px;
+    margin-right: 0px;
     .pin {
       display: flex;
       flex-direction: row;
@@ -306,6 +422,7 @@ export default {
 }
 
 .new-user {
+  margin-bottom: 30px;
   cursor: pointer;
   img {
     width: 50px;

@@ -5,21 +5,21 @@
         <div class="info-main">
           <div class="info-title">
             <div class="info-service-name">Youtube</div>
-            <div class="info-level">Premium</div>
+            <div class="info-level">{{ planName }}</div>
           </div>
           <div class="info-setting-btn">
             <a-button
               class="btn-primary btn-setting"
-              type="primary"
-              :disabled="isSettingDisabled"
+              :type="members.length <= 1 ? 'primary' : 'default'"
               @click="openSettingRoomModal()"
             >
               Settings
             </a-button>
+
             <a-button
               class="btn-primary"
               type="primary"
-              :disabled="isNewRoundDisabled"
+              :disabled="!members.length <= 1"
               @click="openNewRoundModal()"
             >
               New Round
@@ -52,13 +52,17 @@
             <div class="info-profile-name">
               <img :src="user" />
               <div class="info-name">
-                <div>Carolyn</div>
-                <a-rate :default-value="2.5" allow-half />
+                <div>{{ admin.name }}</div>
+                <a-rate
+                  :default-value="admin.rating"
+                  allow-half
+                  :disabled="isAdmin ? true : false"
+                />
               </div>
             </div>
             <div class="info-profile-contact">
-              <div>carolyn@gmail.com</div>
-              <div>(812) 1234-567890</div>
+              <div>{{ admin.email }}</div>
+              <div>{{ admin.phone }}</div>
             </div>
           </div>
           <div class="info-import-btn-container">
@@ -68,13 +72,18 @@
       </div>
     </div>
     <div class="info-table">
-      <a-table :columns="columns" :data-source="data">
-        <span slot="user" slot-scope="text" class="info-table-user">
+      <a-table
+        :columns="columns"
+        :data-source="members"
+        rowKey="user_name"
+        :locale="emptyText"
+      >
+        <span slot="user_name" slot-scope="text" class="info-table-user">
           <img :src="user" />
           {{ text }}</span
         >
         <span slot="state" slot-scope="record" class="info-table-state"
-          >{{ record[0] }} you NT$ {{ record[1] }}</span
+          >{{ record.user_name }} you NT$ {{ record[1] }}</span
         >
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
@@ -109,8 +118,16 @@
 
     <AdminRoomSetting
       :visible="isSettingRoomModalOpen"
+      :roomId="roomId"
+      :isAdmin="isAdmin"
+      :serviceName="serviceName"
+      :planName="planName"
+      :maxCount="maxCount"
+      :roundInfo="roundInfo"
+      :members="members"
       @close="closeRoomSettingModal()"
     />
+
     <NewRoundModal
       :visible="isNewRoundModalOpen"
       @close="closeNewRoundModal()"
@@ -141,6 +158,8 @@
 </template>
 
 <script>
+import axios from "axios";
+import api from "../api";
 import user from "../assets/user.png";
 import AdminRoomSetting from "./AdminRoomSetting";
 import NewRoundModal from "./NewRoundModal";
@@ -152,17 +171,17 @@ import RemoveDialog from "./RemoveDialog";
 const columns = [
   {
     title: "User",
-    key: "user",
+    key: "user_name",
     width: "21%",
-    dataIndex: "user",
-    scopedSlots: { customRender: "user" },
+    dataIndex: "user_name",
+    scopedSlots: { customRender: "user_name" },
   },
   {
     title: "State",
-    key: "state",
+    key: "payment_status",
     width: "24%",
-    dataIndex: "state",
-    scopedSlots: { customRender: "state" },
+    dataIndex: "payment_status",
+    scopedSlots: { customRender: "payment_status" },
   },
   {
     title: "Actions",
@@ -171,28 +190,15 @@ const columns = [
     scopedSlots: { customRender: "action" },
   },
 ];
-const data = [
-  {
-    key: "1",
-    user: "Kevin Yu",
-    state: ["Owe", "720"],
+
+const axiosClient = axios.create({
+  baseURL: api,
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
   },
-  {
-    key: "2",
-    user: "Frank Chen",
-    state: ["Owe", "720"],
-  },
-  {
-    key: "3",
-    user: "Angela Lee",
-    state: ["Owe", "720"],
-  },
-  {
-    key: "4",
-    user: "Chen",
-    state: ["Owe", "720"],
-  },
-];
+});
 export default {
   components: {
     AdminRoomSetting,
@@ -208,8 +214,20 @@ export default {
       isSettingDisabled: false, // default should be false
       isNewRoundDisabled: false, // default should be true
       isSettleUpDisabled: false, // default should be true
+      emptyText: {
+        emptyText: "Go to Settings to add members !",
+      },
+      roomId: "",
 
-      data,
+      isAdmin: false,
+      serviceName: "",
+      planName: "",
+      maxCount: 0,
+      roundInfo: {},
+      memberList: [],
+      admin: {},
+
+      // data,
       columns,
       isSettingRoomModalOpen: false,
       isNewRoundModalOpen: false,
@@ -220,7 +238,22 @@ export default {
       isRemoveDialogOpen: false,
     };
   },
+  computed: {
+    members: function() {
+      const memberList = JSON.parse(JSON.stringify(this.memberList));
+      if (this.isAdmin) {
+        return memberList.filter(
+          (member) => !member.user_name == this.admin.name
+        );
+      }
+      return memberList;
+    },
+  },
   methods: {
+    setTableKey(record) {
+      console.log("record", record);
+      return record.name;
+    },
     openSettingRoomModal() {
       this.isSettingRoomModalOpen = !this.isSettingRoomModalOpen;
     },
@@ -263,21 +296,36 @@ export default {
       this.isRemoveDialogOpen = !this.isRemoveDialogOpen;
     },
   },
-  mounted() {
+  beforeMount() {
+    this.roomId = this.$route.params.id;
+  },
+  async mounted() {
     console.log("router id", this.$route.params);
+    this.roomId = this.$route.params.id;
+    console.log("roomid", this.roomId);
+    const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
+    console.log("original data", data);
+    if (data) {
+      const email = localStorage.getItem("email");
+      if (email == data.admin.email) {
+        this.isAdmin = true;
+      }
+      this.serviceName = data.service_name;
+      this.planName = data.plan_name;
+      this.maxCount = data.max_count;
+      this.roundInfo = data.round;
+      this.admin = data.admin;
+      this.memberList = data.members;
+      console.log("list", this.members);
+    }
   },
 };
 </script>
 
 <style lang="less" scoped>
 #info {
-  // display: flex;
-  // flex-direction: column;
-  // justify-content: flex-start;
-  // align-items: space-between;
 }
 .info-container {
-  // background-color: yellow;
   width: 100%;
   height: 300px;
 

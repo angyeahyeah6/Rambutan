@@ -12,7 +12,9 @@
         <img :src="user" />
         <span class="user-name">{{ userState.user }}</span>
 
-        <span class="state">paid NT${{ userState.state[1] }} to</span>
+        <span class="state"
+          >paid NT${{ userState.state ? userState.state[1] : 0 }} to</span
+        >
         <img :src="user" />
         <span>You</span>
       </div>
