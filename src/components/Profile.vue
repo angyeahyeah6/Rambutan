@@ -2,13 +2,11 @@
 <div id="pro">
     <div class="pro-user-container">
         <img :src="user" />
-        <div>Carolyn</div>
-        <a-rate :default-value="2.5" allow-half />
+        <div> {{ this.data.name}}</div>
+        <a-rate :default-value="this.data.rating" allow-half disabled/>
     </div>
     <div class="pro-detail-container">
         <a-form
-        :form="form"
-        @submit="handleSubmit"
         hasFeedback
         :style="{ radius:'2px'}"
         >
@@ -20,8 +18,7 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												},
 								]},]" block>
 								<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
 							</a-input>
@@ -36,8 +33,7 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												},
 								]},]" block>
 								<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
 							</a-input>
@@ -52,8 +48,7 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												}
 								]},]" block>
 								
 							</a-input>
@@ -63,8 +58,7 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												}
 								]},]" block>
 							</a-input>
 						</a-form-item>
@@ -75,14 +69,16 @@
 </template>
 <script>
 import user from "../assets/user.png";
+import api from "../api";
 export default {
     data() {
     return {
       user,
 			add:"+ add",
 			data:{
-				name:"carolyn",
-				email:"carolyn@gmail.com",
+				name:"",
+				email:"",
+				rating: 3,
 				bankinfo:[{
 					id: 1,
 					value: "(812) 1234-567890"
@@ -90,9 +86,26 @@ export default {
 					id:2,
 					value: "Line Pay"
 					}],
-			}
+			},
     };
   },
+	methods:{
+		getUser(){
+			fetch(api + "/users/1",{
+				method: "GET",
+				headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+			}).then(response => response.json())
+			.then(response => {
+				console.log(response)
+				this.data.name = response.name;
+				this.data.email = response.email;
+				// console.log(response.data)
+			})
+		}
+	},
+	mounted(){
+		this.getUser();
+	}
 }
 </script>
 <style lang="less" scoped>
