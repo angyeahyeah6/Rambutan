@@ -263,6 +263,9 @@ export default {
       this.isRemoveDialogOpen = !this.isRemoveDialogOpen;
     },
   },
+  mounted() {
+    console.log("router id", this.$route.params);
+  },
 };
 </script>
 

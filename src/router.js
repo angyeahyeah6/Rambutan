@@ -8,7 +8,7 @@ const routes = [
   { name: "Login", path: "/Login", component: Login },
   { name: "SignUp", path: "/SignUp", component: SignUp },
   { name: "Main", path: "/Main", component: Main },
-  { name: "Info", path: "/Info", component: Info },
+  { name: "Info", path: "/Info/:id", component: Info },
   { name: "Profile", path: "/Profile", component: Profile },
 ];
 

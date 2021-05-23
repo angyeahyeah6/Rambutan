@@ -12,22 +12,58 @@
       <div class="ard-block-container">
         <p>Plan Select *</p>
         <a-space :size="15">
-          <DropDown :title="this.select.platforms" :menulist="platforms" 
-          @selectValue="(val) => {this.select.platforms = val.value;  this.select.serviceId = val.id}" />
-          <DropDown :title="this.select.plans" :menulist="plans" 
-          @selectValue="(val) => {this.select.plans = val.value;}"/>
+          <DropDown
+            :title="this.select.platforms"
+            :menulist="platforms"
+            @selectValue="
+              (val) => {
+                this.select.platforms = val.value;
+                this.select.serviceId = val.id;
+              }
+            "
+          />
+          <DropDown
+            :title="this.select.plans"
+            :menulist="plans"
+            @selectValue="
+              (val) => {
+                this.select.plans = val.value;
+              }
+            "
+          />
         </a-space>
       </div>
       <div class="ard-block-container">
         <p>Plan Price</p>
         <a-space :size="15">
-          <DropDown title="NT$" :menulist="currency" 
-          @selectValue="(val) => {this.select.currency = val.value;}"/>
-          <a-input-number v-model="this.select.price" :min="0"  
-          @change="(value) => {this.select.price = value}" />
+          <DropDown
+            title="NT$"
+            :menulist="currency"
+            @selectValue="
+              (val) => {
+                this.select.currency = val.value;
+              }
+            "
+          />
+          <a-input-number
+            v-model="this.select.price"
+            :min="0"
+            @change="
+              (value) => {
+                this.select.price = value;
+              }
+            "
+          />
           <p>/</p>
-          <DropDown :title="this.select.timeSlot" :menulist="timeSlot" 
-          @selectValue="(val) => {this.select.timeSlot = val.value;}"/>
+          <DropDown
+            :title="this.select.timeSlot"
+            :menulist="timeSlot"
+            @selectValue="
+              (val) => {
+                this.select.timeSlot = val.value;
+              }
+            "
+          />
         </a-space>
       </div>
       <div class="ard-block-container">
@@ -38,9 +74,12 @@
         </a-space>
       </div>
       <div style="margin-top:40px;">
-        <a-checkbox :checked="this.select.public"
-        @change="(val) => this.select.public = !this.select.public">
-          Make this room public</a-checkbox>
+        <a-checkbox
+          :checked="this.select.public"
+          @change="(val) => (this.select.public = !this.select.public)"
+        >
+          Make this room public</a-checkbox
+        >
       </div>
       <div class="ard-button-container">
         <a-button
@@ -65,7 +104,7 @@ export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
     return {
-      select:{
+      select: {
         serviceId: -1,
         platforms: "Platforms",
         plans: "Plan",
@@ -73,10 +112,10 @@ export default {
         timeSlot: "month",
         currency: "NT",
         peoplecnt: 4,
-        public: false
+        public: false,
       },
       isVisible: false,
-      platforms:[],
+      platforms: [],
       plans: [
         {
           id: 1,
@@ -125,55 +164,61 @@ export default {
     goToInfoPage() {
       this.$router.push("/Info");
     },
-    getServicesforModal(){
-      fetch(api + "/services",
-        { 
-          method: "GET",
-          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")}
-          
+    getServicesforModal() {
+      fetch(api + "/services", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          const data = response.data;
+          data.forEach((ele) => {
+            this.platforms.push({
+              id: ele.id,
+              value: ele.name,
+            });
+          });
         })
-      .then(response => response.json())
-      .then(response => {
-        const data = response.data
-        data.forEach((ele) => {
-          this.platforms.push({
-            id: ele.id,
-            value: ele.name
-          })
+        .catch((err) => {
+          console.log(err);
+          this.platforms = [{ id: 1, name: "Netflix" }];
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        this.platforms = [{id: 1, name: "Netflix"}]
-      })
     },
-    getServicesPlan(id){
-      fetch(api + "/services/" + id.toString(),
-        { 
-          method: "GET",
-          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")}
-          
-        })
-      .then(response => response.json())
+    getServicesPlan(id) {
+      fetch(api + "/services/" + id.toString(), {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }).then((response) => response.json());
     },
-    createRoom(){
+    createRoom() {
       const result = {
-        "max_count": this.select.peoplecnt,
-        "service_id": this.select.serviceId,
-        "plan_name": this.select.plans,
-        "is_public": this.select.public
-      }
+        max_count: this.select.peoplecnt,
+        service_id: this.select.serviceId,
+        plan_name: this.select.plans,
+        is_public: this.select.public,
+      };
       // console.log(result);
-      if(this.select.serviceId > -1){
-        fetch(api + "/rooms",
-        { 
+      if (this.select.serviceId > -1) {
+        fetch(api + "/rooms", {
           method: "POST",
-          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
-          body: JSON.stringify(result)
-        })
-      .then(response => console.log(response.status))
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+          body: JSON.stringify(result),
+        }).then((response) => {
+          if (response.status === 201) {
+            this.$router.push("/Info/5");
+          }
+        });
       }
-    }
+    },
   },
   watch: {
     visible(newVal) {
@@ -182,12 +227,10 @@ export default {
       }
     },
   },
-  created(){
-    
-  },
-  mounted(){
+  created() {},
+  mounted() {
     this.getServicesforModal();
-  }
+  },
 };
 </script>
 <style scoped>

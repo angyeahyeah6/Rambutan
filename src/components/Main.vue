@@ -28,9 +28,13 @@
         >Find Plan Online</a-button
       >
     </a-row>
-    <a-list :grid="{ gutter: 20, column: 4 }" :data-source='rooms'>
+    <a-list :grid="{ gutter: 20, column: 4 }" :data-source="rooms">
       <a-list-item slot="renderItem" slot-scope="item">
-        <a-card v-show="item.room_status=='created'" class="card-home" @click="goToInfoPage()">
+        <a-card
+          v-show="item.room_status == 'created'"
+          class="card-home"
+          @click="goToInfoPage()"
+        >
           <p v-if="item.is_host">admin</p>
           <p v-else>member</p>
           <a-space align="baseline">
@@ -41,7 +45,7 @@
               <p>{{ item.plan_name }}</p>
             </div>
           </a-space>
-          <p v-if="item.payment_status=='unpaid'">Owe NT$ {{ item.cost }}</p>
+          <p v-if="item.payment_status == 'unpaid'">Owe NT$ {{ item.cost }}</p>
         </a-card>
       </a-list-item>
     </a-list>
@@ -60,7 +64,7 @@ export default {
   },
   data() {
     return {
-      rooms:[],
+      rooms: [],
       addModalVisible: false,
       enterModalVisible: false,
     };
@@ -79,21 +83,24 @@ export default {
       this.enterModalVisible = val;
     },
     goToInfoPage() {
-      this.$router.push("/Info");
+      this.$router.push("/Info/5");
     },
-    getRooms(){
-      fetch(api + "/rooms",
-        { 
-          method: "GET",
-          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")}
-          
-        })
-      .then(response => response.json())
-      .then(response => {this.rooms = response.data; })
-    }
+    getRooms() {
+      fetch(api + "/rooms", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          this.rooms = response.data;
+        });
+    },
   },
-  created(){
-    this.getRooms();  
+  created() {
+    this.getRooms();
   },
   mounted() {
     // work around
@@ -103,9 +110,7 @@ export default {
       localStorage.setItem("reloaded", "1");
       location.reload();
     }
-    
   },
-  
 };
 </script>
 <style lang="less" scoped>
