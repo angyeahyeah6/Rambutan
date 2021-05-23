@@ -19,7 +19,7 @@
           class="btn-primary"
           key="add Room"
           type="primary"
-          @click="goToInfoPage()"
+          @click="joinRoom()"
         >
           Enter Room
         </a-button>
@@ -28,6 +28,7 @@
   </a-modal>
 </template>
 <script>
+import api from "../api";
 export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
@@ -47,7 +48,7 @@ export default {
       } else {
         this.showWarning = true;
       }
-    },
+    }
   },
   methods: {
     closeModal: function() {
@@ -57,6 +58,15 @@ export default {
     goToInfoPage() {
       this.$router.push("/Info");
     },
+    joinRoom(){
+      fetch(api + "/rooms/join",
+        { 
+          method: "POST",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+          body: JSON.stringify({"invitation_code": this.roomNumber})
+        })
+      .then(response => console.log(response.status))
+    }
   },
 };
 </script>

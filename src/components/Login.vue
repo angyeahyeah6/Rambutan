@@ -20,11 +20,11 @@
           <a-form-item>
             <a-input
               v-decorator="[
-                'userName',
+                'email',
                 {
                   rules: [
                     {
-                      message: 'Account is required.',
+                      type: 'email', message: 'Account should be email',
                     },
                     {},
                   ],
@@ -50,7 +50,6 @@
                     {
                       message: 'Password  is required.',
                     },
-                    {},
                   ],
                 },
               ]"
@@ -78,7 +77,7 @@
             class="btn-primary"
             key="add Room"
             type="primary"
-            @click="goToMainPage()"
+            @click="postLogin()"
           >
             Log in
           </a-button>
@@ -88,6 +87,7 @@
   </a-modal>
 </template>
 <script>
+import api from "../api";
 export default {
   data() {
     return {
@@ -96,24 +96,32 @@ export default {
     };
   },
   methods: {
-    checkAccountExist(rule, value, callback) {
-      if (value != "carolyn@gmail.com") {
-        callback("This account dose not exist");
-      }
-    },
-    checkPasswordValid(rule, value, callback) {
-      if (value != "carolyn") {
-        callback("The password is incorrect");
-      }
-    },
     goToSignUp() {
       this.$router.push("/SignUp");
     },
-    goToMainPage() {
+    goToMain() {
       this.$router.push("/Main");
     },
-  },
-};
+    postLogin(){
+      this.form.validateFields((err, values) => {
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values)
+        };
+        fetch(api + "/auth/signin", requestOptions)
+        .then(response => response.json())
+        .then((response) => {
+          localStorage.setItem("token", response.token);
+        })
+        .then(() => this.goToMain())
+        .catch((error) => {
+          console.log(error);
+        })
+      });
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";

@@ -43,11 +43,12 @@
                 {
                   rules: [
                     {
-                      required: true,
-                      message: 'Account is required.',
+                      type: 'email',
+                      message: 'The account should be email',
                     },
                     {
-                      validator: checkAccountExist,
+                      required: true,
+                      message: 'Email  is required.',
                     },
                   ],
                 },
@@ -73,7 +74,6 @@
                       required: true,
                       message: 'Password  is required.',
                     },
-                    {},
                   ],
                 },
               ]"
@@ -104,6 +104,7 @@
   </a-modal>
 </template>
 <script>
+import api from "../api";
 export default {
   data() {
     return {
@@ -112,17 +113,30 @@ export default {
     };
   },
   methods: {
-    checkAccountExist(rule, value, callback) {
-      if (value != "carolyn@gmail.com") {
-        callback("This account already exist");
-      }
-    },
     goToLogin() {
       this.$router.push("/Login");
     },
     goToMain() {
       this.$router.push("/Main");
     },
+    postSignUp(){
+      this.form.validateFields((err, values) => {
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values)
+        };
+        fetch(api + "/auth/signup", requestOptions)
+        .then(response => response.json())
+        .then((response) => {
+          localStorage.setItem("token", response.token);
+        })
+        .then(() => this.goToMain())
+        .catch((error) => {
+          console.log(error);
+        })
+      });
+    }
   },
 };
 </script>

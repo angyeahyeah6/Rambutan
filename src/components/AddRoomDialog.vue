@@ -7,66 +7,47 @@
       @cancel="closeModal"
       :footer="null"
       :width="480"
-      :body-style="{ padding: '50px', paddingTop: '30px', height: '685px' }"
+      :body-style="{ padding: '50px', paddingTop: '50px', height: '542px' }"
     >
       <div class="ard-block-container">
         <p>Plan Select *</p>
         <a-space :size="15">
-          <DropDown title="Platform" :menulist="platforms" />
-          <DropDown title="Plan" :menulist="plans" />
+          <DropDown :title="this.select.platforms" :menulist="platforms" 
+          @selectValue="(val) => {this.select.platforms = val.value;  this.select.serviceId = val.id}" />
+          <DropDown :title="this.select.plans" :menulist="plans" 
+          @selectValue="(val) => {this.select.plans = val.value;}"/>
         </a-space>
       </div>
       <div class="ard-block-container">
         <p>Plan Price</p>
         <a-space :size="15">
-          <DropDown title="NT$" :menulist="currency" />
-          <a-input-number v-model="month" :min="1" :max="10" />
+          <DropDown title="NT$" :menulist="currency" 
+          @selectValue="(val) => {this.select.currency = val.value;}"/>
+          <a-input-number v-model="this.select.price" :min="0"  
+          @change="(value) => {this.select.price = value}" />
           <p>/</p>
-          <DropDown title="month" :menulist="timeSlot" />
+          <DropDown :title="this.select.timeSlot" :menulist="timeSlot" 
+          @selectValue="(val) => {this.select.timeSlot = val.value;}"/>
         </a-space>
       </div>
       <div class="ard-block-container">
         <p>Split</p>
         <a-space :size="15" align="baseline">
-          <a-input-number v-model="peoplecnt" :min="1" :max="10" />
+          <a-input-number v-model="this.select.peoplecnt" :min="1" :max="10" />
           <p>people</p>
         </a-space>
       </div>
-      <div class="ard-block-container">
-        <p>Payment Deadline</p>
-        <a-space :size="15" align="baseline">
-          <a-input-number v-model="number" :min="1" :max="10" />
-          <DropDown title="week" :menulist="timetype" />
-          <p>before start</p>
-        </a-space>
-      </div>
-      <div class="ard-block-container">
-        <p>Members</p>
-        <a-select
-          default-value="lucy"
-          mode="multiple"
-          style="width: 50%"
-          placeholder="email"
-          :filter-option="false"
-        >
-          <a-icon slot="suffixIcon" type="user" />
-          <a-select-option v-for="u in allUser" :key="u">
-            {{ u }}
-          </a-select-option>
-        </a-select>
-      </div>
       <div style="margin-top:40px;">
-        <a-checkbox>Deposit Mechanism</a-checkbox>
-      </div>
-      <div style="margin-top:30px;">
-        <a-checkbox>Publish Online</a-checkbox>
+        <a-checkbox :checked="this.select.public"
+        @change="(val) => this.select.public = !this.select.public">
+          Make this room public</a-checkbox>
       </div>
       <div class="ard-button-container">
         <a-button
           class="btn-primary"
           key="add Room"
           type="primary"
-          @click="goToInfoPage()"
+          @click="createRoom()"
         >
           + Add Room
         </a-button>
@@ -76,6 +57,7 @@
 </template>
 <script>
 import DropDown from "./DropDown";
+import api from "../api";
 export default {
   components: {
     DropDown,
@@ -83,68 +65,54 @@ export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
     return {
-      number: 3,
-      peoplecnt: 4,
-      allUser: ["Json", "Tina"],
+      select:{
+        serviceId: -1,
+        platforms: "Platforms",
+        plans: "Plan",
+        price: 0,
+        timeSlot: "month",
+        currency: "NT",
+        peoplecnt: 4,
+        public: false
+      },
       isVisible: false,
-      month: 1,
-      date: 2,
+      platforms:[],
       plans: [
         {
-          index: 1,
+          id: 1,
           value: "family",
         },
         {
-          index: 2,
+          id: 2,
           value: "premium",
-        },
-      ],
-      platforms: [
-        {
-          index: 1,
-          value: "Youtube",
-        },
-        {
-          index: 2,
-          value: "Slack",
         },
       ],
       currency: [
         {
-          index: 1,
+          id: 1,
           value: "NT",
         },
         {
-          index: 2,
+          id: 2,
           value: "US",
         },
       ],
       timeSlot: [
         {
-          index: 1,
+          id: 1,
           value: "year",
         },
         {
-          index: 2,
+          id: 2,
           value: "month",
         },
         {
-          index: 3,
+          id: 3,
           value: "week",
         },
         {
-          index: 4,
+          id: 4,
           value: "day",
-        },
-      ],
-      timetype: [
-        {
-          index: 1,
-          value: "week",
-        },
-        {
-          index: 2,
-          value: "month",
         },
       ],
     };
@@ -157,6 +125,55 @@ export default {
     goToInfoPage() {
       this.$router.push("/Info");
     },
+    getServicesforModal(){
+      fetch(api + "/services",
+        { 
+          method: "GET",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")}
+          
+        })
+      .then(response => response.json())
+      .then(response => {
+        const data = response.data
+        data.forEach((ele) => {
+          this.platforms.push({
+            id: ele.id,
+            value: ele.name
+          })
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.platforms = [{id: 1, name: "Netflix"}]
+      })
+    },
+    getServicesPlan(id){
+      fetch(api + "/services/" + id.toString(),
+        { 
+          method: "GET",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")}
+          
+        })
+      .then(response => response.json())
+    },
+    createRoom(){
+      const result = {
+        "max_count": this.select.peoplecnt,
+        "service_id": this.select.serviceId,
+        "plan_name": this.select.plans,
+        "is_public": this.select.public
+      }
+      // console.log(result);
+      if(this.select.serviceId > -1){
+        fetch(api + "/rooms",
+        { 
+          method: "POST",
+          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+          body: JSON.stringify(result)
+        })
+      .then(response => console.log(response.status))
+      }
+    }
   },
   watch: {
     visible(newVal) {
@@ -165,6 +182,12 @@ export default {
       }
     },
   },
+  created(){
+    
+  },
+  mounted(){
+    this.getServicesforModal();
+  }
 };
 </script>
 <style scoped>
