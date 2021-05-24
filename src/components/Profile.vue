@@ -2,13 +2,11 @@
 <div id="pro">
     <div class="pro-user-container">
         <img :src="user" />
-        <div>Carolyn</div>
-        <a-rate :default-value="2.5" allow-half />
+        <div> {{ this.data.name}}</div>
+        <a-rate :default-value="this.data.rating" allow-half disabled/>
     </div>
     <div class="pro-detail-container">
         <a-form
-        :form="form"
-        @submit="handleSubmit"
         hasFeedback
         :style="{ radius:'2px'}"
         >
@@ -20,14 +18,12 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												},
 								]},]" block>
 								<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
 							</a-input>
 						</a-form-item>
-					</div>
-					
+					</div>	
 					<div class="pro-form-item">
 						<p>email</p>
 						<a-form-item>
@@ -36,8 +32,7 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												},
 								]},]" block>
 								<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
 							</a-input>
@@ -52,37 +47,56 @@
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												}
 								]},]" block>
 								
 							</a-input>
 							</template>
-							<a-input v-model="add"
+							<a-button type="dashed" v-model="add"
 								v-decorator="[
 										'userName',
 										{ rules: [{
 														required: true, message: 'Account is required.'
-												},{ 
-														validator: checkAccountExist }
+												}
 								]},]" block>
-							</a-input>
+								<a-icon type="plus" /> Add
+							</a-button>
 						</a-form-item>
 					</div>
         </a-form>
+				<div class="pro-button-container">
+        <a-button v-if="!ischanged"
+          class="btn-primary"
+          type="primary"
+          disabled
+        >
+          Save
+        </a-button>
+				<a-button v-else
+          class="btn-primary"
+          type="primary"
+          @click="patchUser()"
+        >
+          Save
+        </a-button>
+      </div>
     </div>
 </div>
 </template>
 <script>
 import user from "../assets/user.png";
+import api from "../api";
 export default {
     data() {
     return {
+			obs_cnt :0,
       user,
-			add:"+ add",
+			add:"add",
+			ischanged: false,
 			data:{
-				name:"carolyn",
-				email:"carolyn@gmail.com",
+				name:"",
+				email:"",
+				rating: 3,
 				bankinfo:[{
 					id: 1,
 					value: "(812) 1234-567890"
@@ -90,9 +104,54 @@ export default {
 					id:2,
 					value: "Line Pay"
 					}],
-			}
+			},
     };
   },
+	methods:{
+		getUser(){
+			fetch(api + "/user",{
+				method: "GET",
+				headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+			}).then(response => response.json())
+			.then(response => {
+				this.data.name = response.name;
+				this.data.email = response.email;
+				this.data.rating = 2.5;
+			})
+		},
+		patchUser(){
+			const update_user ={
+				"name": this.data.name,
+				"email": this.data.email,
+				"image_url": ""
+			}
+			fetch(api + "/user",{
+				method: "PATCH",
+				headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
+				body: JSON.stringify(update_user)
+			}).then(response => console.log(response.status))
+			this.obs_cnt = 0;
+			this.ischanged = false;
+		}
+	},
+	mounted(){
+		this.getUser();
+		this.ischanged = false
+	},
+	watch:{
+		data: {
+			handler(val){
+				if (!this.ischanged & this.obs_cnt != 0){
+					this.ischanged = true
+				}
+				this.data.name = val.name
+				this.data.email = val.email
+				this.obs_cnt += 1;
+			},
+			deep: true
+		}
+		
+	}
 }
 </script>
 <style lang="less" scoped>
@@ -113,8 +172,21 @@ export default {
     justify-content: center;
     text-align: center;
 }
+.pro-button-container {
+  justify-content: flex-end;
+  display: flex;
+  padding: 0px;
+  margin-top: 110px;
+}
 img{
     width:80px;
     height:80px;
+}
+.btn-primary {
+  height: 40px;
+  width: 130px;
+  border-radius: 50px;
+  color: black;
+  font-weight: bold;
 }
 </style>

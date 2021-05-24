@@ -65,7 +65,16 @@ export default {
           headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
           body: JSON.stringify({"invitation_code": this.roomNumber})
         })
-      .then(response => console.log(response.status))
+      .then(response => response.json())
+      .then(res => {
+        if(res.status == 200){
+          this.$router.push("/Info/" + res.room_id)
+        }
+        else{
+          this.showWarning = true;
+        }
+      })
+      .catch(err => console.log(err))
     }
   },
 };
