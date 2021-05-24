@@ -9,14 +9,14 @@
     <div class="l-block-container">
       <a-button style="height:50px;" block>
         <a-icon type="google" />
-        Continue with Google
+        {{ $t(`google_login`) }}
       </a-button>
       <div class="l-center-container">
-        <p>or</p>
+        <p>{{ $t(`or`) }}</p>
       </div>
       <a-form :form="form" hasFeedback :style="{ radius: '2px' }">
         <div class="l-form-item">
-          <p>email</p>
+          <p>{{ $t(`email`) }}</p>
           <a-form-item>
             <a-input
               v-decorator="[
@@ -25,7 +25,7 @@
                   rules: [
                     {
                       type: 'email',
-                      message: 'Account should be email',
+                      message: $t(`account_should_be_email`),
                     },
                     {},
                   ],
@@ -41,7 +41,7 @@
           </a-form-item>
         </div>
         <div class="l-form-item">
-          <p>password</p>
+          <p>{{ $t(`password`) }}</p>
           <a-form-item>
             <a-input
               v-decorator="[
@@ -49,7 +49,7 @@
                 {
                   rules: [
                     {
-                      message: 'Password  is required.',
+                      message: $t(`password_is_required`),
                     },
                   ],
                 },
@@ -59,17 +59,19 @@
           </a-form-item>
         </div>
         <div class="l-center-container">
-          <p style="color:#1890FF">Forgot password?</p>
+          <p style="color:#1890FF">
+            {{ $t(`forgot_password`) }}
+          </p>
         </div>
         <div class="l-center-container">
           <a-space algin="baseline">
-            <div>Don’t have an account?</div>
+            <div>{{ $t(`dont_have_an_account`) }}</div>
             <a-button
               type="link"
               @click="goToSignUp()"
               style="color:#1890FF; padding-left:0px"
             >
-              Sign up
+              {{ $t(`sign_up`) }}
             </a-button>
           </a-space>
         </div>
@@ -80,7 +82,7 @@
             type="primary"
             @click="postLogin()"
           >
-            Log in
+            {{ $t(`log_in`) }}
           </a-button>
         </div>
       </a-form>

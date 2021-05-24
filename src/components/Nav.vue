@@ -9,6 +9,7 @@
         viewBox="0 0 24 24"
         width="25px"
         fill="#C4C4C4"
+        @click="changeLang()"
       >
         <path d="M0 0h24v24H0V0z" fill="none" />
         <path
@@ -16,15 +17,9 @@
         />
       </svg>
       <div class="nav-profile-btn">
-        <img :src="user" @click="goToProfilePage()"/>
+        <img :src="user" @click="goToProfilePage()" />
       </div>
     </div>
-    <!-- <div class="nav-logo">Logo</div>
-    <div class="nav-right-container">
-      <img class="nav-lang-btn" :src="globe" />
-      <div class="nav-login-btn">Login in</div>
-      <div class="nav-signup-btn">Sign up</div>
-    </div> -->
   </div>
 </template>
 
@@ -46,6 +41,20 @@ export default {
     },
     goToProfilePage() {
       this.$router.push("/Profile");
+    },
+    changeLang() {
+      const lang = localStorage.getItem("lang");
+      let newLang = "enUS";
+      if (lang == null || lang == "enUS") {
+        newLang = "zhTW";
+      }
+      this.$i18n.locale = newLang;
+      if (
+        localStorage.getItem("lang") == null ||
+        localStorage.getItem("lang") != newLang
+      ) {
+        localStorage.setItem("lang", newLang);
+      }
     },
   },
 };

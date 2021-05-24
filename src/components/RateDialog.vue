@@ -21,7 +21,7 @@
           type="default"
           @click="close()"
         >
-          Cancel
+          {{ $t(`cancel`) }}
         </a-button>
         <a-button
           class="btn-primary"
@@ -29,7 +29,7 @@
           type="primary"
           @click="close()"
         >
-          Save
+          {{ $t(`save`) }}
         </a-button>
       </div>
     </div>

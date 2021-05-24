@@ -6,7 +6,7 @@
         class="addroom-btn btn-primary"
         @click="openAddRoomModal()"
       >
-        + Add Room
+        + {{ $t(`add_room`) }}
         <AddRoomDialog
           :visible="addModalVisible"
           @closeAddModal="closeAddRoomModal()"
@@ -18,15 +18,15 @@
         class="btn-primary"
         @click="() => openEnterRoomModal()"
       >
-        Enter Room
+        {{ $t(`enter_room`) }}
         <EnterRoomDialog
           :visible="enterModalVisible"
           @closeEnterModal="closeEnterRoomModal()"
         />
       </a-button>
-      <a-button type="default" class="btn-primary find-plan-btn"
-        >Find Plan Online</a-button
-      >
+      <a-button type="default" class="btn-primary find-plan-btn">{{
+        $t(`find_plan_online`)
+      }}</a-button>
     </a-row>
     <a-list :grid="{ gutter: 20, column: 4 }" :data-source="rooms">
       <a-list-item slot="renderItem" slot-scope="item">
@@ -35,8 +35,8 @@
           class="card-home"
           @click="goToInfoPage(item.room_id)"
         >
-          <p v-if="item.is_host">admin</p>
-          <p v-else>member</p>
+          <p v-if="item.is_host">{{ $t(`admin`) }}</p>
+          <p v-else>{{ $t(`member`) }}</p>
           <a-space align="baseline">
             <div>
               <h1>{{ item.service_name }}</h1>
@@ -45,7 +45,9 @@
               <p>{{ item.plan_name }}</p>
             </div>
           </a-space>
-          <p v-if="item.payment_status == 'unpaid'">Owe NT$ {{ item.cost }}</p>
+          <p v-if="item.payment_status == 'unpaid'">
+            {{ $t(`owe`) }} NT$ {{ item.cost }}
+          </p>
         </a-card>
       </a-list-item>
     </a-list>

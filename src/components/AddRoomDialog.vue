@@ -10,22 +10,24 @@
       :body-style="{ padding: '50px', paddingTop: '50px', height: '542px' }"
     >
       <div class="ard-block-container">
-        <p>Plan Select *</p>
+        <p>{{ $t(`plan_select`) }} <span class="star">*</span></p>
         <a-space :size="15">
           <DropDown
             :title="this.select.platforms"
             :menulist="platforms"
-            @selectValue="selectPlatform"/>
-          <DropDown v-if="!isSelect"
-            disabled />
-          <DropDown v-else
+            @selectValue="selectPlatform"
+          />
+          <DropDown v-if="!isSelect" disabled />
+          <DropDown
+            v-else
             :title="this.select.plans"
             :menulist="plans"
-            @selectValue="selectPlan"/>
+            @selectValue="selectPlan"
+          />
         </a-space>
       </div>
       <div class="ard-block-container">
-        <p>Plan Price</p>
+        <p>{{ $t(`plan_price`) }}</p>
         <a-space :size="15">
           <DropDown
             title="NT$"
@@ -36,12 +38,10 @@
               }
             "
           />
-          <a-input-number disabled
-            v-model="this.select.price"
-            :min="0"/>
+          <a-input-number disabled v-model="this.select.price" :min="0" />
           <p>/</p>
-          <DropDown 
-            :title="this.select.timeSlot"
+          <DropDown
+            :title="$t(`${this.select.timeSlot}`)"
             :menulist="timeSlot"
             @selectValue="
               (val) => {
@@ -52,12 +52,15 @@
         </a-space>
       </div>
       <div class="ard-block-container">
-        <p>Split</p>
+        <p>{{ $t(`split`) }}</p>
         <a-space :size="15" align="baseline">
-          <a-input-number v-model="this.select.peoplecnt" 
-            :min="1" :max="this.select.max_cnt" 
-            @change="selectPeople"/>
-          <p>people</p>
+          <a-input-number
+            v-model="this.select.peoplecnt"
+            :min="1"
+            :max="this.select.max_cnt"
+            @change="selectPeople"
+          />
+          <p>{{ $t(`people`) }}</p>
         </a-space>
       </div>
       <div style="margin-top:40px;">
@@ -65,7 +68,7 @@
           :checked="this.select.public"
           @change="(val) => (this.select.public = !this.select.public)"
         >
-          Make this room public</a-checkbox
+          {{ $t(`make_this_room_public`) }}</a-checkbox
         >
       </div>
       <div class="ard-button-container">
@@ -75,7 +78,7 @@
           type="primary"
           @click="createRoom()"
         >
-          + Add Room
+          + {{ $t(`add_room`) }}
         </a-button>
       </div>
     </a-modal>
@@ -105,7 +108,7 @@ export default {
       isSelect: false,
       isVisible: false,
       platforms: [],
-      plans:[],
+      plans: [],
       currency: [
         {
           id: 1,
@@ -119,51 +122,50 @@ export default {
       timeSlot: [
         {
           id: 1,
-          value: "year",
+          value: this.$t(`year`),
         },
         {
           id: 2,
-          value: "month",
+          value: this.$t(`month`),
         },
         {
           id: 3,
-          value: "week",
+          value: this.$t(`week`),
         },
         {
           id: 4,
-          value: "day",
+          value: this.$t(`day`),
         },
       ],
     };
   },
   methods: {
-    selectPeople(val){
-      if(val < this.select.max_count){
-        this.select.peoplecnt = val
-      }
-      else{
-        this.select.peoplecnt = this.select.max_count
+    selectPeople(val) {
+      if (val < this.select.max_count) {
+        this.select.peoplecnt = val;
+      } else {
+        this.select.peoplecnt = this.select.max_count;
       }
     },
-    selectPlan(val){
+    selectPlan(val) {
       this.select.plans = val.value;
-      this.select.price = this.plans[val.id-1].cost
-      this.select.max_count = this.plans[val.id-1].max_count
+      this.select.price = this.plans[val.id - 1].cost;
+      this.select.max_count = this.plans[val.id - 1].max_count;
     },
-    selectPlatform(val){
+    selectPlatform(val) {
       this.select.platforms = val.value;
       this.select.serviceId = val.id;
       var cnt = 1;
-      this.plans = []
-      this.platforms[val.id -1].plans.forEach((ele) => {
+      this.plans = [];
+      this.platforms[val.id - 1].plans.forEach((ele) => {
         this.plans.push({
           id: cnt,
           value: ele.plan_name,
           cost: ele.cost,
-          max_count: ele.max_count
+          max_count: ele.max_count,
         });
         cnt += 1;
-      })
+      });
       this.isSelect = true;
     },
     closeModal() {
@@ -185,18 +187,18 @@ export default {
         .then((response) => {
           const data = response.data;
           data.forEach((ele) => {
-            var plans = []
+            var plans = [];
             ele.plans.forEach((e) => {
               plans.push({
                 plan_name: e.plan_name,
                 cost: e.cost,
-                max_count: e.max_count
-              })
-            })
+                max_count: e.max_count,
+              });
+            });
             this.platforms.push({
               id: ele.id,
               value: ele.name,
-              plans: plans
+              plans: plans,
             });
           });
         })
@@ -229,11 +231,14 @@ export default {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify(result),
-        }).then((response) => response.json())
-        .then((res) => {
-          this.$router.push("/Info/" + res.room_id.toString());
         })
-        .catch(err => {console.log(err)})
+          .then((response) => response.json())
+          .then((res) => {
+            this.$router.push("/Info/" + res.room_id.toString());
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
   },
@@ -273,6 +278,9 @@ export default {
 }
 .ard-block-container {
   margin-bottom: 30px;
+}
+.star {
+  margin-left: 5px;
 }
 p {
   margin: 0px;

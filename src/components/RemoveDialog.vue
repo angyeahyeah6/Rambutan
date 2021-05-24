@@ -9,7 +9,7 @@
   >
     <div class="content">
       <div>
-        <span class="text">Send payment reminder email to</span>
+        <span class="text">{{ $t(`are_you_sure_you_want_to_remove`) }}</span>
         <img :src="user" />
         <span class="user-name text">{{ userState.user_name }} </span>
         <span>?</span>
@@ -22,7 +22,7 @@
           type="default"
           @click="close()"
         >
-          Cancel
+          {{ $t(`cancel`) }}
         </a-button>
         <a-button
           class="btn-primary btn-danger"
@@ -31,7 +31,7 @@
           @click="close()"
           ghost
         >
-          Remove
+          {{ $t(`remove`) }}
         </a-button>
       </div>
     </div>

@@ -9,9 +9,9 @@
   >
     <div class="content">
       <div>
-        <span class="text">Send payment reminder email to</span>
+        <span class="text">{{ $t(`send_payment_reminder_email_to`) }}</span>
         <img :src="user" />
-        <span class="user-name text">{{ userState.user_name }} </span>
+        <span class="user-name">{{ userState.user_name }} </span>
         <span>?</span>
       </div>
 
@@ -22,7 +22,7 @@
           type="default"
           @click="close()"
         >
-          Cancel
+          {{ $t(`cancel`) }}
         </a-button>
         <a-button
           class="btn-primary"
@@ -30,7 +30,7 @@
           type="primary"
           @click="close()"
         >
-          Send
+          {{ $t(`send`) }}
         </a-button>
       </div>
     </div>
@@ -84,7 +84,7 @@ export default {
   }
 
   .user-name {
-    margin-right: 50px;
+    margin-right: 20px;
   }
 
   .btn-container {

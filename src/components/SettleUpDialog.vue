@@ -13,10 +13,11 @@
         <span class="user-name">{{ userState.user_name }}</span>
 
         <span class="state"
-          >paid NT${{ userState.state ? userState.state[1] : 0 }} to</span
+          >{{ $t(`paid`) }} NT${{ userState.state ? userState.state[1] : 0 }}
+          {{ $t(`to`) }}</span
         >
         <img :src="user" />
-        <span>You</span>
+        <span>{{ $t(`you`) }}</span>
       </div>
 
       <div class="btn-container">
@@ -26,7 +27,7 @@
           type="default"
           @click="close()"
         >
-          Cancel
+          {{ $t(`cancel`) }}
         </a-button>
         <a-button
           class="btn-primary"
@@ -34,7 +35,7 @@
           type="primary"
           @click="close()"
         >
-          Settle up
+          {{ $t(`settle_up`) }}
         </a-button>
       </div>
     </div>

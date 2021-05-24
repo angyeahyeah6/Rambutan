@@ -6,14 +6,14 @@
     @cancel="closeModal"
   >
     <div class="block-container">
-      <p>Room PIN</p>
+      <p>{{ $t(`room_pin`) }}</p>
       <a-input
-        placeholder="Room Number"
+        :placeholder="$t(`room_number`)"
         v-model="roomNumber"
         class="erd-room"
         style="width: 100%"
       />
-      <p v-if="showWarning" class="erd-warning">The PIN is incorrect</p>
+      <p v-if="showWarning" class="erd-warning">{{ $t(`pin_is_incorrect`) }}</p>
       <div class="erd-btn-container">
         <a-button
           class="btn-primary"
@@ -21,7 +21,7 @@
           type="primary"
           @click="joinRoom()"
         >
-          Enter Room
+          {{ $t(`enter_room`) }}
         </a-button>
       </div>
     </div>
@@ -48,7 +48,7 @@ export default {
       } else {
         this.showWarning = true;
       }
-    }
+    },
   },
   methods: {
     closeModal: function() {
@@ -58,24 +58,25 @@ export default {
     goToInfoPage() {
       this.$router.push("/Info");
     },
-    joinRoom(){
-      fetch(api + "/rooms/join",
-        { 
-          method: "POST",
-          headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
-          body: JSON.stringify({"invitation_code": this.roomNumber})
-        })
-      .then(response => response.json())
-      .then(res => {
-        if(res.status == 200){
-          this.$router.push("/Info/" + res.room_id)
-        }
-        else{
-          this.showWarning = true;
-        }
+    joinRoom() {
+      fetch(api + "/rooms/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ invitation_code: this.roomNumber }),
       })
-      .catch(err => console.log(err))
-    }
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.status == 200) {
+            this.$router.push("/Info/" + res.room_id);
+          } else {
+            this.showWarning = true;
+          }
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
