@@ -1,7 +1,7 @@
 <template>
   <a-dropdown>
     <a-menu slot="overlay" @click="handleMenuClick">
-      <template v-for="item in menulist">
+      <template  v-for="item in menulist">
       <a-menu-item :key="item.id" >{{item.value}}</a-menu-item>
       </template>
     </a-menu>

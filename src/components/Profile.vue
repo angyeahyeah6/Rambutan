@@ -23,8 +23,7 @@
 								<a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
 							</a-input>
 						</a-form-item>
-					</div>
-					
+					</div>	
 					<div class="pro-form-item">
 						<p>email</p>
 						<a-form-item>
@@ -110,12 +109,11 @@ export default {
   },
 	methods:{
 		getUser(){
-			fetch(api + "/users/5",{
+			fetch(api + "/user",{
 				method: "GET",
 				headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
 			}).then(response => response.json())
 			.then(response => {
-				console.log(response)
 				this.data.name = response.name;
 				this.data.email = response.email;
 				this.data.rating = 2.5;
@@ -127,7 +125,7 @@ export default {
 				"email": this.data.email,
 				"image_url": ""
 			}
-			fetch(api + "/users",{
+			fetch(api + "/user",{
 				method: "PATCH",
 				headers: { "Content-Type": "application/json", 'Authorization': "Bearer " + localStorage.getItem("token")},
 				body: JSON.stringify(update_user)
@@ -143,7 +141,6 @@ export default {
 	watch:{
 		data: {
 			handler(val){
-				console.log(this.obs_cnt)
 				if (!this.ischanged & this.obs_cnt != 0){
 					this.ischanged = true
 				}

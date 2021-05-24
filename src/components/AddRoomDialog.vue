@@ -15,22 +15,13 @@
           <DropDown
             :title="this.select.platforms"
             :menulist="platforms"
-            @selectValue="
-              (val) => {
-                this.select.platforms = val.value;
-                this.select.serviceId = val.id;
-              }
-            "
-          />
-          <DropDown
+            @selectValue="selectPlatform"/>
+          <DropDown v-if="!isSelect"
+            disabled />
+          <DropDown v-else
             :title="this.select.plans"
             :menulist="plans"
-            @selectValue="
-              (val) => {
-                this.select.plans = val.value;
-              }
-            "
-          />
+            @selectValue="selectPlan"/>
         </a-space>
       </div>
       <div class="ard-block-container">
@@ -45,17 +36,11 @@
               }
             "
           />
-          <a-input-number
+          <a-input-number disabled
             v-model="this.select.price"
-            :min="0"
-            @change="
-              (value) => {
-                this.select.price = value;
-              }
-            "
-          />
+            :min="0"/>
           <p>/</p>
-          <DropDown
+          <DropDown 
             :title="this.select.timeSlot"
             :menulist="timeSlot"
             @selectValue="
@@ -69,7 +54,9 @@
       <div class="ard-block-container">
         <p>Split</p>
         <a-space :size="15" align="baseline">
-          <a-input-number v-model="this.select.peoplecnt" :min="1" :max="10" />
+          <a-input-number v-model="this.select.peoplecnt" 
+            :min="1" :max="this.select.max_cnt" 
+            @change="selectPeople"/>
           <p>people</p>
         </a-space>
       </div>
@@ -111,21 +98,14 @@ export default {
         price: 0,
         timeSlot: "month",
         currency: "NT",
-        peoplecnt: 4,
+        peoplecnt: 1,
+        max_count: 1,
         public: false,
       },
+      isSelect: false,
       isVisible: false,
       platforms: [],
-      plans: [
-        {
-          id: 1,
-          value: "family",
-        },
-        {
-          id: 2,
-          value: "premium",
-        },
-      ],
+      plans:[],
       currency: [
         {
           id: 1,
@@ -157,6 +137,35 @@ export default {
     };
   },
   methods: {
+    selectPeople(val){
+      if(val < this.select.max_count){
+        this.select.peoplecnt = val
+      }
+      else{
+        this.select.peoplecnt = this.select.max_count
+      }
+    },
+    selectPlan(val){
+      this.select.plans = val.value;
+      this.select.price = this.plans[val.id-1].cost
+      this.select.max_count = this.plans[val.id-1].max_count
+    },
+    selectPlatform(val){
+      this.select.platforms = val.value;
+      this.select.serviceId = val.id;
+      var cnt = 1;
+      this.plans = []
+      this.platforms[val.id -1].plans.forEach((ele) => {
+        this.plans.push({
+          id: cnt,
+          value: ele.plan_name,
+          cost: ele.cost,
+          max_count: ele.max_count
+        });
+        cnt += 1;
+      })
+      this.isSelect = true;
+    },
     closeModal() {
       this.$emit("closeAddModal", this.isVisible);
       // this.isVisible = false;
@@ -176,9 +185,18 @@ export default {
         .then((response) => {
           const data = response.data;
           data.forEach((ele) => {
+            var plans = []
+            ele.plans.forEach((e) => {
+              plans.push({
+                plan_name: e.plan_name,
+                cost: e.cost,
+                max_count: e.max_count
+              })
+            })
             this.platforms.push({
               id: ele.id,
               value: ele.name,
+              plans: plans
             });
           });
         })
@@ -203,7 +221,6 @@ export default {
         plan_name: this.select.plans,
         is_public: this.select.public,
       };
-      // console.log(result);
       if (this.select.serviceId > -1) {
         fetch(api + "/rooms", {
           method: "POST",
@@ -212,11 +229,11 @@ export default {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify(result),
-        }).then((response) => {
-          if (response.status === 201) {
-            this.$router.push("/Info/5");
-          }
-        });
+        }).then((response) => response.json())
+        .then((res) => {
+          this.$router.push("/Info/" + res.room_id.toString());
+        })
+        .catch(err => {console.log(err)})
       }
     },
   },
