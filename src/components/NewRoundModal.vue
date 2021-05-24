@@ -63,7 +63,7 @@
           class="btn-primary btn-new-round"
           key="Save"
           type="primary"
-          @click="close()"
+          @click="createNewRound()"
         >
           New Round
         </a-button>
@@ -75,8 +75,17 @@
 <script>
 const intervalUnitData = ["year", "month", "week"];
 const deadlineUnitData = ["year", "month", "week"];
+import api from "../api"
+Date.prototype.toISODate = function() {
+  return this.getFullYear() + '-' +
+          ('0'+ (this.getMonth()+1)).slice(-2) + '-' +
+          ('0'+ this.getDate()).slice(-2);
+};
 export default {
-  props: { visible: { type: Boolean, default: false } },
+  props: { 
+    visible: { type: Boolean, default: false } ,
+    roomId: { type: String, default: "0" }
+  },
   data() {
     return {
       isVisible: false, // default should be false
@@ -107,6 +116,30 @@ export default {
     handleGoogleCalendar() {
       this.isAddedToGoogleCalendar = !this.isAddedToGoogleCalendar;
     },
+    createNewRound() {
+      const new_round = {
+        "starting_time": this.date,
+        "round_interval": this.interval,
+        "payment_deadline": this.deadline,
+        "is_add_calendar": this.isAddedToGoogleCalendar
+      }
+      console.log(new_round);
+      fetch(api + "/rooms/" + this.roomId +"/round", 
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        },
+         body: JSON.stringify(new_round),
+      }).then(res => {
+        if(res.status == 201){
+          this.close();
+          this.$emit("setboard");
+        }
+      })
+      .catch((err) => console.log(err))
+    }
   },
 };
 </script>

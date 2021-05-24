@@ -19,7 +19,7 @@
             <a-button
               class="btn-primary"
               type="primary"
-              :disabled="!members.length <= 1"
+              :disabled="!(members.length == maxCount-1 && !isInRound)"
               @click="openNewRoundModal()"
             >
               {{ $t(`new_round`) }}
@@ -34,9 +34,15 @@
               <div class="info-plan-label">{{ $t(`date`) }}</div>
             </div>
             <div class="info-plan-date-container">
-              <div class="info-plan-date">-</div>
-              <div class="info-plan-date">-</div>
-              <div class="info-plan-date">-</div>
+              <div class="info-plan-date">
+                {{ this.timelineBoard.paymentDeadline }}
+              </div>
+              <div class="info-plan-date">
+                {{ this.timelineBoard.interval }}
+              </div>
+              <div class="info-plan-date">
+                {{ this.timelineBoard.date }}
+              </div>
             </div>
           </div>
         </div>
@@ -44,7 +50,7 @@
       <div class="info-right">
         <div class="info-card info-announce">
           <div class="info-card-title">{{ $t(`announcement`) }}</div>
-          <textarea />
+          <textarea v-model="this.announcement"/>
         </div>
         <div class="info-card info-admin">
           <div class="info-card-title">{{ $t(`admin_info`) }}</div>
@@ -132,6 +138,8 @@
 
     <NewRoundModal
       :visible="isNewRoundModalOpen"
+      :roomId="roomId"
+      @setboard="setTimelineBoard()"
       @close="closeNewRoundModal()"
     />
 
@@ -195,11 +203,11 @@ export default {
       isSettingDisabled: false, // default should be false
       isNewRoundDisabled: false, // default should be true
       isSettleUpDisabled: false, // default should be true
+      isInRound: false,
       emptyText: {
         emptyText: this.$t(`go_to_settings_to_add_members`),
       },
       roomId: "",
-
       isAdmin: false,
       serviceId: 0,
       serviceName: "",
@@ -208,6 +216,12 @@ export default {
       roundInfo: {},
       memberList: [],
       admin: {},
+      timelineBoard:{
+        paymentDeadline:"-",
+        interval:"-",
+        date:"-",
+      },
+      announcement:"",
 
       // data,
       columns: [
@@ -248,6 +262,22 @@ export default {
     },
   },
   methods: {
+    async setTimelineBoard(){
+      console.log("d")
+      const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
+      if (data) {
+        const email = localStorage.getItem("email");
+        if (email == data.admin.email) {
+          this.isAdmin = true;
+        }
+        if(data.round.payment_deadline != ""){
+          this.isInRound = true;
+          this.timelineBoard.paymentDeadline = data.round.payment_deadline
+          this.timelineBoard.interval = data.round.round_interval + "  year"
+          this.timelineBoard.date = data.round.starting_time + "  ->  " + data.round.ending_time
+        }
+      }
+    },
     setTableKey(record) {
       console.log("record", record);
       return record.name;
@@ -314,6 +344,15 @@ export default {
       this.roundInfo = data.round;
       this.admin = data.admin;
       this.memberList = data.members;
+      this.announcement = data.announcement;
+
+      if(data.round.payment_deadline != ""){
+        this.isInRound = true;
+        this.timelineBoard.paymentDeadline = data.round.payment_deadline
+        this.timelineBoard.interval = data.round.round_interval + "  year"
+        this.timelineBoard.date = data.round.starting_time + "  ->  " + data.round.ending_time
+      }
+      
       // console.log("list", this.members);
     }
   },
