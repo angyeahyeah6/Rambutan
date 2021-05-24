@@ -117,6 +117,7 @@
     </div>
 
     <AdminRoomSetting
+      v-if="serviceId"
       :visible="isSettingRoomModalOpen"
       :roomId="roomId"
       :isAdmin="isAdmin"
@@ -243,12 +244,7 @@ export default {
   computed: {
     members: function() {
       const memberList = JSON.parse(JSON.stringify(this.memberList));
-      if (this.isAdmin) {
-        return memberList.filter(
-          (member) => !member.user_name == this.admin.name
-        );
-      }
-      return memberList;
+      return memberList.filter((member) => member.user_name != this.admin.name);
     },
   },
   methods: {
@@ -290,7 +286,6 @@ export default {
       this.isRateDialogOpen = !this.isRateDialogOpen;
     },
     openRemoveDialog(user) {
-      console.log("user", user);
       this.selectedUserState = user;
       this.isRemoveDialogOpen = !this.isRemoveDialogOpen;
     },

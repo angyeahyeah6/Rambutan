@@ -10,7 +10,7 @@
     <div class="content">
       <div>
         <img :src="user" />
-        <span class="user-name">{{ userState.user }}</span>
+        <span class="user-name">{{ userState.user_name }}</span>
 
         <span class="state"
           >paid NT${{ userState.state ? userState.state[1] : 0 }} to</span
@@ -49,7 +49,7 @@ export default {
     userState: {
       type: Object,
       default: function() {
-        return { key: "", state: [], user: "" };
+        return { user_name: "", payment_status: "" };
       },
     },
   },

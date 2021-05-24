@@ -10,7 +10,7 @@
     <div class="content">
       <div>
         <img :src="user" />
-        <span class="user-name text">{{ userState.user }} </span>
+        <span class="user-name text">{{ userState.user_name }} </span>
         <a-rate v-model="rating" allow-half />
       </div>
 
@@ -44,7 +44,7 @@ export default {
     userState: {
       type: Object,
       default: function() {
-        return { key: "", state: "", user: "" };
+        return { payment_status: "", user_name: "" };
       },
     },
   },

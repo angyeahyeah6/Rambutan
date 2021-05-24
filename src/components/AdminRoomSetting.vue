@@ -18,7 +18,7 @@
         <a-menu-item key="1">
           Settings
         </a-menu-item>
-        <a-menu-item key="2">
+        <a-menu-item v-show="isAdmin" key="2">
           Members
         </a-menu-item>
         <a-menu-item key="3">
@@ -349,15 +349,20 @@ export default {
     },
   },
   async mounted() {
-    console.log("id", this.roomId);
-    const { data } = await axiosClient.get(`/rooms/${this.roomId}/invitation`);
+    // console.log("id", this.roomId);
+
     const { data: plans } = await axiosClient.get("/services");
     // console.log("plans", plans.data);
     this.plans = plans.data;
-    this.planLevels = this.plans[this.serviceId - 1].plans;
+    this.planLevels = plans.data[this.serviceId - 1].plans;
     this.planNameDft = this.planName;
-    const codes = data.data.map((code) => code.invitation_code);
-    this.pinCodes = codes;
+    if (this.isAdmin) {
+      const { data } = await axiosClient.get(
+        `/rooms/${this.roomId}/invitation`
+      );
+      const codes = data.data.map((code) => code.invitation_code);
+      this.pinCodes = codes;
+    }
   },
 };
 </script>
