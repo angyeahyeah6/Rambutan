@@ -32,8 +32,24 @@
       <div class="admin-room-content">
         <div v-if="selectedItem == '1'">
           <div class="content-item">
-            <div class="content-title">Plan Type</div>
-            <div>{{ serviceName }} : {{ planName }}</div>
+            <div class="content-title">Plan Select</div>
+            <a-select
+              :default-value="serviceName"
+              style="width: 110px; margin-right: 15px;"
+              @change="handlePlanChange"
+            >
+              <a-select-option v-for="ele in planList" :key="ele.id">
+                {{ ele.name }}
+              </a-select-option>
+            </a-select>
+            <a-select v-model="planNameDft" style="width: 110px">
+              <a-select-option
+                v-for="ele in planLevelList"
+                :key="ele.plan_name"
+              >
+                {{ ele.plan_name }}
+              </a-select-option>
+            </a-select>
           </div>
           <div class="content-item">
             <div class="content-title red">Plan Price</div>
@@ -41,13 +57,14 @@
               v-model="currencySelected"
               :default-value="currencyData[0]"
               style="width: 110px; margin-right: 15px;"
+              disabled
             >
               <a-select-option v-for="ele in currencyData" :key="ele">
                 {{ ele }}
               </a-select-option>
             </a-select>
             <a-input
-              v-model="planPrice"
+              v-model="price"
               placeholder="0"
               style="width: 110px;"
               disabled
@@ -144,12 +161,6 @@ const planLevelData = {
 const currencyData = ["NT", "US"];
 const periodData = ["month", "week"];
 
-// const pinList = [
-//   { pinCode: "222333", expireDate: "2075-01-01", expireTime: "05:20" },
-//   { pinCode: "122334", expireDate: "2075-01-01", expireTime: "05:20" },
-//   { pinCode: "223335", expireDate: "2075-01-01", expireTime: "05:20" },
-//   { pinCode: "223336", expireDate: "2075-01-01", expireTime: "05:20" },
-// ];
 const axiosClient = axios.create({
   baseURL: api,
   timeout: 1000,
@@ -166,6 +177,7 @@ export default {
     visible: { type: Boolean, default: false },
     roomId: { type: String, default: "0" },
     isAdmin: { type: Boolean, default: false },
+    serviceId: { type: Number, default: 0 },
     serviceName: { type: String, default: "" },
     planPrice: { type: Number, default: 1200 },
     planName: { type: String, default: "" },
@@ -203,8 +215,11 @@ export default {
       selectedItem: "1", // default should be 1
       planData,
       planLevelData,
-      plan: planLevelData[planData[0]],
-      planLevel: planLevelData[planData[0]][0],
+      plans: [],
+      // plan: "",
+      planNameDefault: "",
+      planNameDft: "",
+      planLevels: [],
       price: 0,
       currencyData,
       periodData,
@@ -229,7 +244,7 @@ export default {
     },
     currencySelected: function(val) {
       if (val) {
-        console.log("val", val);
+        // console.log("val", val);
         this.isChanged = true;
         this.isSaved = false;
       } else {
@@ -254,11 +269,24 @@ export default {
         this.isChanged = false;
       }
     },
+    planNameDft: function(val) {
+      // console.log("dft", val, this.planLevelList);
+      this.planNameDafault = val;
+      this.price = this.planLevelList.filter(
+        (planLevel) => planLevel.plan_name.toLowerCase() == val.toLowerCase()
+      )[0].cost;
+    },
   },
   computed: {
     pinList: function() {
-      console.log("codes", JSON.parse(JSON.stringify(this.pinCodes)));
+      // console.log("codes", JSON.parse(JSON.stringify(this.pinCodes)));
       return JSON.parse(JSON.stringify(this.pinCodes));
+    },
+    planList: function() {
+      return JSON.parse(JSON.stringify(this.plans));
+    },
+    planLevelList: function() {
+      return JSON.parse(JSON.stringify(this.planLevels));
     },
   },
   methods: {
@@ -270,9 +298,9 @@ export default {
       };
       await axiosClient.patch(`/rooms/${this.roomId}`, {
         max_count: parseInt(this.settingData.maxCount),
-        service_id: 3, // should be removed
-        plan_name: "family", // should be removed
-        is_public: true, // should be remove
+        service_id: this.serviceId,
+        plan_name: this.planName,
+        is_public: true,
       });
       this.isSaved = true;
     },
@@ -283,9 +311,11 @@ export default {
     handleSettingState(e) {
       this.selectedItem = e.key;
     },
-    handlePlanChange(value) {
-      this.plan = planLevelData[value];
-      this.planLevel = planLevelData[value][0];
+    handlePlanChange(val) {
+      // this.plan = planLevelData[value];
+      const value = val - 1;
+      this.planLevels = this.planList[value].plans;
+      this.planNameDefault = this.planList[value].plans[0].plan_name;
     },
     handleRoomPublic() {
       this.isRoomPublic = !this.isRoomPublic;
@@ -297,9 +327,7 @@ export default {
       const { data: newPin } = await axiosClient.post(
         `/rooms/${this.roomId}/invitation`
       );
-      console.log("pin", newPin);
       const pin = newPin.code;
-      console.log("p", pin);
       this.pinCodes.unshift(pin);
     },
     async deleteRoom() {
@@ -310,9 +338,13 @@ export default {
   async mounted() {
     console.log("id", this.roomId);
     const { data } = await axiosClient.get(`/rooms/${this.roomId}/invitation`);
+    const { data: plans } = await axiosClient.get("/services");
+    // console.log("plans", plans.data);
+    this.plans = plans.data;
+    this.planLevels = this.plans[this.serviceId - 1].plans;
+    this.planNameDft = this.planName;
     const codes = data.data.map((code) => code.invitation_code);
     this.pinCodes = codes;
-    console.log("m", codes);
   },
 };
 </script>

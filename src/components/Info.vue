@@ -120,6 +120,7 @@
       :visible="isSettingRoomModalOpen"
       :roomId="roomId"
       :isAdmin="isAdmin"
+      :serviceId="serviceId"
       :serviceName="serviceName"
       :planName="planName"
       :maxCount="maxCount"
@@ -220,6 +221,7 @@ export default {
       roomId: "",
 
       isAdmin: false,
+      serviceId: 0,
       serviceName: "",
       planName: "",
       maxCount: 0,
@@ -302,21 +304,22 @@ export default {
   async mounted() {
     console.log("router id", this.$route.params);
     this.roomId = this.$route.params.id;
-    console.log("roomid", this.roomId);
+    // console.log("roomid", this.roomId);
     const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
-    console.log("original data", data);
+    // console.log("original data", data);
     if (data) {
       const email = localStorage.getItem("email");
       if (email == data.admin.email) {
         this.isAdmin = true;
       }
+      this.serviceId = data.service_id;
       this.serviceName = data.service_name;
       this.planName = data.plan_name;
       this.maxCount = data.max_count;
       this.roundInfo = data.round;
       this.admin = data.admin;
       this.memberList = data.members;
-      console.log("list", this.members);
+      // console.log("list", this.members);
     }
   },
 };
