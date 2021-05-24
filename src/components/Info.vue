@@ -306,7 +306,7 @@ export default {
     this.roomId = this.$route.params.id;
     // console.log("roomid", this.roomId);
     const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
-    // console.log("original data", data);
+    console.log("original data", data);
     if (data) {
       const email = localStorage.getItem("email");
       if (email == data.admin.email) {

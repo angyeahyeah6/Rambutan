@@ -82,7 +82,11 @@
           </div>
           <div class="content-item">
             <div class="content-title red">Split</div>
-            <a-input placeholder="0" v-model="people" style="width: 110px;" />
+            <a-input
+              placeholder="0"
+              v-model="selectedMaxCnt"
+              style="width: 110px;"
+            />
             <span> people </span>
           </div>
           <div>
@@ -219,6 +223,8 @@ export default {
       // plan: "",
       planNameDefault: "",
       planNameDft: "",
+      selectedMaxCnt: 0,
+      selectedServiceId: 0,
       planLevels: [],
       price: 0,
       currencyData,
@@ -240,7 +246,7 @@ export default {
       this.isVisible = val;
     },
     maxCount: function(val) {
-      this.people = val;
+      this.selectedMaxCnt = val;
     },
     currencySelected: function(val) {
       if (val) {
@@ -253,16 +259,16 @@ export default {
     },
     periodSelected: function(val) {
       if (val) {
-        console.log("val", val);
+        // console.log("val", val);
         this.isChanged = true;
         this.isSaved = false;
       } else {
         this.isChanged = false;
       }
     },
-    people: function(val) {
+    selectedMaxCnt: function(val) {
       if (val) {
-        console.log("val", val);
+        // console.log("val", val);
         this.isChanged = true;
         this.isSaved = false;
       } else {
@@ -272,9 +278,15 @@ export default {
     planNameDft: function(val) {
       // console.log("dft", val, this.planLevelList);
       this.planNameDafault = val;
-      this.price = this.planLevelList.filter(
+      const selectedPlan = this.planLevelList.filter(
         (planLevel) => planLevel.plan_name.toLowerCase() == val.toLowerCase()
-      )[0].cost;
+      )[0];
+      this.price = selectedPlan.cost;
+      this.selectedMaxCnt = selectedPlan.max_count;
+    },
+    serviceId: function(val) {
+      // console.log("sercie", val);
+      this.selectedServiceId = val;
     },
   },
   computed: {
@@ -292,14 +304,14 @@ export default {
   methods: {
     async saveSettings() {
       this.settingData = {
-        currency: this.currencySelected,
-        period: this.periodSelected,
-        maxCount: this.people,
+        selectedServiceId: this.selectedServiceId,
+        planNameDft: this.planNameDft,
+        maxCount: this.selectedMaxCnt,
       };
       await axiosClient.patch(`/rooms/${this.roomId}`, {
         max_count: parseInt(this.settingData.maxCount),
-        service_id: this.serviceId,
-        plan_name: this.planName,
+        service_id: this.settingData.selectedServiceId,
+        plan_name: this.settingData.planNameDft,
         is_public: true,
       });
       this.isSaved = true;
@@ -315,6 +327,7 @@ export default {
       // this.plan = planLevelData[value];
       const value = val - 1;
       this.planLevels = this.planList[value].plans;
+      this.selectedServiceId = this.planList[value].id;
       this.planNameDefault = this.planList[value].plans[0].plan_name;
     },
     handleRoomPublic() {
