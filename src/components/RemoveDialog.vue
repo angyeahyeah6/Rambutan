@@ -11,7 +11,7 @@
       <div>
         <span class="text">Send payment reminder email to</span>
         <img :src="user" />
-        <span class="user-name text">{{ userState.user }} </span>
+        <span class="user-name text">{{ userState.user_name }} </span>
         <span>?</span>
       </div>
 
@@ -46,7 +46,7 @@ export default {
     userState: {
       type: Object,
       default: function() {
-        return { key: "", state: "", user: "" };
+        return { payment_status: "", user_name: "" };
       },
     },
   },

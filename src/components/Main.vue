@@ -33,7 +33,7 @@
         <a-card
           v-show="item.room_status == 'created'"
           class="card-home"
-          @click="goToInfoPage()"
+          @click="goToInfoPage(item.room_id)"
         >
           <p v-if="item.is_host">admin</p>
           <p v-else>member</p>
@@ -82,8 +82,8 @@ export default {
     closeEnterRoomModal(val) {
       this.enterModalVisible = val;
     },
-    goToInfoPage() {
-      this.$router.push("/Info/5");
+    goToInfoPage(room_id) {
+      this.$router.push(`/Info/${room_id}`); // should be automatically route to the new id
     },
     getRooms() {
       fetch(api + "/rooms", {
@@ -96,6 +96,7 @@ export default {
         .then((response) => response.json())
         .then((response) => {
           this.rooms = response.data;
+          console.log(this.rooms);
         });
     },
   },
