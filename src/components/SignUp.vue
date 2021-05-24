@@ -9,14 +9,14 @@
     <div class="su-block-container">
       <a-button style="height:50px;" block>
         <a-icon type="google" />
-        Continue with Google
+        {{ $t(`google_login`) }}
       </a-button>
       <div class="su-center-container">
-        <p>or</p>
+        <p>{{ $t(`or`) }}</p>
       </div>
       <a-form :form="form" hasFeedback :style="{ radius: '2px' }">
         <div class="su-form-item">
-          <p>name</p>
+          <p>{{ $t(`name`) }}</p>
           <a-form-item>
             <a-input
               v-decorator="[
@@ -25,7 +25,7 @@
                   rules: [
                     {
                       required: true,
-                      message: 'Name  is required.',
+                      message: $t(`name_is_required`),
                     },
                   ],
                 },
@@ -35,7 +35,7 @@
           </a-form-item>
         </div>
         <div class="su-form-item">
-          <p>email</p>
+          <p>{{ $t(`email`) }}</p>
           <a-form-item>
             <a-input
               v-decorator="[
@@ -44,11 +44,11 @@
                   rules: [
                     {
                       type: 'email',
-                      message: 'The account should be email',
+                      message: $t(`account_should_be_email`),
                     },
                     {
                       required: true,
-                      message: 'Email  is required.',
+                      message: $t(`email_is_required`),
                     },
                   ],
                 },
@@ -63,7 +63,7 @@
           </a-form-item>
         </div>
         <div class="su-form-item">
-          <p>password</p>
+          <p>{{ $t(`password`) }}</p>
           <a-form-item>
             <a-input
               v-decorator="[
@@ -83,9 +83,9 @@
         </div>
         <div class="su-center-container">
           <a-space>
-            <p>Already have an account?</p>
+            <p>{{ $t(`already_have_an_account`) }}</p>
             <p style="color:#1890FF; cursor:pointer;" @click="goToLogin()">
-              Log in
+              {{ $t(`log_in`) }}
             </p>
           </a-space>
         </div>
@@ -96,7 +96,7 @@
             type="primary"
             @click="goToMain()"
           >
-            Sign Up
+            {{ $t(`sign_up`) }}
           </a-button>
         </div>
       </a-form>
@@ -119,24 +119,24 @@ export default {
     goToMain() {
       this.$router.push("/Main");
     },
-    postSignUp(){
+    postSignUp() {
       this.form.validateFields((err, values) => {
         const requestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(values)
+          body: JSON.stringify(values),
         };
         fetch(api + "/auth/signup", requestOptions)
-        .then(response => response.json())
-        .then((response) => {
-          localStorage.setItem("token", response.token);
-        })
-        .then(() => this.goToMain())
-        .catch((error) => {
-          console.log(error);
-        })
+          .then((response) => response.json())
+          .then((response) => {
+            localStorage.setItem("token", response.token);
+          })
+          .then(() => this.goToMain())
+          .catch((error) => {
+            console.log(error);
+          });
       });
-    }
+    },
   },
 };
 </script>

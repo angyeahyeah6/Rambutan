@@ -16,23 +16,23 @@
         @click="handleSettingState"
       >
         <a-menu-item key="1">
-          Settings
+          {{ $t(`settings`) }}
         </a-menu-item>
         <a-menu-item v-show="isAdmin" key="2">
-          Members
+          {{ $t(`members`) }}
         </a-menu-item>
         <a-menu-item key="3">
-          Reminder
+          {{ $t(`reminder`) }}
         </a-menu-item>
         <a-menu-item v-show="isAdmin" key="4">
-          Delete
+          {{ $t(`delete`) }}
         </a-menu-item>
       </a-menu>
 
       <div class="admin-room-content">
         <div v-if="selectedItem == '1'">
           <div class="content-item">
-            <div class="content-title">Plan Select</div>
+            <div class="content-title">{{ $t(`plan_select`) }}</div>
             <a-select
               :default-value="serviceName"
               style="width: 110px; margin-right: 15px;"
@@ -52,7 +52,7 @@
             </a-select>
           </div>
           <div class="content-item">
-            <div class="content-title red">Plan Price</div>
+            <div class="content-title red">{{ $t(`plan_price`) }}</div>
             <a-select
               v-model="currencySelected"
               :default-value="currencyData[0]"
@@ -81,13 +81,13 @@
             </a-select>
           </div>
           <div class="content-item">
-            <div class="content-title red">Split</div>
+            <div class="content-title red">{{ $t(`split`) }}</div>
             <a-input
               placeholder="0"
               v-model="selectedMaxCnt"
               style="width: 110px;"
             />
-            <span> people </span>
+            <span> {{ $t(`people`) }} </span>
           </div>
           <div>
             <a-checkbox
@@ -95,7 +95,7 @@
               :checked="isRoomPublic"
               @change="handleRoomPublic"
             >
-              Make this Room Public
+              {{ $t(`make_this_room_public`) }}
             </a-checkbox>
           </div>
           <div class="btn-container">
@@ -106,7 +106,7 @@
               :disabled="isSaved && isChanged"
               @click="saveSettings()"
             >
-              Save
+              {{ $t(`save`) }}
             </a-button>
           </div>
         </div>
@@ -118,7 +118,9 @@
             <img :src="question" />
             <div class="pin-info">
               <div class="pin">
-                <div class="label">Room PIN: {{ ele }}</div>
+                <div class="label">
+                  {{ $t(`room_pin`) }} <span>|</span> {{ ele }}
+                </div>
               </div>
               <!-- <div class="note">
                 expire at {{ ele.expireDate }} {{ ele.expireTime }}
@@ -126,13 +128,15 @@
             </div>
             <copy-to-clipboard :text="ele" @copy="handleCopy">
               <a-button class="btn-primary btn-copy" type="default">
-                Copy
+                {{ $t(`copy`) }}
               </a-button>
             </copy-to-clipboard>
           </div>
         </div>
         <div v-if="selectedItem == '3'">
-          <button class="btn-google-calendar">Add to Google Calendar</button>
+          <button class="btn-google-calendar">
+            {{ $t(`add_to_google_calendar`) }}
+          </button>
         </div>
         <div v-if="selectedItem == '4'">
           <a-button
@@ -141,7 +145,7 @@
             ghost
             @click="deleteRoom()"
           >
-            Delete Room
+            {{ $t(`delete_room`) }}
           </a-button>
         </div>
       </div>
@@ -163,8 +167,7 @@ const planLevelData = {
   Netflix: ["Family"],
 };
 const currencyData = ["NT", "US"];
-const periodData = ["month", "week"];
-
+const periodData = ["year", "month", "week"];
 const axiosClient = axios.create({
   baseURL: api,
   timeout: 1000,
@@ -228,9 +231,9 @@ export default {
       planLevels: [],
       price: 0,
       currencyData,
-      periodData,
+      periodData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
       currencySelected: currencyData[0],
-      periodSelected: periodData[0],
+      periodSelected: this.$t(`${periodData[0]}`),
       people: 0,
       isRoomPublic: false,
 
@@ -457,6 +460,9 @@ export default {
 
       .label {
         margin-right: 30px;
+        span {
+          margin: 0 10px;
+        }
       }
     }
     .note {

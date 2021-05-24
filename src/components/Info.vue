@@ -4,7 +4,7 @@
       <div class="info-left">
         <div class="info-main">
           <div class="info-title">
-            <div class="info-service-name">Youtube</div>
+            <div class="info-service-name">{{ serviceName }}</div>
             <div class="info-level">{{ planName }}</div>
           </div>
           <div class="info-setting-btn">
@@ -13,7 +13,7 @@
               :type="members.length <= 1 ? 'primary' : 'default'"
               @click="openSettingRoomModal()"
             >
-              Settings
+              {{ $t(`settings`) }}
             </a-button>
 
             <a-button
@@ -22,16 +22,16 @@
               :disabled="!members.length <= 1"
               @click="openNewRoundModal()"
             >
-              New Round
+              {{ $t(`new_round`) }}
             </a-button>
           </div>
         </div>
         <div class="info-plan">
           <div class="info-plan-detail-container">
             <div class="info-plan-label-container">
-              <div class="info-plan-label">Payment Deadline</div>
-              <div class="info-plan-label">Interval</div>
-              <div class="info-plan-label">Date</div>
+              <div class="info-plan-label">{{ $t(`payment_deadline`) }}</div>
+              <div class="info-plan-label">{{ $t(`interval`) }}</div>
+              <div class="info-plan-label">{{ $t(`date`) }}</div>
             </div>
             <div class="info-plan-date-container">
               <div class="info-plan-date">-</div>
@@ -43,11 +43,11 @@
       </div>
       <div class="info-right">
         <div class="info-card info-announce">
-          <div class="info-card-title">Announcement</div>
+          <div class="info-card-title">{{ $t(`announcement`) }}</div>
           <textarea />
         </div>
         <div class="info-card info-admin">
-          <div class="info-card-title">Admin Info</div>
+          <div class="info-card-title">{{ $t(`admin_info`) }}</div>
           <div class="info-card-content">
             <div class="info-profile-name">
               <img :src="user" />
@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="info-import-btn-container">
-            <div class="info-import-btn">Import bank info</div>
+            <div class="info-import-btn">{{ $t(`import_bank_info`) }}</div>
           </div>
         </div>
       </div>
@@ -82,9 +82,9 @@
           <img :src="user" />
           {{ text }}</span
         >
-        <span slot="state" slot-scope="record" class="info-table-state"
-          >{{ record.user_name }} you NT$ {{ record[1] }}</span
-        >
+        <span slot="payment_status" slot-scope="record" class="info-table-state"
+          >{{ $t(`${record}`) }}
+        </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
             type="primary"
@@ -92,25 +92,25 @@
             :disabled="isSettleUpDisabled"
             @click="openSettleUpDialog(record)"
           >
-            <a-icon type="dollar" />Settle up</a-button
+            <a-icon type="dollar" />{{ $t(`settle_up`) }}</a-button
           >
           <a-button
             type="default"
             class="btn-action"
             @click="openRemindDialog(record)"
-            ><a-icon type="mail" />Remind</a-button
+            ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
-            ><a-icon type="star" />Rate</a-button
+            ><a-icon type="star" />{{ $t(`rate`) }}</a-button
           >
           <a-button
             type="default"
             class="btn-action"
             @click="openRemoveDialog(record)"
-            ><a-icon type="delete" />Remove</a-button
+            ><a-icon type="delete" />{{ $t(`remove`) }}</a-button
           >
         </span>
       </a-table>
@@ -170,28 +170,7 @@ import RemindDialog from "./RemindDialog";
 import RateDialog from "./RateDialog";
 import RemoveDialog from "./RemoveDialog";
 
-const columns = [
-  {
-    title: "User",
-    key: "user_name",
-    width: "21%",
-    dataIndex: "user_name",
-    scopedSlots: { customRender: "user_name" },
-  },
-  {
-    title: "State",
-    key: "payment_status",
-    width: "24%",
-    dataIndex: "payment_status",
-    scopedSlots: { customRender: "payment_status" },
-  },
-  {
-    title: "Actions",
-    key: "action",
-    width: "55%",
-    scopedSlots: { customRender: "action" },
-  },
-];
+// const columns = ;
 
 const axiosClient = axios.create({
   baseURL: api,
@@ -217,7 +196,7 @@ export default {
       isNewRoundDisabled: false, // default should be true
       isSettleUpDisabled: false, // default should be true
       emptyText: {
-        emptyText: "Go to Settings to add members !",
+        emptyText: this.$t(`go_to_settings_to_add_members`),
       },
       roomId: "",
 
@@ -231,7 +210,28 @@ export default {
       admin: {},
 
       // data,
-      columns,
+      columns: [
+        {
+          title: this.$t(`user`),
+          key: "user_name",
+          width: "21%",
+          dataIndex: "user_name",
+          scopedSlots: { customRender: "user_name" },
+        },
+        {
+          title: this.$t(`state`),
+          key: "payment_status",
+          width: "24%",
+          dataIndex: "payment_status",
+          scopedSlots: { customRender: "payment_status" },
+        },
+        {
+          title: this.$t(`action`),
+          key: "action",
+          width: "55%",
+          scopedSlots: { customRender: "action" },
+        },
+      ],
       isSettingRoomModalOpen: false,
       isNewRoundModalOpen: false,
       isSettleUpDialogOpen: false,
