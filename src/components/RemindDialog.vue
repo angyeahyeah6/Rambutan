@@ -28,7 +28,7 @@
           class="btn-primary"
           key="send"
           type="primary"
-          @click="close()"
+          @click="mailTo()"
         >
           {{ $t(`send`) }}
         </a-button>
@@ -62,6 +62,11 @@ export default {
   },
   methods: {
     close: function() {
+      this.isVisible = false;
+      this.$emit("close", this.isVisible);
+    },
+    mailTo() {
+      window.open("mailto:");
       this.isVisible = false;
       this.$emit("close", this.isVisible);
     },

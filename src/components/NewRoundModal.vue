@@ -9,12 +9,12 @@
   >
     <div class="content">
       <div class="item">
-        <div class="label">Plan Start</div>
+        <div class="label">{{ $t(`plan_start`) }}</div>
         <a-date-picker class="date-picker" @change="handleDatePicker" />
       </div>
 
       <div class="item">
-        <div class="label">Plan Interval</div>
+        <div class="label">{{ $t(`interval`) }}</div>
         <a-input
           placeholder="0"
           v-model="interval"
@@ -47,7 +47,7 @@
             {{ ele }}
           </a-select-option>
         </a-select>
-        <span class="text">before start</span>
+        <span class="text">{{ $t(`before_start`) }}</span>
       </div>
 
       <a-checkbox
@@ -55,7 +55,7 @@
         :checked="isAddedToGoogleCalendar"
         @change="handleGoogleCalendar"
       >
-        Add to Google Calendar
+        {{ $t(`add_to_google_calendar`) }}
       </a-checkbox>
 
       <div class="btn-container">
@@ -65,7 +65,7 @@
           type="primary"
           @click="createNewRound()"
         >
-          New Round
+          {{ $t(`new_round`) }}
         </a-button>
       </div>
     </div>
@@ -73,29 +73,31 @@
 </template>
 
 <script>
-const intervalUnitData = ["year", "month", "week"];
-const deadlineUnitData = ["year", "month", "week"];
-import api from "../api"
+import api from "../api";
 Date.prototype.toISODate = function() {
-  return this.getFullYear() + '-' +
-          ('0'+ (this.getMonth()+1)).slice(-2) + '-' +
-          ('0'+ this.getDate()).slice(-2);
+  return (
+    this.getFullYear() +
+    "-" +
+    ("0" + (this.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("0" + this.getDate()).slice(-2)
+  );
 };
 export default {
-  props: { 
-    visible: { type: Boolean, default: false } ,
-    roomId: { type: String, default: "0" }
+  props: {
+    visible: { type: Boolean, default: false },
+    roomId: { type: String, default: "0" },
   },
   data() {
     return {
       isVisible: false, // default should be false
       date: "",
       interval: 1,
-      intervalUnit: intervalUnitData[0],
-      intervalUnitData,
+      intervalUnit: this.$t(`week`),
+      intervalUnitData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
       deadline: 1,
-      deadlineUnit: deadlineUnitData[0],
-      deadlineUnitData,
+      deadlineUnit: this.$t(`week`),
+      deadlineUnitData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
       isAddedToGoogleCalendar: false,
     };
   },
@@ -118,28 +120,28 @@ export default {
     },
     createNewRound() {
       const new_round = {
-        "starting_time": this.date,
-        "round_interval": this.interval,
-        "payment_deadline": this.deadline,
-        "is_add_calendar": this.isAddedToGoogleCalendar
-      }
+        starting_time: this.date,
+        round_interval: this.interval,
+        payment_deadline: this.deadline,
+        is_add_calendar: this.isAddedToGoogleCalendar,
+      };
       console.log(new_round);
-      fetch(api + "/rooms/" + this.roomId +"/round", 
-      {
+      fetch(api + "/rooms/" + this.roomId + "/round", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token"),
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
-         body: JSON.stringify(new_round),
-      }).then(res => {
-        if(res.status == 201){
-          this.close();
-          this.$emit("setboard");
-        }
+        body: JSON.stringify(new_round),
       })
-      .catch((err) => console.log(err))
-    }
+        .then((res) => {
+          if (res.status == 201) {
+            this.close();
+            this.$emit("setboard");
+          }
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
