@@ -44,7 +44,7 @@ export default {
   action: "確認 / 提醒 / 評分 / 移除",
   unpaid: "未付款",
   pending: "等待中",
-  comfirmed: "已付款",
+  confirmed: "已付款",
   settle_up: "結帳",
   remind: "提醒",
   rate: "評分",
@@ -67,4 +67,6 @@ export default {
   account_is_required: "帳戶資訊是必填項目",
   bank_info: "匯款帳戶資訊",
   add: "新增",
+  plan_start: "起始時間",
+  before_start: "以前",
 };

@@ -44,7 +44,7 @@ export default {
   action: "Action",
   unpaid: "Unpaid",
   pendings: "Pending",
-  comfirmed: "Comfirmed",
+  confirmed: "Comfirmed",
   settle_up: "Settle up",
   remind: "Remind",
   rate: "Rate",
@@ -67,4 +67,6 @@ export default {
   account_is_required: "Account is required.",
   bank_info: "Bank Info",
   add: "Add",
+  plan_start: "Plan Start",
+  before_start: "before start",
 };

@@ -10,7 +10,7 @@
           <div class="info-setting-btn">
             <a-button
               class="btn-primary btn-setting"
-              :type="members.length <= 1 ? 'primary' : 'default'"
+              :type="members.length < 1 ? 'primary' : 'default'"
               @click="openSettingRoomModal()"
             >
               {{ $t(`settings`) }}
@@ -19,7 +19,7 @@
             <a-button
               class="btn-primary"
               type="primary"
-              :disabled="!(members.length == maxCount-1 && !isInRound)"
+              :disabled="!(members.length >= 1 && !isInRound)"
               @click="openNewRoundModal()"
             >
               {{ $t(`new_round`) }}
@@ -50,7 +50,7 @@
       <div class="info-right">
         <div class="info-card info-announce">
           <div class="info-card-title">{{ $t(`announcement`) }}</div>
-          <textarea v-model="this.announcement"/>
+          <textarea v-model="this.announcement" />
         </div>
         <div class="info-card info-admin">
           <div class="info-card-title">{{ $t(`admin_info`) }}</div>
@@ -84,6 +84,9 @@
         rowKey="user_name"
         :locale="emptyText"
       >
+        <span slot="customUser">{{ $t(`user`) }}</span>
+        <span slot="customStatus">{{ $t(`state`) }}</span>
+        <span slot="customAction">{{ $t(`action`) }}</span>
         <span slot="user_name" slot-scope="text" class="info-table-user">
           <img :src="user" />
           {{ text }}</span
@@ -137,6 +140,7 @@
     />
 
     <NewRoundModal
+      v-if="serviceId"
       :visible="isNewRoundModalOpen"
       :roomId="roomId"
       @setboard="setTimelineBoard()"
@@ -144,9 +148,12 @@
     />
 
     <SettleUpDialog
+      v-if="serviceId"
       :visible="isSettleUpDialogOpen"
+      :roomId="roomId"
       :userState="selectedUserState"
       @close="closeSettleUpDialog()"
+      @settleUp="settleUp"
     />
 
     <RemindDialog
@@ -160,9 +167,12 @@
       @close="closeRateDialog()"
     />
     <RemoveDialog
+      v-if="serviceId"
       :visible="isRemoveDialogOpen"
+      :roomId="roomId"
       :userState="selectedUserState"
       @close="closeRemoveDialog()"
+      @removeUser="removeUser"
     />
   </div>
 </template>
@@ -177,8 +187,6 @@ import SettleUpDialog from "./SettleUpDialog";
 import RemindDialog from "./RemindDialog";
 import RateDialog from "./RateDialog";
 import RemoveDialog from "./RemoveDialog";
-
-// const columns = ;
 
 const axiosClient = axios.create({
   baseURL: api,
@@ -216,33 +224,33 @@ export default {
       roundInfo: {},
       memberList: [],
       admin: {},
-      timelineBoard:{
-        paymentDeadline:"-",
-        interval:"-",
-        date:"-",
+      timelineBoard: {
+        paymentDeadline: "-",
+        interval: "-",
+        date: "-",
       },
-      announcement:"",
+      announcement: "",
 
       // data,
       columns: [
         {
-          title: this.$t(`user`),
           key: "user_name",
           width: "21%",
           dataIndex: "user_name",
+          slots: { title: "customUser" },
           scopedSlots: { customRender: "user_name" },
         },
         {
-          title: this.$t(`state`),
           key: "payment_status",
           width: "24%",
           dataIndex: "payment_status",
+          slots: { title: "customStatus" },
           scopedSlots: { customRender: "payment_status" },
         },
         {
-          title: this.$t(`action`),
           key: "action",
           width: "55%",
+          slots: { title: "customAction" },
           scopedSlots: { customRender: "action" },
         },
       ],
@@ -262,19 +270,20 @@ export default {
     },
   },
   methods: {
-    async setTimelineBoard(){
-      console.log("d")
+    async setTimelineBoard() {
+      console.log("d");
       const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
       if (data) {
         const email = localStorage.getItem("email");
         if (email == data.admin.email) {
           this.isAdmin = true;
         }
-        if(data.round.payment_deadline != ""){
+        if (data.round.payment_deadline != "") {
           this.isInRound = true;
-          this.timelineBoard.paymentDeadline = data.round.payment_deadline
-          this.timelineBoard.interval = data.round.round_interval + "  year"
-          this.timelineBoard.date = data.round.starting_time + "  ->  " + data.round.ending_time
+          this.timelineBoard.paymentDeadline = data.round.payment_deadline;
+          this.timelineBoard.interval = data.round.round_interval + "  year";
+          this.timelineBoard.date =
+            data.round.starting_time + "  ->  " + data.round.ending_time;
         }
       }
     },
@@ -322,6 +331,24 @@ export default {
     closeRemoveDialog() {
       this.isRemoveDialogOpen = !this.isRemoveDialogOpen;
     },
+    settleUp(newUserStatus) {
+      this.isSettleUpDialogOpen = !this.isSettleUpDialogOpen;
+      this.memberList.forEach((member, id) => {
+        if (member.user_id == newUserStatus.userId) {
+          this.memberList[id].payment_status = newUserStatus.status;
+        }
+      });
+    },
+    removeUser(userId) {
+      this.isRemoveDialogOpen = !this.isRemoveDialogOpen;
+      let userIdx;
+      this.memberList.forEach((member, id) => {
+        if (member.user_id == userId) {
+          userIdx = id;
+        }
+      });
+      this.memberList.splice(userIdx, 1);
+    },
   },
   beforeMount() {
     this.roomId = this.$route.params.id;
@@ -346,13 +373,14 @@ export default {
       this.memberList = data.members;
       this.announcement = data.announcement;
 
-      if(data.round.payment_deadline != ""){
+      if (data.round.payment_deadline != "") {
         this.isInRound = true;
-        this.timelineBoard.paymentDeadline = data.round.payment_deadline
-        this.timelineBoard.interval = data.round.round_interval + "  year"
-        this.timelineBoard.date = data.round.starting_time + "  ->  " + data.round.ending_time
+        this.timelineBoard.paymentDeadline = data.round.payment_deadline;
+        this.timelineBoard.interval = data.round.round_interval + "  year";
+        this.timelineBoard.date =
+          data.round.starting_time + "  ->  " + data.round.ending_time;
       }
-      
+
       // console.log("list", this.members);
     }
   },

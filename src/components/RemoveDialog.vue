@@ -28,7 +28,7 @@
           class="btn-primary btn-danger"
           key="remove"
           type="danger"
-          @click="close()"
+          @click="removeUser()"
           ghost
         >
           {{ $t(`remove`) }}
@@ -40,6 +40,17 @@
 
 <script>
 import user from "../assets/user.png";
+import axios from "axios";
+import api from "../api";
+
+const axiosClient = axios.create({
+  baseURL: api,
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+  },
+});
 export default {
   props: {
     visible: { type: Boolean, default: false },
@@ -49,6 +60,7 @@ export default {
         return { payment_status: "", user_name: "" };
       },
     },
+    roomId: { type: String, default: "" },
   },
   data() {
     return {
@@ -65,6 +77,19 @@ export default {
     close: function() {
       this.isVisible = false;
       this.$emit("close", this.isVisible);
+    },
+    async removeUser() {
+      const res = await axiosClient.delete(`/participant`, {
+        data: {
+          user_id: this.userState.user_id,
+          room_id: parseInt(this.roomId),
+        },
+      });
+      // console.log(res);
+      if (res) {
+        this.isVisible = false;
+        this.$emit("removeUser", this.userState.user_id);
+      }
     },
   },
 };

@@ -69,7 +69,7 @@ export default {
       })
         .then((response) => response.json())
         .then((res) => {
-          if (res.status == 200) {
+          if (res) {
             this.$router.push("/Info/" + res.room_id);
           } else {
             this.showWarning = true;

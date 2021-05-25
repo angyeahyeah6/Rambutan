@@ -33,7 +33,7 @@
           class="btn-primary"
           key="settleUp"
           type="primary"
-          @click="close()"
+          @click="settleUp()"
         >
           {{ $t(`settle_up`) }}
         </a-button>
@@ -43,16 +43,28 @@
 </template>
 
 <script>
+import axios from "axios";
+import api from "../api";
 import user from "../assets/user.png";
+
+const axiosClient = axios.create({
+  baseURL: api,
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+  },
+});
 export default {
   props: {
     visible: { type: Boolean, default: false },
     userState: {
       type: Object,
       default: function() {
-        return { user_name: "", payment_status: "" };
+        return { user_id: 0, user_name: "", payment_status: "" };
       },
     },
+    roomId: { type: String, default: "" },
   },
   data() {
     return {
@@ -69,6 +81,22 @@ export default {
     close: function() {
       this.isVisible = false;
       this.$emit("close", this.isVisible);
+    },
+    async settleUp() {
+      const res = await axiosClient.patch(`/participant/status`, {
+        user_id: this.userState.user_id,
+        room_id: parseInt(this.roomId),
+        payment_status: "confirmed",
+      });
+      // console.log("res", res);
+      if (res) {
+        this.isVisible = false;
+        const newUserStatus = {
+          userId: this.userState.user_id,
+          status: "confirmed",
+        };
+        this.$emit("settleUp", newUserStatus);
+      }
     },
   },
 };
