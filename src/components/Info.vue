@@ -126,7 +126,7 @@
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
-            v-show="record.user_name == 'You'"
+            v-show="isAdmin || record.user_name == 'You'"
             type="primary"
             class="btn-action"
             :disabled="isSettleUpDisabled"
@@ -142,7 +142,7 @@
             ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
-            v-show="record.user_name == 'You'"
+            v-show="isAdmin || record.user_name == 'You'"
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
