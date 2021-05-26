@@ -8,10 +8,11 @@
             <div class="info-level">{{ planName }}</div>
           </div>
           <div class="info-setting-btn">
-            <a-button 
-            class="btn-primary-long btn-setting"
-            style="{width:214px;}"
-            v-show="!isAdmin">
+            <a-button
+              class="btn-primary-long btn-setting"
+              style="{width:214px;}"
+              v-show="!isAdmin"
+            >
               {{ $t(`add_to_google_calendar`) }}
             </a-button>
             <a-button
@@ -41,7 +42,6 @@
             >
               {{ $t(`new_round`) }}
             </a-button>
-            
           </div>
         </div>
         <div class="info-plan">
@@ -68,7 +68,19 @@
       <div class="info-right">
         <div class="info-card info-announce">
           <div class="info-card-title">{{ $t(`announcement`) }}</div>
-          <textarea v-model="this.announcement" />
+
+          <textarea v-if="isAdmin" v-model="announcement" />
+          <div v-else class="text">
+            {{ this.announcement ? this.announcement : $t(`none`) }}
+          </div>
+          <div v-show="isAdmin" class="btn-announce-container">
+            <a-button
+              type="default"
+              class="btn-primary btn-announce"
+              @click="handleAnnouncement()"
+              >{{ $t(`announce`) }}</a-button
+            >
+          </div>
         </div>
         <div class="info-card info-admin">
           <div class="info-card-title">{{ $t(`admin_info`) }}</div>
@@ -107,20 +119,19 @@
         <span slot="customAction">{{ $t(`action`) }}</span>
         <span slot="user_name" slot-scope="text" class="info-table-user">
           <img :src="user" />
-          {{ text }}</span
+          {{ text == "You" ? $t(`you`) : text }}</span
         >
         <span slot="payment_status" slot-scope="record" class="info-table-state"
           >{{ $t(`${record}`) }}
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
-            v-show="isAdmin"
+            v-show="record.user_name == 'You'"
             type="primary"
             class="btn-action"
             :disabled="isSettleUpDisabled"
             @click="openSettleUpDialog(record)"
           >
-          
             <a-icon type="dollar" />{{ $t(`settle_up`) }}</a-button
           >
           <a-button
@@ -131,7 +142,7 @@
             ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
-            v-show="isAdmin"
+            v-show="record.user_name == 'You'"
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
@@ -148,10 +159,11 @@
       </a-table>
     </div>
     <DoubleCheckDialog
-    :visible="isDoubleCheckModalOpen"
-    delteObject="this Round"
-    @doYes="deleteRound()"
-    @close="closeDoubleCheckModal()" />
+      :visible="isDoubleCheckModalOpen"
+      delteObject="this Round"
+      @doYes="deleteRound()"
+      @close="closeDoubleCheckModal()"
+    />
     <AdminRoomSetting
       v-if="serviceId"
       :visible="isSettingRoomModalOpen"
@@ -163,6 +175,7 @@
       :maxCount="maxCount"
       :roundInfo="roundInfo"
       :members="members"
+      @setRoom="setRoom"
       @close="closeRoomSettingModal()"
     />
 
@@ -248,6 +261,7 @@ export default {
       serviceId: 0,
       serviceName: "",
       planName: "",
+      isPublic: false,
       maxCount: 0,
       roundInfo: {},
       memberList: [],
@@ -257,6 +271,7 @@ export default {
         interval: "-",
         date: "-",
       },
+      originalAnnouncement: "",
       announcement: "",
 
       // data,
@@ -294,8 +309,9 @@ export default {
   },
   computed: {
     members: function() {
-      const memberList = JSON.parse(JSON.stringify(this.memberList));
-      return memberList.filter((member) => member.user_name != this.admin.name);
+      console.log("user_name", this.admin.name);
+      let memberList = JSON.parse(JSON.stringify(this.memberList));
+      return memberList;
     },
   },
   methods: {
@@ -312,11 +328,10 @@ export default {
           this.timelineBoard.interval = data.round.round_interval + "  year";
           this.timelineBoard.date =
             data.round.starting_time + "  ->  " + data.round.ending_time;
-        }
-        else{
+        } else {
           this.timelineBoard.paymentDeadline = "-";
           this.timelineBoard.interval = "-";
-          this.timelineBoard.date = "-"
+          this.timelineBoard.date = "-";
         }
       }
     },
@@ -324,7 +339,7 @@ export default {
       console.log("record", record);
       return record.name;
     },
-    async deleteRound(){
+    async deleteRound() {
       const res = await axiosClient.delete(`/rooms/${this.roomId}/round`);
       if (res.status == 200) {
         this.isInRound = false;
@@ -342,7 +357,8 @@ export default {
       this.isSettingRoomModalOpen = !this.isSettingRoomModalOpen;
     },
     closeRoomSettingModal() {
-      this.isSettingRoomModalOpen = !this.isSettingRoomModalOpen;
+      // this.isSettingRoomModalOpen = !this.isSettingRoomModalOpen;
+      window.location.reload();
     },
     openNewRoundModal() {
       this.isNewRoundModalOpen = !this.isNewRoundModalOpen;
@@ -396,6 +412,24 @@ export default {
       });
       this.memberList.splice(userIdx, 1);
     },
+    async handleAnnouncement() {
+      console.log(this.announcement);
+      if (this.originalAnnouncement == this.announcement) return;
+      await axiosClient.patch(`/rooms/${this.roomId}`, {
+        max_count: this.maxCount,
+        service_id: this.serviceId,
+        plan_name: this.planName,
+        is_public: this.isPublic,
+        announcement: this.announcement,
+      });
+    },
+    setRoom() {
+      // console.log("newSettings", newSettings);
+      // this.maxCount = newSettings.max_count;
+      // this.serviceId = newSettings.service_id;
+      // this.planName = newSettings.plan_name;
+      // this.serviceName = newSettings.serviceName;
+    },
   },
   beforeMount() {
     this.roomId = this.$route.params.id;
@@ -414,10 +448,12 @@ export default {
       this.serviceId = data.service_id;
       this.serviceName = data.service_name;
       this.planName = data.plan_name;
+      this.isPublic = data.is_public;
       this.maxCount = data.max_count;
       this.roundInfo = data.round;
       this.admin = data.admin;
       this.memberList = data.members;
+      this.originalAnnouncement = data.announcement;
       this.announcement = data.announcement;
 
       if (data.round.payment_deadline != "") {
@@ -426,6 +462,25 @@ export default {
         this.timelineBoard.interval = data.round.round_interval + "  year";
         this.timelineBoard.date =
           data.round.starting_time + "  ->  " + data.round.ending_time;
+      }
+
+      this.memberList = this.memberList.filter(
+        (member) => member.user_name != this.admin.name
+      );
+      if (!this.isAdmin) {
+        let idx;
+        this.memberList.forEach((member, id) => {
+          console.log("member", member.user_id);
+          console.log("id", localStorage.getItem("id"));
+          if (member.user_id == localStorage.getItem("id")) {
+            idx = id;
+          }
+        });
+
+        this.memberList[idx].user_name = "You";
+        const youData = this.memberList[idx];
+        this.memberList.splice(idx, 1);
+        this.memberList.unshift(youData);
       }
 
       // console.log("list", this.members);
@@ -591,6 +646,17 @@ export default {
   }
   .info-announce {
     margin-right: 20px;
+    .text {
+      height: 60%;
+    }
+    .btn-announce-container {
+      display: flex;
+      justify-content: flex-end;
+      .btn-announce {
+        border-radius: 50px;
+        margin: 5px 0;
+      }
+    }
   }
   .info-admin {
     display: flex;

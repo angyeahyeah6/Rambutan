@@ -280,7 +280,7 @@ export default {
     },
     planNameDft: function(val) {
       // console.log("dft", val, this.planLevelList);
-      this.planNameDafault = val;
+      this.planNameDefault = val;
       const selectedPlan = this.planLevelList.filter(
         (planLevel) => planLevel.plan_name.toLowerCase() == val.toLowerCase()
       )[0];
@@ -318,6 +318,14 @@ export default {
         is_public: true,
       });
       this.isSaved = true;
+      console.log("plan list", this.planList);
+      this.$emit("setRoom", {
+        max_count: parseInt(this.settingData.maxCount),
+        serviceName: this.planList[this.serviceId - 1].name,
+        service_id: this.settingData.selectedServiceId,
+        plan_name: this.settingData.planNameDft,
+        is_public: true,
+      });
     },
     close() {
       this.isVisible = false;
@@ -328,10 +336,12 @@ export default {
     },
     handlePlanChange(val) {
       // this.plan = planLevelData[value];
+      console.log(val);
+      console.log(this.planList[val - 1]);
       const value = val - 1;
       this.planLevels = this.planList[value].plans;
       this.selectedServiceId = this.planList[value].id;
-      this.planNameDefault = this.planList[value].plans[0].plan_name;
+      this.planNameDft = this.planList[value].plans[0].plan_name;
     },
     handleRoomPublic() {
       this.isRoomPublic = !this.isRoomPublic;

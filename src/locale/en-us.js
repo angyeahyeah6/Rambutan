@@ -71,4 +71,6 @@ export default {
   before_start: "before start",
   delete_round: "Delete Round",
   yes: "Yes",
+  none: "None",
+  announce: "Save",
 };
