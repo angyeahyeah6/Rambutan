@@ -69,4 +69,7 @@ export default {
   add: "新增",
   plan_start: "起始時間",
   before_start: "以前",
+  delete_round: "刪除這一輪",
+  yes: "是的",
+
 };

@@ -28,7 +28,7 @@
         $t(`find_plan_online`)
       }}</a-button>
     </a-row>
-    <a-list :grid="{ gutter: 20, column: 4 }" :data-source="rooms">
+    <a-list v-if="rooms && rooms.length" :grid="{ gutter: 20, column: 4 }" :data-source="rooms">
       <a-list-item slot="renderItem" slot-scope="item">
         <a-card
           v-show="item.room_status == 'created'"
@@ -69,6 +69,7 @@ export default {
       rooms: [],
       addModalVisible: false,
       enterModalVisible: false,
+      emptyText: "Create your own room now !"
     };
   },
   methods: {

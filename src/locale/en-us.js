@@ -69,4 +69,6 @@ export default {
   add: "Add",
   plan_start: "Plan Start",
   before_start: "before start",
+  delete_round: "Delete Round",
+  yes: "Yes",
 };

@@ -8,22 +8,40 @@
             <div class="info-level">{{ planName }}</div>
           </div>
           <div class="info-setting-btn">
+            <a-button 
+            class="btn-primary-long btn-setting"
+            style="{width:214px;}"
+            v-show="!isAdmin">
+              {{ $t(`add_to_google_calendar`) }}
+            </a-button>
             <a-button
+              v-show="isAdmin"
               class="btn-primary btn-setting"
               :type="members.length < 1 ? 'primary' : 'default'"
               @click="openSettingRoomModal()"
             >
               {{ $t(`settings`) }}
             </a-button>
-
             <a-button
+              v-show="isAdmin"
+              v-if="isInRound"
               class="btn-primary"
               type="primary"
+              @click="openDoubleCheckModal()"
+            >
+              {{ $t(`delete_round`) }}
+            </a-button>
+            <a-button
+              v-show="isAdmin"
+              class="btn-primary"
+              type="primary"
+              v-else
               :disabled="!(members.length >= 1 && !isInRound)"
               @click="openNewRoundModal()"
             >
               {{ $t(`new_round`) }}
             </a-button>
+            
           </div>
         </div>
         <div class="info-plan">
@@ -96,26 +114,31 @@
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
+            v-show="isAdmin"
             type="primary"
             class="btn-action"
             :disabled="isSettleUpDisabled"
             @click="openSettleUpDialog(record)"
           >
+          
             <a-icon type="dollar" />{{ $t(`settle_up`) }}</a-button
           >
           <a-button
+            v-show="isAdmin"
             type="default"
             class="btn-action"
             @click="openRemindDialog(record)"
             ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
+            v-show="isAdmin"
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
             ><a-icon type="star" />{{ $t(`rate`) }}</a-button
           >
           <a-button
+            v-show="isAdmin"
             type="default"
             class="btn-action"
             @click="openRemoveDialog(record)"
@@ -124,7 +147,11 @@
         </span>
       </a-table>
     </div>
-
+    <DoubleCheckDialog
+    :visible="isDoubleCheckModalOpen"
+    delteObject="this Round"
+    @doYes="deleteRound()"
+    @close="closeDoubleCheckModal()" />
     <AdminRoomSetting
       v-if="serviceId"
       :visible="isSettingRoomModalOpen"
@@ -187,7 +214,7 @@ import SettleUpDialog from "./SettleUpDialog";
 import RemindDialog from "./RemindDialog";
 import RateDialog from "./RateDialog";
 import RemoveDialog from "./RemoveDialog";
-
+import DoubleCheckDialog from "./DoubleCheckDialog";
 const axiosClient = axios.create({
   baseURL: api,
   timeout: 1000,
@@ -204,6 +231,7 @@ export default {
     RemindDialog,
     RateDialog,
     RemoveDialog,
+    DoubleCheckDialog,
   },
   data() {
     return {
@@ -255,6 +283,7 @@ export default {
         },
       ],
       isSettingRoomModalOpen: false,
+      isDoubleCheckModalOpen: false,
       isNewRoundModalOpen: false,
       isSettleUpDialogOpen: false,
       selectedUserState: {},
@@ -271,7 +300,6 @@ export default {
   },
   methods: {
     async setTimelineBoard() {
-      console.log("d");
       const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
       if (data) {
         const email = localStorage.getItem("email");
@@ -285,12 +313,31 @@ export default {
           this.timelineBoard.date =
             data.round.starting_time + "  ->  " + data.round.ending_time;
         }
+        else{
+          this.timelineBoard.paymentDeadline = "-";
+          this.timelineBoard.interval = "-";
+          this.timelineBoard.date = "-"
+        }
       }
     },
     setTableKey(record) {
       console.log("record", record);
       return record.name;
     },
+    async deleteRound(){
+      const res = await axiosClient.delete(`/rooms/${this.roomId}/round`);
+      if (res.status == 200) {
+        this.isInRound = false;
+        this.setTimelineBoard();
+      }
+    },
+    openDoubleCheckModal() {
+      this.isDoubleCheckModalOpen = !this.isDoubleCheckModalOpen;
+    },
+    closeDoubleCheckModal() {
+      this.isDoubleCheckModalOpen = !this.isDoubleCheckModalOpen;
+    },
+
     openSettingRoomModal() {
       this.isSettingRoomModalOpen = !this.isSettingRoomModalOpen;
     },
@@ -442,6 +489,16 @@ export default {
   .btn-primary {
     height: 40px;
     width: 130px;
+    // margin-top: 100px;
+    margin-bottom: 20px;
+    margin-right: 25px;
+    border-radius: 50px;
+    padding: 8px, 16px, 8px, 16px;
+    font-weight: bold;
+  }
+  .btn-primary-long {
+    height: 40px;
+    width: 240px;
     // margin-top: 100px;
     margin-bottom: 20px;
     margin-right: 25px;

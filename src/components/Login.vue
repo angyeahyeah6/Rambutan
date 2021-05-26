@@ -7,7 +7,7 @@
     :body-style="{ padding: '50px', paddingTop: '50px', height: '600px' }"
   >
     <div class="l-block-container">
-      <a-button style="height:50px;" block>
+      <a-button style="height:50px;" block @click="googleLogin()">
         <a-icon type="google" />
         {{ $t(`google_login`) }}
       </a-button>
@@ -91,9 +91,11 @@
 </template>
 <script>
 import api from "../api";
+import firebase from 'firebase'
 export default {
   data() {
     return {
+      token: '',
       visible: true,
       form: this.$form.createForm(this),
     };
@@ -124,8 +126,39 @@ export default {
           });
       });
     },
+    googleLogin(){
+      const that = this;
+      var provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider).then(function (result) {
+        const requestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            "email" :result.user.email,
+            "password" :result.user.uid
+          }),
+        };
+       
+        fetch(api + "/auth/signin", requestOptions)
+          .then((response) => response.json())
+          .then((response) => {
+            localStorage.setItem("token", response.token);
+            localStorage.setItem("email", result.user.email);
+          })
+          .then(() => this.goToMain())
+          .catch(() => {
+            that.$router.push("/SignUp");
+          });
+      }).catch(err => console.log(err))
+    }
   },
-};
+  async mounted() {
+    if(localStorage.getItem("email") && localStorage.getItem("token")){
+      this.goToMain();
+    }
+  }
+}
+
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
