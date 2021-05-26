@@ -71,5 +71,6 @@ export default {
   before_start: "以前",
   delete_round: "刪除這一輪",
   yes: "是的",
-
+  none: "無",
+  announce: "發佈",
 };
