@@ -175,7 +175,6 @@
       :maxCount="maxCount"
       :roundInfo="roundInfo"
       :members="members"
-      @setRoom="setRoom"
       @close="closeRoomSettingModal()"
     />
 
@@ -422,13 +421,6 @@ export default {
         is_public: this.isPublic,
         announcement: this.announcement,
       });
-    },
-    setRoom() {
-      // console.log("newSettings", newSettings);
-      // this.maxCount = newSettings.max_count;
-      // this.serviceId = newSettings.service_id;
-      // this.planName = newSettings.plan_name;
-      // this.serviceName = newSettings.serviceName;
     },
   },
   beforeMount() {
