@@ -7,30 +7,33 @@
       @cancel="closeModal"
       :footer="null"
       :width="480"
-      :body-style="{ padding: '50px', paddingTop: '50px', height: '542px' }"
+      :body-style="{ padding: '40px', paddingTop: '40px', height: '542px' }"
     >
       <div class="ard-block-container">
         <p>{{ $t(`plan_select`) }} <span class="star">*</span></p>
-        <a-space :size="15">
+        <div class="plan-type">
           <DropDown
+            class="dropdown"
             :title="this.select.platforms"
             :menulist="platforms"
             @selectValue="selectPlatform"
           />
-          <DropDown v-if="!isSelect" disabled />
+          <DropDown class="dropdown" v-if="!isSelect" disabled />
           <DropDown
+            class="dropdown"
             v-else
             :title="this.select.plans"
             :menulist="plans"
             @selectValue="selectPlan"
           />
-        </a-space>
+        </div>
       </div>
       <div class="ard-block-container">
         <p>{{ $t(`plan_price`) }}</p>
-        <a-space :size="15">
+        <div class="plan-type plan-price">
           <DropDown
-            title="NT$"
+            class="dropdown currency"
+            title="NT"
             :menulist="currency"
             @selectValue="
               (val) => {
@@ -38,9 +41,15 @@
               }
             "
           />
-          <a-input-number disabled v-model="this.select.price" :min="0" />
+          <a-input-number
+            class="input"
+            disabled
+            v-model="this.select.price"
+            :min="0"
+          />
           <p>/</p>
           <DropDown
+            class="dropdown time"
             :title="$t(`${this.select.timeSlot}`)"
             :menulist="timeSlot"
             @selectValue="
@@ -49,7 +58,7 @@
               }
             "
           />
-        </a-space>
+        </div>
       </div>
       <div class="ard-block-container">
         <p>{{ $t(`split`) }}</p>
@@ -169,7 +178,8 @@ export default {
       this.isSelect = true;
     },
     closeModal() {
-      this.$emit("closeAddModal", this.isVisible);
+      this.isVisible = false;
+      this.$emit("closeAddModal");
       // this.isVisible = false;
     },
     goToInfoPage() {
@@ -243,10 +253,8 @@ export default {
     },
   },
   watch: {
-    visible(newVal) {
-      if (newVal) {
-        this.isVisible = this.visible;
-      }
+    visible: function(val) {
+      this.isVisible = val;
     },
   },
   created() {},
@@ -292,5 +300,62 @@ p {
   border-radius: 50px;
   color: black;
   font-weight: bold;
+}
+.plan-type {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.dropdown {
+  width: 130px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+.currency {
+  width: 68px;
+  margin-right: 5px;
+}
+.time {
+  margin-left: 5px;
+}
+.input {
+  width: 50px;
+  margin-right: 5px;
+}
+@media screen and (max-width: 440px) {
+  .ard-block-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .plan-type {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .dropdown {
+    width: 85px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+  .currency {
+    width: 68px;
+    margin-right: 5px;
+  }
+  .time {
+    margin-left: 5px;
+  }
+  .input {
+    width: 50px;
+    margin-right: 5px;
+  }
+}
+@media screen and (max-width: 320px) {
+  .plan-price {
+    flex-wrap: wrap;
+  }
 }
 </style>

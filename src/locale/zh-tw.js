@@ -73,4 +73,6 @@ export default {
   yes: "是的",
   none: "無",
   announce: "發佈",
+  enter: "加入",
+  find: "尋找",
 };

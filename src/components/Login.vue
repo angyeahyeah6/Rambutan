@@ -172,7 +172,7 @@ export default {
           // console.log("response", response);
           localStorage.setItem("id", response.id);
         });
-      // this.goToMain();
+      this.goToMain();
     }
   },
 };

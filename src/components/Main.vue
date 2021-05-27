@@ -1,35 +1,74 @@
 <template>
-  <div>
-    <a-row>
-      <a-button
-        type="primary"
-        class="addroom-btn btn-primary"
-        @click="openAddRoomModal()"
-      >
-        + {{ $t(`add_room`) }}
-        <AddRoomDialog
-          :visible="addModalVisible"
-          @closeAddModal="closeAddRoomModal()"
-        />
-      </a-button>
+  <div id="main">
+    <div class="main-btn-container">
+      <div class="web-visible">
+        <a-button
+          type="primary"
+          class="addroom-btn btn-primary"
+          @click="openAddRoomModal()"
+        >
+          + {{ $t(`add_room`) }}
+          <AddRoomDialog
+            :visible="addModalVisible"
+            @closeAddModal="closeAddRoomModal()"
+          />
+        </a-button>
+      </div>
+      <div class="mobile-visible">
+        <a-button
+          type="primary"
+          class="addroom-btn btn-primary web-visible mobile-visible"
+          @click="openAddRoomModal()"
+        >
+          + {{ $t(`add`) }}
+          <AddRoomDialog
+            :visible="addModalVisible"
+            @closeAddModal="closeAddRoomModal()"
+          />
+        </a-button>
+      </div>
 
-      <a-button
-        type="default"
-        class="btn-primary"
-        @click="() => openEnterRoomModal()"
-      >
-        {{ $t(`enter_room`) }}
-        <EnterRoomDialog
-          :visible="enterModalVisible"
-          @closeEnterModal="closeEnterRoomModal()"
-        />
-      </a-button>
-      <a-button type="default" class="btn-primary find-plan-btn">{{
-        $t(`find_plan_online`)
-      }}</a-button>
-    </a-row>
-    <a-list v-if="rooms && rooms.length" :grid="{ gutter: 20, column: 4 }" :data-source="rooms">
-      <a-list-item slot="renderItem" slot-scope="item">
+      <div class="web-visible">
+        <a-button
+          type="default"
+          class="btn-primary"
+          @click="() => openEnterRoomModal()"
+        >
+          {{ $t(`enter_room`) }}
+          <EnterRoomDialog
+            :visible="enterModalVisible"
+            @closeEnterModal="closeEnterRoomModal()"
+          />
+        </a-button>
+      </div>
+      <div class="mobile-visible">
+        <a-button
+          type="default"
+          class="btn-primary"
+          @click="() => openEnterRoomModal()"
+        >
+          {{ $t(`enter`) }}
+          <EnterRoomDialog
+            :visible="enterModalVisible"
+            @closeEnterModal="closeEnterRoomModal()"
+          />
+        </a-button>
+      </div>
+
+      <div class="web-visible">
+        <a-button type="default" class="btn-primary find-plan-btn">{{
+          $t(`find_plan_online`)
+        }}</a-button>
+      </div>
+      <div class="mobile-visible">
+        <a-button type="default" class="btn-primary find-plan-btn">{{
+          $t(`find`)
+        }}</a-button>
+      </div>
+    </div>
+
+    <div v-if="rooms && rooms.length" class="room-card-container">
+      <div v-for="item in rooms" :key="item.room_id" class="card-container">
         <a-card
           v-show="item.room_status == 'created'"
           class="card-home"
@@ -39,7 +78,7 @@
           <p v-else>{{ $t(`member`) }}</p>
           <a-space align="baseline">
             <div>
-              <h1>{{ item.service_name }}</h1>
+              <h1>{{ item.service_name | ellipsis }}</h1>
             </div>
             <div>
               <p>{{ item.plan_name }}</p>
@@ -49,8 +88,8 @@
             {{ $t(`owe`) }} NT$ {{ item.cost }}
           </p>
         </a-card>
-      </a-list-item>
-    </a-list>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -69,15 +108,24 @@ export default {
       rooms: [],
       addModalVisible: false,
       enterModalVisible: false,
-      emptyText: "Create your own room now !"
+      emptyText: "Create your own room now !",
     };
+  },
+  filters: {
+    ellipsis(value) {
+      if (!value) return "";
+      if (value.length > 8) {
+        return value.slice(0, 8) + "...";
+      }
+      return value;
+    },
   },
   methods: {
     openAddRoomModal() {
-      this.addModalVisible = true;
+      this.addModalVisible = !this.addModalVisible;
     },
-    closeAddRoomModal(val) {
-      this.addModalVisible = val;
+    closeAddRoomModal() {
+      this.addModalVisible = !this.addModalVisible;
     },
     openEnterRoomModal() {
       this.enterModalVisible = true;
@@ -106,6 +154,7 @@ export default {
   created() {
     this.getRooms();
   },
+
   mounted() {
     // work around
     if (localStorage.getItem("reloaded")) {
@@ -119,6 +168,19 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
+#main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.web-visible {
+  display: block;
+}
+.mobile-visible {
+  display: none;
+}
 .btn-primary {
   height: 40px;
   width: 130px;
@@ -137,9 +199,67 @@ export default {
   width: 170px;
 }
 .card-home {
+  width: 270px;
   height: 179px;
   border-radius: 10px;
   margin-top: 40px;
+  margin-right: 30px;
   cursor: pointer;
+}
+.main-btn-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.room-card-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+}
+@media screen and (max-width: 578px) {
+  .web-visible {
+    display: none;
+  }
+  .mobile-visible {
+    display: block;
+  }
+  .btn-primary {
+    height: 40px;
+    width: 70px;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+    padding: 8px, 16px, 8px, 16px;
+    color: black;
+    font-weight: bold;
+  }
+}
+@media screen and (max-width: 440px) {
+  .room-card-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .card-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .card-home {
+    width: 300px;
+    height: 160px;
+    border-radius: 10px;
+    margin: 0;
+    margin-bottom: 25px;
+    cursor: pointer;
+  }
 }
 </style>

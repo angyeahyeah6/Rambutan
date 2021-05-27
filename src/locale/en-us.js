@@ -73,4 +73,6 @@ export default {
   yes: "Yes",
   none: "None",
   announce: "Save",
+  enter: "Enter",
+  find: "Find",
 };

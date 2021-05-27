@@ -4,6 +4,7 @@
     :footer="null"
     @ok="closeModal"
     @cancel="closeModal"
+    :body-style="{ height: '320px' }"
   >
     <div class="block-container">
       <p>{{ $t(`room_pin`) }}</p>
@@ -103,7 +104,7 @@ export default {
   font-weight: bold;
 }
 .erd-btn-container {
-  margin-top: 100px;
+  margin-top: 80px;
   justify-content: flex-end;
   display: flex;
 }
