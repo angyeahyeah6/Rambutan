@@ -111,7 +111,7 @@ export default {
       this.form.validateFields((err, values) => {
         const requestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json"},
           body: JSON.stringify(values),
         };
         fetch(api + "/auth/signin", requestOptions)

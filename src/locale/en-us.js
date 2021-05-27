@@ -73,4 +73,11 @@ export default {
   yes: "Yes",
   none: "None",
   announce: "Save",
+
+  admin_title: "Admin",
+  plan_title:"Plan",
+  matching_deadline: "Matching Deadline",
+  message: "Message",
+  apply: "Apply"
+  
 };

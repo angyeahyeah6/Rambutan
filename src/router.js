@@ -3,6 +3,7 @@ import Info from "./components/Info";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import OnlineMatch from './components/OnlineMatch'
 const routes = [
   { path: "/", redirect: "/Login" },
   { name: "Login", path: "/Login", component: Login },
@@ -10,6 +11,7 @@ const routes = [
   { name: "Main", path: "/Main", component: Main },
   { name: "Info", path: "/Info/:id", component: Info },
   { name: "Profile", path: "/Profile", component: Profile },
+  { name: "OnlineMatch", path: "/OnlineMatch", component: OnlineMatch },
 ];
 
 export default routes;
