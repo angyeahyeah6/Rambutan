@@ -5,9 +5,9 @@
     <div class="nav-right-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        height="24px"
+        height="36px"
         viewBox="0 0 24 24"
-        width="25px"
+        width="36px"
         fill="#C4C4C4"
         @click="changeLang()"
       >
@@ -80,7 +80,7 @@ export default {
 .nav-home-btn {
   font-size: 30px;
   color: #c4c4c4;
-  margin-left: 130px;
+  margin-left: 8%;
   cursor: pointer;
 }
 .nav-logo {
@@ -88,8 +88,9 @@ export default {
   font-size: 30px;
 }
 .nav-right-container {
-  width: 115.5px;
-  margin-right: 130px;
+  width: 7%;
+  min-width: 70px;
+  margin-right: 8%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -100,8 +101,8 @@ export default {
   }
 
   .nav-profile-btn {
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 25px;
     border-radius: 100%;
     background-color: #e0e0e0;
     cursor: pointer;
@@ -112,37 +113,9 @@ export default {
     align-items: center;
 
     img {
-      width: 35px;
-      height: 35px;
+      width: 32px;
+      height: 32px;
     }
   }
 }
-
-/* .nav-lang-btn {
-  width: 25px;
-}
-.nav-login-btn {
-  width: 130px;
-  height: 32px;
-  font-size: 14px;
-  border-radius: 50px;
-  border: #c4c4c4 solid 1px;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-.nav-signup-btn {
-  width: 130px;
-  height: 32px;
-  font-size: 14px;
-  border-radius: 50px;
-  background-color: #f2c94c;
-
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-} */
 </style>

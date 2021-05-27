@@ -4,16 +4,18 @@
     :closable="false"
     :footer="false"
     :width="495"
-    :body-style="{ padding: '50px', paddingTop: '50px', height: '600px' }"
+    :body-style="{
+      padding: '50px',
+      paddingTop: '50px',
+      height: '550px',
+    }"
   >
     <div class="l-block-container">
-      <a-button style="height:50px;" block @click="googleLogin()">
+      <a-button class="google-login" block @click="googleLogin()">
         <a-icon type="google" />
         {{ $t(`google_login`) }}
       </a-button>
-      <div class="l-center-container">
-        <p>{{ $t(`or`) }}</p>
-      </div>
+
       <a-form :form="form" hasFeedback :style="{ radius: '2px' }">
         <div class="l-form-item">
           <p>{{ $t(`email`) }}</p>
@@ -65,11 +67,11 @@
         </div>
         <div class="l-center-container">
           <a-space algin="baseline">
-            <div>{{ $t(`dont_have_an_account`) }}</div>
+            <div class="remind-text">{{ $t(`dont_have_an_account`) }}</div>
             <a-button
               type="link"
               @click="goToSignUp()"
-              style="color:#1890FF; padding-left:0px"
+              style="color:#1890FF; padding-left:0px; padding-right:0px"
             >
               {{ $t(`sign_up`) }}
             </a-button>
@@ -170,7 +172,7 @@ export default {
           // console.log("response", response);
           localStorage.setItem("id", response.id);
         });
-      this.goToMain();
+      // this.goToMain();
     }
   },
 };
@@ -179,13 +181,21 @@ export default {
 @import "../../ant-design-vue/dist/antd.less";
 .l-block-container {
   width: 395px;
-  height: 379px;
+  height: 479px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .l-center-container {
   text-align: center;
   margin: 30px;
   display: flex;
   justify-content: center;
+}
+.google-login {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 30px;
 }
 p {
   margin: 0px;
@@ -207,5 +217,46 @@ p {
   margin-top: 22px;
   justify-content: flex-end;
   display: flex;
+}
+
+@media screen and (max-width: 587px) {
+  .l-block-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .l-center-container {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+
+    .remind-text {
+      white-space: nowrap;
+    }
+  }
+  .google-login {
+    width: 100%;
+    height: 35px;
+    margin-bottom: 30px;
+  }
+  p {
+    margin: 0px;
+  }
+  .l-form-item {
+    margin-bottom: 10px;
+  }
+  .btn-primary {
+    height: 35px;
+    width: 100px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+  }
+  .btn-primary:hover {
+    color: @my-grey-3;
+  }
 }
 </style>
