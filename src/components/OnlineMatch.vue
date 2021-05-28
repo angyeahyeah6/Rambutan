@@ -46,19 +46,21 @@
         {{ text.service_name}} - {{ text.plan_name}}
       </span>
 
+      <span slot="cost" slot-scope="text" class="online-table-user">
+        NT$ {{ text.cost}} / month
+      </span>
+
       <span slot="mem" slot-scope="text" class="online-table-user">
         {{ text.member_count }} / {{ text.max_count }} 
       </span>
 
       <span slot="action" slot-scope="text" class="online-table-action">
         <a-button
-          :key="text.room_id"
           type="primary"
           class="btn-action"
-          v-if="!text.isApply"
-          @click="applyJoinRoom(text.room_id)"
-        >
-          {{ $t(`apply`) }} {{ text.isApply}}
+          :disabled="text.isApply"
+          @click="() => applyJoinRoom(text.room_id)">
+          {{ $t(`apply`) }}
         </a-button
         >
       </span>
@@ -86,33 +88,32 @@ export default {
   },
   data() {
     return {
-      publicRooms:[],
+      publicRoom:[],
       user,
       addModalVisible: false,
       // data,
       columns: [
         {
           key: "admin_name",
-          width: "17%",
+          width: "16%",
           slots: { title: "customAdmin" },
           scopedSlots: { customRender: "admin_name" },
         },
         {
           key: "plan_name",
-          width: "17%",
+          width: "16%",
           slots: { title: "customPlan" },
           scopedSlots: { customRender: "plan_name" },
         },
         {
           key: "cost",
-          width: "13%",
-          dataIndex: "cost",
+          width: "16%",
           slots: { title: "customPrice" },
           scopedSlots: { customRender: "cost" },
         },
         {
           key: "time",
-          width: "20%",
+          width: "16%",
           dataIndex: "time",
           slots: { title: "customDeadline" },
           scopedSlots: { customRender: "time" },
@@ -141,8 +142,16 @@ export default {
   },
   computed: {
     rooms: function() {
-      return this.publicRooms;
+      return JSON.parse(JSON.stringify(this.publicRoom));
     },
+  },
+  watch: {
+    publicRoom:{
+      handler (){
+        console.log("watch")
+      },
+      deep: true,
+    }
   },
   methods: {
     openAddRoomModal() {
@@ -151,7 +160,7 @@ export default {
     closeAddRoomModal(val) {
       this.addModalVisible = val;
     },
-    getPublicRooms() {
+    getPublicRoom() {
       fetch(api + "/rooms/public", {
         method: "GET",
         headers: {
@@ -161,30 +170,42 @@ export default {
       })
         .then((response) => response.json())
         .then((response) => {
-          console.log(response.data)
-          this.publicRooms = response.data
-          this.publicRooms.forEach(function (element) {
-            if(element.isApply == undefined){
-              element.isApply = false;
-            }
+          response.data.forEach((ele) =>  {
+              let roomObj = {
+                "room_id": ele.room_id,
+                "admin_name": ele.admin_name,
+                "admin_rating": ele.admin_rating,
+                "service_name": ele.service_name,
+                "plan_name": ele.plan_name,
+                "cost": ele.cost,
+                "max_count": ele.max_count,
+                "member_count": ele.member_count,
+              };
+              if(roomObj.max_count != roomObj.member_count){
+                roomObj["isApply"] = false;
+              }
+              else{
+                roomObj["true"] = true;
+              }
+              this.publicRoom.push(roomObj);
           });
         });
     },
     async applyJoinRoom(roomId){
       const res = await axiosClient.get(`/rooms/${roomId}/application`);
-      console.log(res);
       if(res.status == 200){
-        for (var i = 0; i < this.publicRooms.length; i++) {
-          if(this.publicRooms[i].room_id == roomId){
-            this.publicRooms[i].isApply = true;
-            console.log(this.publicRooms[i])
+        let roomIdx;
+        this.publicRoom.forEach((room, id) => {
+          if (room.room_id == roomId) {
+            roomIdx = id;
           }
-        }
+        });
+        this.publicRoom[roomIdx].isApply = true;
       }
     }
   },
   mounted: function(){
-    this.getPublicRooms();
+    this.getPublicRoom();
   }
 };
 </script>
