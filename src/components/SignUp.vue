@@ -7,13 +7,11 @@
     :body-style="{ padding: '50px', paddingTop: '50px', height: '600px' }"
   >
     <div class="su-block-container">
-      <a-button style="height:50px;" block @click="googleSignUp()">
+      <a-button class="google-login" block @click="googleSignUp()">
         <a-icon type="google" />
         {{ $t(`google_login`) }}
       </a-button>
-      <div class="su-center-container">
-        <p>{{ $t(`or`) }}</p>
-      </div>
+
       <a-form :form="form" hasFeedback :style="{ radius: '2px' }">
         <div class="su-form-item">
           <p>{{ $t(`name`) }}</p>
@@ -83,8 +81,11 @@
         </div>
         <div class="su-center-container">
           <a-space>
-            <p>{{ $t(`already_have_an_account`) }}</p>
-            <p style="color:#1890FF; cursor:pointer;" @click="goToLogin()">
+            <p class="remind-text">{{ $t(`already_have_an_account`) }}</p>
+            <p
+              style="color:#1890FF; cursor:pointer; white-space: nowrap"
+              @click="goToLogin()"
+            >
               {{ $t(`log_in`) }}
             </p>
           </a-space>
@@ -105,7 +106,7 @@
 </template>
 <script>
 import api from "../api";
-import firebase from 'firebase'
+import firebase from "firebase";
 export default {
   data() {
     return {
@@ -138,44 +139,56 @@ export default {
           });
       });
     },
-    googleSignUp(){
+    googleSignUp() {
       const that = this;
-      var provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithPopup(provider).then(function (result) {
-        const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            "name": result.user.displayName,
-            "email" :result.user.email,
-            "password" :result.user.uid
-          }),
-        };
-        fetch(api + "/auth/signup", requestOptions)
-          .then((response) => response.json())
-          .then((response) => {
-            localStorage.setItem("token", response.token);
-            localStorage.setItem("email", result.user.email);
-          })
-          .then(() => that.$router.push("/Main"))
-          .catch((err) => {
-            console.log(err)
-          });
-      }).catch(err => console.log(err))
-    }
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: result.user.displayName,
+              email: result.user.email,
+              password: result.user.uid,
+            }),
+          };
+          fetch(api + "/auth/signup", requestOptions)
+            .then((response) => response.json())
+            .then((response) => {
+              localStorage.setItem("token", response.token);
+              localStorage.setItem("email", result.user.email);
+            })
+            .then(() => that.$router.push("/Main"))
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
 <style scoped>
 .su-block-container {
   width: 395px;
-  height: 379px;
+  height: 479px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .su-center-container {
   text-align: center;
   margin: 20px;
   display: flex;
   justify-content: center;
+}
+.google-login {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 30px;
 }
 p {
   margin: 0px;
@@ -195,5 +208,47 @@ p {
   margin-top: 11px;
   justify-content: flex-end;
   display: flex;
+}
+@media screen and (max-width: 587px) {
+  .su-block-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .su-center-container {
+    text-align: center;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .remind-text {
+    white-space: nowrap;
+  }
+  .google-login {
+    width: 100%;
+    height: 35px;
+    margin-bottom: 30px;
+  }
+  p {
+    margin: 0px;
+    margin-bottom: 10px;
+  }
+  .su-form-item {
+    margin-bottom: 30px;
+  }
+  .btn-primary {
+    height: 40px;
+    width: 130px;
+    margin: 0px;
+    border-radius: 50px;
+  }
+
+  .su-btn-container {
+    margin-top: 11px;
+    justify-content: flex-end;
+    display: flex;
+  }
 }
 </style>

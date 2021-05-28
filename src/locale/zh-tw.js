@@ -73,10 +73,11 @@ export default {
   yes: "是的",
   none: "無",
   announce: "發佈",
-
   admin_title: "擁有者",
   plan_title:"方案",
   matching_deadline: "媒合期限",
   message: "訊息",
-  apply: "申請"
+  apply: "申請",
+  enter: "加入",
+  find: "尋找",
 };
