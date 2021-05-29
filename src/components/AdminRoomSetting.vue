@@ -9,8 +9,28 @@
   >
     <div class="admin-room">
       <a-menu
-        style="width: 100px; height: 485px; padding: 12px 35px 10px 10px; box-sizing: content-box;"
+        class="menu web-menu"
         mode="vertical"
+        :default-selected-keys="['1']"
+        :selected-keys="[selectedItem]"
+        @click="handleSettingState"
+      >
+        <a-menu-item key="1">
+          {{ $t(`settings`) }}
+        </a-menu-item>
+        <a-menu-item v-show="isAdmin" key="2">
+          {{ $t(`members`) }}
+        </a-menu-item>
+        <a-menu-item key="3">
+          {{ $t(`reminder`) }}
+        </a-menu-item>
+        <a-menu-item v-show="isAdmin" key="4">
+          {{ $t(`delete`) }}
+        </a-menu-item>
+      </a-menu>
+      <a-menu
+        class="menu mobile-menu"
+        mode="horizontal"
         :default-selected-keys="['1']"
         :selected-keys="[selectedItem]"
         @click="handleSettingState"
@@ -56,7 +76,7 @@
             <a-select
               v-model="currencySelected"
               :default-value="currencyData[0]"
-              style="width: 110px; margin-right: 15px;"
+              class="price-select currency-select"
               disabled
             >
               <a-select-option v-for="ele in currencyData" :key="ele">
@@ -66,14 +86,14 @@
             <a-input
               v-model="price"
               placeholder="0"
-              style="width: 110px;"
+              class="price-select"
               disabled
             />
             <span> / </span>
             <a-select
               v-model="periodSelected"
               :default-value="periodData[0]"
-              style="width: 110px"
+              class="price-select"
             >
               <a-select-option v-for="ele in periodData" :key="ele">
                 {{ ele }}
@@ -85,7 +105,7 @@
             <a-input
               placeholder="0"
               v-model="selectedMaxCnt"
-              style="width: 110px;"
+              class="price-select"
             />
             <span> {{ $t(`people`) }} </span>
           </div>
@@ -140,7 +160,7 @@
         </div>
         <div v-if="selectedItem == '4'">
           <a-button
-            class="btn-primary"
+            class="btn-primary btn-delete"
             type="danger"
             ghost
             @click="deleteRoom()"
@@ -378,6 +398,18 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   height: 510px;
+  .web-menu {
+    display: block;
+  }
+  .mobile-menu {
+    display: none;
+  }
+  .menu {
+    width: 100px;
+    height: 485px;
+    padding: 12px 35px 10px 10px;
+    box-sizing: content-box;
+  }
 }
 .admin-room-content {
   box-sizing: content-box;
@@ -386,6 +418,13 @@ export default {
   width: 480px;
   height: 450px;
   overflow: scroll;
+  .currency-select {
+    margin-right: 15px;
+  }
+  .price-select {
+    width: 110px;
+    margin-bottom: 10px;
+  }
 }
 .ant-menu-item-selected {
   background-color: none !important;
@@ -422,11 +461,11 @@ export default {
   font-weight: bold;
 }
 .btn-save {
-  margin-top: 100px;
+  margin-top: 80px;
 }
 .btn-google-calendar {
   width: 200px;
-  height: 32px;
+  height: 40px;
   font-size: 14px;
   border: solid @my-grey-1 1px;
   border-radius: 50px;
@@ -482,6 +521,75 @@ export default {
   cursor: pointer;
   img {
     width: 50px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .admin-room {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: 550px;
+    .web-menu {
+      display: none;
+    }
+    .mobile-menu {
+      display: block;
+    }
+    .menu {
+      width: 100%;
+      height: 60px;
+      box-sizing: border-box;
+    }
+    .admin-room-content {
+      width: 93%;
+      height: 90%;
+      padding: 10px;
+      padding-top: 25px;
+
+      .btn-primary {
+        margin-top: 45px;
+      }
+      .btn-delete {
+        margin-top: 10px;
+      }
+      .btn-save {
+        margin-bottom: 0;
+      }
+      .content-item {
+        span {
+          margin: 0;
+          margin-right: 5px;
+        }
+      }
+      .price-select {
+        width: 60px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .new-code {
+    width: 100%;
+    margin-right: 0;
+    img {
+      margin-right: 18px;
+    }
+    .pin-info {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      .pin {
+        .label {
+          margin-right: 18px;
+        }
+      }
+    }
+    .btn-primary {
+      margin-top: 0 !important;
+    }
   }
 }
 </style>

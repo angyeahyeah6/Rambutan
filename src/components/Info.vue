@@ -707,7 +707,6 @@ export default {
   }
 }
 .info-table {
-  // background-color: green;
   margin-top: 40px;
   .info-table-user {
     img {
@@ -721,9 +720,7 @@ export default {
   }
   .info-table-state {
   }
-  // .info-table-action {
-  //   width: 50%;
-  // }
+
   .btn-action {
     font-weight: normal;
     border-radius: 50px;
