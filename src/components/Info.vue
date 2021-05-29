@@ -63,6 +63,26 @@
               </div>
             </div>
           </div>
+          <div class="info-plan-detail-mobile">
+            <div class="info-plan-detail">
+              <div class="info-plan-label">{{ $t(`payment_deadline`) }}</div>
+              <div class="info-plan-date">
+                {{ this.timelineBoard.paymentDeadline }}
+              </div>
+            </div>
+            <div class="info-plan-detail">
+              <div class="info-plan-label">{{ $t(`interval`) }}</div>
+              <div class="info-plan-date">
+                {{ this.timelineBoard.interval }}
+              </div>
+            </div>
+            <div class="info-plan-detail">
+              <div class="info-plan-label">{{ $t(`date`) }}</div>
+              <div class="info-plan-date">
+                {{ this.timelineBoard.date }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="info-right">
@@ -119,7 +139,7 @@
         <span slot="customAction">{{ $t(`action`) }}</span>
         <span slot="user_name" slot-scope="text" class="info-table-user">
           <img :src="user" />
-          {{ text == "You" ? $t(`you`) : text }}</span
+          <span>{{ text == "You" ? $t(`you`) : text }}</span></span
         >
         <span slot="payment_status" slot-scope="record" class="info-table-state"
           >{{ $t(`${record}`) }}
@@ -492,9 +512,11 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+  // flex-wrap: wrap;
 }
 .info-left {
-  width: 50%;
+  // width: 50%;
+  margin-right: 18px;
   height: 100%;
 }
 .info-main {
@@ -529,8 +551,10 @@ export default {
   .info-setting-btn {
     width: 100%;
     margin-top: 30px;
+    white-space: nowrap;
   }
   .btn-setting {
+    margin-right: 20px;
     color: #000000;
   }
   .btn-primary {
@@ -538,7 +562,7 @@ export default {
     width: 130px;
     // margin-top: 100px;
     margin-bottom: 20px;
-    margin-right: 25px;
+    // margin-right: 25px;
     border-radius: 50px;
     padding: 8px, 16px, 8px, 16px;
     font-weight: bold;
@@ -564,6 +588,10 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
 
+  .info-plan-detail-mobile {
+    display: none;
+  }
+
   .info-plan-detail-container {
     // margin-top: 40px;
 
@@ -585,7 +613,7 @@ export default {
 
 .info-right {
   // background-color: blue;
-  width: 50%;
+  width: 70%;
   height: 100%;
 
   display: flex;
@@ -594,16 +622,16 @@ export default {
   align-items: center;
 
   .info-card {
-    width: 48%;
+    width: 32%;
     height: 97%;
     border: #d9d9d9 solid 1px;
     border-radius: 10px;
-    padding: 30px;
+    padding: 30px 3.5%;
     color: #828282;
 
     .info-card-title {
       font-size: 16px;
-      margin-bottom: 30px;
+      margin-bottom: 10%;
     }
     textarea {
       width: 100%;
@@ -637,6 +665,7 @@ export default {
     }
   }
   .info-announce {
+    min-width: 170px;
     margin-right: 20px;
     .text {
       height: 60%;
@@ -651,6 +680,7 @@ export default {
     }
   }
   .info-admin {
+    min-width: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -683,6 +713,10 @@ export default {
     img {
       width: 50px;
       margin-right: 15px;
+      margin-bottom: 10px;
+    }
+    span {
+      white-space: nowrap;
     }
   }
   .info-table-state {
@@ -696,6 +730,115 @@ export default {
     width: 130px;
     margin: 5px 0;
     margin-right: 15px;
+  }
+}
+@media screen and (max-width: 720px) {
+  #info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .info-container {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+
+    .info-plan-detail-container {
+      display: none;
+    }
+    .info-plan-detail-mobile {
+      display: block;
+      .info-plan-detail {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        .info-plan-label {
+          margin-right: 20px;
+        }
+      }
+    }
+
+    .btn-setting {
+      margin-right: 15px;
+      color: #000000;
+    }
+
+    .btn-primary {
+      width: 110px;
+    }
+
+    .info-left {
+      height: auto;
+      .info-main {
+        height: auto;
+        .info-setting-btn {
+          margin-top: 25px;
+        }
+        button {
+          margin-bottom: 0;
+        }
+      }
+      .info-plan {
+        margin-top: 40px;
+
+        .info-plan-detail-container {
+          padding-left: 18px;
+        }
+        .info-plan-label-container {
+          margin-right: 20px;
+        }
+        .info-plan-label,
+        .info-plan-date {
+          margin-top: 0;
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    .info-right {
+      width: 100%;
+      margin-top: 20px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      textarea {
+        height: 100px;
+        margin-bottom: 10px;
+      }
+
+      .info-card {
+        margin-bottom: 20px;
+      }
+      .info-card-title {
+        margin-bottom: 15px;
+      }
+      .info-announce,
+      .info-admin {
+        width: 100%;
+        min-width: none;
+        padding: 20px;
+        height: auto;
+
+        .info-card-content {
+          height: 120px;
+        }
+      }
+    }
+  }
+  .info-table-user {
+    img {
+      margin-bottom: 10px;
+    }
+    span {
+      white-space: nowrap;
+    }
   }
 }
 </style>
