@@ -8,9 +8,11 @@
     @cancel="close"
   >
     <div class="content">
-      <div>
-        <img :src="user" />
-        <span class="user-name text">{{ userState.user_name }} </span>
+      <div class="content-detail-container">
+        <div class="content-detail">
+          <img :src="user" />
+          <span class="user-name text">{{ userState.user_name }} </span>
+        </div>
         <a-rate v-model="rating" allow-half />
       </div>
 
@@ -105,6 +107,42 @@ export default {
 
     .btn-cancel {
       margin-right: 20px;
+    }
+  }
+}
+@media screen and (max-width: 720px) {
+  .content {
+    height: 215px;
+    padding: 25px 15px;
+    .content-detail-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      .content-detail {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        img {
+          margin-right: 10px;
+          margin-bottom: 15px;
+        }
+        span {
+          margin: 0;
+          margin-bottom: 15px;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .btn-container {
+      margin-top: 30px;
+      .btn-primary {
+        width: 80px;
+      }
+      .btn-cancel {
+        margin-right: 15px;
+      }
     }
   }
 }

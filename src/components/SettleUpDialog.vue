@@ -8,16 +8,18 @@
     @cancel="close"
   >
     <div class="content">
-      <div>
-        <img :src="user" />
-        <span class="user-name">{{ userState.user_name }}</span>
-
-        <span class="state"
-          >{{ $t(`paid`) }} NT${{ userState.state ? userState.state[1] : 0 }}
-          {{ $t(`to`) }}</span
-        >
-        <img :src="user" />
-        <span>{{ $t(`you`) }}</span>
+      <div class="content-detail">
+        <div class="content-detail">
+          <img :src="user" />
+          <span class="user-name">{{ userState.user_name }}</span>
+        </div>
+        <div class="state">
+          {{ $t(`paid`) }} NT${{ userState.state ? userState.state[1] : 0 }}
+          {{ $t(`to`) }}
+        </div>
+        <div class="content-detail">
+          <img :src="user" /> <span>{{ $t(`you`) }}</span>
+        </div>
       </div>
 
       <div class="btn-container">
@@ -108,6 +110,16 @@ export default {
   padding: 26px;
   font-size: 16px;
 
+  .content-detail {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    margin-bottom: 20px;
+  }
+
   img {
     width: 50px;
     margin-right: 10px;
@@ -119,6 +131,7 @@ export default {
 
   .state {
     margin-right: 50px;
+    margin-bottom: 20px;
   }
 
   .btn-container {
@@ -139,6 +152,24 @@ export default {
 
     .btn-cancel {
       margin-right: 20px;
+    }
+  }
+}
+@media screen and (max-width: 720px) {
+  .content {
+    height: 300px;
+
+    .state {
+      margin-left: 60px;
+    }
+    .btn-container {
+      margin-top: 20px;
+      .btn-primary {
+        width: 90px;
+      }
+      .btn-cancel {
+        margin-right: 15px;
+      }
     }
   }
 }

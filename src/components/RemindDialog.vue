@@ -113,4 +113,22 @@ export default {
     }
   }
 }
+@media screen and (max-width: 720px) {
+  .content {
+    height: 220px;
+
+    img {
+      margin: 10px 10px 0 0;
+    }
+    .btn-container {
+      margin-top: 40px;
+      .btn-primary {
+        width: 80px;
+      }
+      .btn-cancel {
+        margin-right: 15px;
+      }
+    }
+  }
+}
 </style>

@@ -137,4 +137,28 @@ export default {
     }
   }
 }
+@media screen and (max-width: 720px) {
+  .content {
+    padding: 25px 15px;
+    height: 170px;
+    .user-name {
+      margin-right: 10px;
+    }
+
+    img {
+      margin-left: -12px;
+      width: 35px;
+    }
+
+    .btn-container {
+      margin-top: 30px;
+      .btn-primary {
+        width: 80px;
+      }
+      .btn-cancel {
+        margin-right: 15px;
+      }
+    }
+  }
+}
 </style>
