@@ -56,11 +56,8 @@
           <img :src="user" />
           {{ text.user_name}}
         </span>
-        <span slot="application_date" slot-scope="record" class="info-table-state"
-          >{{ $t(`${record}`) }}
-        </span>
         <span slot="action" slot-scope="record" class="info-table-action">
-          <div v-show="record.name == userName">
+          <div>
             <a-button
               v-if="!record.is_accepted"
               v-show="isAdmin"
@@ -171,20 +168,26 @@ export default {
       }
     },
     applyAccept(userId){
-      this.memberList.forEach((ele) => {
-        if(ele.user_id == userId){
-          ele.is_accepted = true
-        }
-      })
-      console.log({
-        "room_id": Number(this.roomId), "user_id": userId
-      });
-      const { data } = axiosClient.post(`/application/accept`, {
-        "room_id": this.roomId, "user_id": userId
-      })
-      if(data){
-        console.log(data)
+      if(this.memberCount == this.maxCount){
+        alert("the room is full")
       }
+      else{
+        this.memberList.forEach((ele) => {
+          if(ele.user_id == userId){
+            ele.is_accepted = true
+          }
+        })
+        console.log({
+          "room_id": Number(this.roomId), "user_id": userId
+        });
+        const { data } = axiosClient.post(`/application/accept`, {
+          "room_id": this.roomId, "user_id": userId
+        })
+        if(data){
+          console.log(data)
+        }
+      }
+      
     },
     openRemoveDialog(user) {
       this.selectedUserState = user;
@@ -215,15 +218,9 @@ export default {
       console.log(data)
       this.memberList = JSON.parse(JSON.stringify(data.data))
     }
-    else{
-      this.memberList = []
-    }
     data = await (await axiosClient.get(`/rooms/${this.roomId}`)).data;
     if (data) {
-      console.log(data)
       const email = localStorage.getItem("email");
-      console.log(email)
-      console.log(email == data.admin.email)
       if (email == data.admin.email) {
         this.isAdmin = true;
       }
@@ -234,6 +231,7 @@ export default {
       this.maxCount = data.max_count;
       this.planPrice = data.payment_fee
       this.memberCount = data.members.length
+      this.MatchingDeadline = data.matching_deadline
     }
   },
 };

@@ -37,7 +37,7 @@
           <a-form-item>
             <a-input
               v-decorator="[
-                'userName',
+                'email',
                 {
                   rules: [
                     {
@@ -95,7 +95,7 @@
             class="btn-primary"
             key="add Room"
             type="primary"
-            @click="goToMain()"
+            @click="postSignUp()"
           >
             {{ $t(`sign_up`) }}
           </a-button>
@@ -106,6 +106,7 @@
 </template>
 <script>
 import api from "../api";
+import axios from "axios";
 import firebase from "firebase";
 export default {
   data() {
@@ -121,6 +122,21 @@ export default {
     goToMain() {
       this.$router.push("/Main");
     },
+    async getName(){
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 1000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      const { data } = await axiosClient.get(`/user`);
+      if(data){
+        localStorage.setItem("name", data.name);
+        console.log(data);
+      }
+    },
     postSignUp() {
       this.form.validateFields((err, values) => {
         const requestOptions = {
@@ -128,10 +144,14 @@ export default {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         };
+        console.log(values);
         fetch(api + "/auth/signup", requestOptions)
           .then((response) => response.json())
           .then((response) => {
             localStorage.setItem("token", response.token);
+          })
+          .then(() => {
+            this.getName(); 
           })
           .then(() => this.goToMain())
           .catch((error) => {

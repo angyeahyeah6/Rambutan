@@ -94,6 +94,7 @@
 <script>
 import api from "../api";
 import firebase from "firebase";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -110,6 +111,7 @@ export default {
       this.$router.push("/Main");
     },
     postLogin() {
+      const that = this
       this.form.validateFields((err, values) => {
         const requestOptions = {
           method: "POST",
@@ -122,11 +124,29 @@ export default {
             localStorage.setItem("token", response.token);
             localStorage.setItem("email", values.email);
           })
+          .then(() => this.getName())
           .then(() => this.goToMain())
           .catch((error) => {
             console.log(error);
+            that.goToSignUp();
           });
       });
+    },
+    async getName(){
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 1000,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token"),
+        },
+      });
+      console.log(axiosClient);
+      const { data } = await axiosClient.get(`/user`);
+      if(data){
+        localStorage.setItem("name", data.name);
+        console.log(data);
+      }
     },
     googleLogin() {
       const that = this;
@@ -150,6 +170,7 @@ export default {
               localStorage.setItem("token", response.token);
               localStorage.setItem("email", result.user.email);
             })
+            .then(() => this.getName())
             .then(() => this.goToMain())
             .catch(() => {
               that.$router.push("/SignUp");

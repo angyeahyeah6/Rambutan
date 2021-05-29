@@ -80,4 +80,5 @@ export default {
   apply: "Apply",
   enter: "Enter",
   find: "Find",
+  find_memebers_online: "Find Members Online"
 };

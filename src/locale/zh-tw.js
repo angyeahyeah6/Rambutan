@@ -80,4 +80,5 @@ export default {
   apply: "申請",
   enter: "加入",
   find: "尋找",
+  find_memebers_online: "線上尋找你的組員"
 };

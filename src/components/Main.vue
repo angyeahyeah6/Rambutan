@@ -56,12 +56,14 @@
       </div>
 
       <div class="web-visible">
-        <a-button type="default" class="btn-primary find-plan-btn">{{
+        <a-button type="default" class="btn-primary find-plan-btn"
+        @click="goToOnlinePage()">{{
           $t(`find_plan_online`)
         }}</a-button>
       </div>
       <div class="mobile-visible">
-        <a-button type="default" class="btn-primary find-plan-btn">{{
+        <a-button type="default" class="btn-primary find-plan-btn"
+        @click="goToOnlinePage()">{{
           $t(`find`)
         }}</a-button>
       </div>
@@ -70,7 +72,7 @@
     <div v-if="rooms && rooms.length" class="room-card-container">
       <div v-for="item in rooms" :key="item.room_id" class="card-container">
         <a-card
-          v-show="item.room_status == 'created'"
+          v-show="item.room_status == 'start'"
           class="card-home"
           @click="goToInfoPage(item.room_id)"
         >
@@ -87,6 +89,23 @@
           <p v-if="item.payment_status == 'unpaid'">
             {{ $t(`owe`) }} NT$ {{ item.cost }}
           </p>
+        </a-card>
+        <a-card
+          v-show="item.room_status == 'created'"
+          class="card-home"
+          @click="goToApplyInfoPage(item.room_id)"
+        >
+          <p v-if="item.is_host">{{ $t(`admin`) }}</p>
+          <p v-else>{{ $t(`member`) }}</p>
+          <a-space align="baseline">
+            <div>
+              <h1>{{ item.service_name | ellipsis }}</h1>
+            </div>
+            <div>
+              <p>{{ item.plan_name }}</p>
+            </div>
+          </a-space>
+          <p>New Application</p>
         </a-card>
       </div>
     </div>
@@ -135,6 +154,13 @@ export default {
     },
     goToInfoPage(room_id) {
       this.$router.push(`/Info/${room_id}`); // should be automatically route to the new id
+    },
+    goToOnlinePage(){
+      this.$router.push(`/onlinematch`);
+      
+    },
+    goToApplyInfoPage(room_id){
+      this.$router.push(`/ApplyInfo/${room_id}`); 
     },
     getRooms() {
       fetch(api + "/rooms", {

@@ -78,7 +78,7 @@
           :checked="this.select.public"
           @change="(val) => (this.select.public = !this.select.public)"
         >
-          {{ $t(`make_this_room_public`) }}</a-checkbox
+          {{ $t(`find_memebers_online`) }}  </a-checkbox
         >
       </div>
       <div class="ard-button-container">
@@ -257,9 +257,12 @@ export default {
         max_count: this.select.peoplecnt,
         service_id: this.select.serviceId,
         plan_name: this.select.plans,
-        next_page: this.select.public,
+        is_public: this.select.public,
+        matching_deadline: this.select.matching_deadline,
+        message: this.select.message
       };
       if (this.select.serviceId > -1) {
+        console.log(result)
         fetch(api + "/rooms", {
           method: "POST",
           headers: {

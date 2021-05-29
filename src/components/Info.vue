@@ -458,9 +458,6 @@ export default {
       if (email == data.admin.email) {
         this.isAdmin = true;
       }
-      if(data.is_public){
-        this.isRoomStart
-      }
       this.serviceId = data.service_id;
       this.serviceName = data.service_name;
       this.planName = data.plan_name;

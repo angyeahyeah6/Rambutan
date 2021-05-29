@@ -58,7 +58,8 @@
         <a-button
           type="primary"
           class="btn-action"
-          :disabled="text.isApply"
+          :disabled="text.isApply || text.member_count==text.max_count || 
+          text.admin_name == userName"
           @click="() => applyJoinRoom(text.room_id)">
           {{ $t(`apply`) }}
         </a-button
@@ -88,6 +89,7 @@ export default {
   },
   data() {
     return {
+      userName:localStorage.getItem("name"),
       publicRoom:[],
       user,
       addModalVisible: false,
@@ -114,7 +116,7 @@ export default {
         {
           key: "time",
           width: "16%",
-          dataIndex: "time",
+          dataIndex: "matching_deadline",
           slots: { title: "customDeadline" },
           scopedSlots: { customRender: "time" },
         },
@@ -127,7 +129,7 @@ export default {
         {
           key: "mes",
           width: "21%",
-          dataIndex: "mes",
+          dataIndex: "public_message",
           slots: { title: "customMessage" },
           scopedSlots: { customRender: "mes" },
         },
@@ -171,6 +173,7 @@ export default {
         .then((response) => response.json())
         .then((response) => {
           response.data.forEach((ele) =>  {
+            console.log(ele)
               let roomObj = {
                 "room_id": ele.room_id,
                 "admin_name": ele.admin_name,
@@ -180,19 +183,18 @@ export default {
                 "cost": ele.cost,
                 "max_count": ele.max_count,
                 "member_count": ele.member_count,
+                "isApply": ele.is_applied,
+                "public_message": ele.public_message,
+                "matching_deadline": ele.matching_deadline
               };
-              if(roomObj.max_count != roomObj.member_count){
-                roomObj["isApply"] = false;
-              }
-              else{
-                roomObj["true"] = true;
-              }
               this.publicRoom.push(roomObj);
           });
         });
     },
     async applyJoinRoom(roomId){
-      const res = await axiosClient.get(`/rooms/${roomId}/application`);
+      const res = await axiosClient.post(`/rooms/${roomId}/application`, {
+        "application_message": "let me in plz"
+      });
       if(res.status == 200){
         let roomIdx;
         this.publicRoom.forEach((room, id) => {
