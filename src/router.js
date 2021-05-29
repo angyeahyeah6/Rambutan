@@ -3,9 +3,10 @@ import Info from "./components/Info";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import OnlineMatch from './components/OnlineMatch'
+import OnlineMatch from "./components/OnlineMatch";
+import Gate from "./components/Gate";
 const routes = [
-  { path: "/", redirect: "/Login" },
+  { name: "/", path: "/", component: Gate },
   { name: "Login", path: "/Login", component: Login },
   { name: "SignUp", path: "/SignUp", component: SignUp },
   { name: "Main", path: "/Main", component: Main },
