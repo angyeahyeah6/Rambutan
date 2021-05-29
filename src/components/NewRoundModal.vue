@@ -15,15 +15,11 @@
 
       <div class="item">
         <div class="label">{{ $t(`interval`) }}</div>
-        <a-input
-          placeholder="0"
-          v-model="interval"
-          style="width: 110px; margin-right: 12px;"
-        />
+        <a-input placeholder="0" v-model="interval" class="item-input" />
         <a-select
           v-model="intervalUnit"
           :default-value="intervalUnitData[0]"
-          style="width: 110px"
+          class="item-input"
         >
           <a-select-option v-for="ele in intervalUnitData" :key="ele">
             {{ ele }}
@@ -33,15 +29,11 @@
 
       <div class="item">
         <div class="label">Payment Deadline</div>
-        <a-input
-          placeholder="0"
-          v-model="deadline"
-          style="width: 110px; margin-right: 12px;"
-        />
+        <a-input placeholder="0" v-model="deadline" class="item-input" />
         <a-select
           v-model="deadlineUnit"
           :default-value="deadlineUnitData[0]"
-          style="width: 110px"
+          class="item-input"
         >
           <a-select-option v-for="ele in deadlineUnitData" :key="ele">
             {{ ele }}
@@ -154,6 +146,10 @@ export default {
 
   .item {
     margin-bottom: 50px;
+    .item-input {
+      width: 110px;
+      margin-right: 15px;
+    }
 
     .label {
       margin-bottom: 10px;
@@ -164,7 +160,7 @@ export default {
     }
 
     .text {
-      margin-left: 15px;
+      margin-left: 0px;
     }
   }
 
@@ -185,6 +181,26 @@ export default {
 
     .btn-new-round {
       margin-top: 50px;
+    }
+  }
+}
+@media screen and (max-width: 600px) {
+  .content {
+    height: 550px;
+    padding: 26px;
+    font-size: 16px;
+    .item {
+      margin-bottom: 20px;
+
+      .item-input {
+        width: 110px;
+        margin-right: 15px;
+        margin-bottom: 10px;
+      }
+
+      .date-picker {
+        width: 200px;
+      }
     }
   }
 }

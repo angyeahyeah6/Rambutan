@@ -720,6 +720,9 @@ export default {
   }
   .info-table-state {
   }
+  // .info-table-action {
+  //   width: 50%;
+  // }
 
   .btn-action {
     font-weight: normal;
@@ -735,6 +738,7 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    width: 100%;
   }
   .info-container {
     width: 100%;
@@ -827,14 +831,6 @@ export default {
           height: 120px;
         }
       }
-    }
-  }
-  .info-table-user {
-    img {
-      margin-bottom: 10px;
-    }
-    span {
-      white-space: nowrap;
     }
   }
 }
