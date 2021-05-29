@@ -3,7 +3,12 @@
     <div class="pro-user-container">
       <img :src="user" />
       <div class="name">{{ this.data.name }}</div>
-      <a-rate :default-value="this.data.rating" allow-half disabled />
+      <a-rate
+        :default-value="this.data.rating"
+        allow-half
+        disabled
+        class="rating"
+      />
     </div>
     <div class="pro-detail-container">
       <a-form hasFeedback :style="{ radius: '2px' }">
@@ -201,20 +206,28 @@ export default {
 <style lang="less" scoped>
 #pro {
   display: flex;
-  margin: 20px;
+  margin-top: 35px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 .pro-form-item {
   margin-bottom: 50px;
 }
 .pro-detail-container {
-  margin-right: 94px;
-  width: 395px;
+  // margin-right: 94px;
+  width: 30%;
+  max-width: 310px;
+  min-width: 200px;
 }
 .pro-user-container {
-  width: 180px;
-  margin: 40px;
+  width: 18%;
+  margin-top: 20px;
+  margin-right: 40px;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
 
   img {
     margin-bottom: 15px;
@@ -227,7 +240,7 @@ export default {
   justify-content: flex-end;
   display: flex;
   padding: 0px;
-  margin-top: 110px;
+  margin-top: 70px;
 }
 img {
   width: 80px;
@@ -239,5 +252,41 @@ img {
   border-radius: 50px;
   color: black;
   font-weight: bold;
+}
+@media screen and (max-width: 720px) {
+  #pro {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 0px;
+  }
+  .pro-form-item {
+    margin-bottom: 20px;
+    p {
+      margin-bottom: 5px;
+    }
+  }
+  .pro-user-container {
+    width: 100%;
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    .name {
+      margin-bottom: 10px;
+    }
+  }
+  .pro-detail-container {
+    // margin-right: 94px;
+    width: 100%;
+    max-width: 275px;
+    min-width: none;
+  }
+  .pro-button-container {
+    justify-content: flex-end;
+    display: flex;
+    padding: 0px;
+    margin-top: 50px;
+  }
 }
 </style>
