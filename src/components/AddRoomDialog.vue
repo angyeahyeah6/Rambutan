@@ -9,6 +9,7 @@
       :width="480"
       :body-style="{ padding: '40px', paddingTop: '40px', height: '542px' }"
     >
+    <div v-show="!next_page" id="add-first-stage">
       <div class="ard-block-container">
         <p>{{ $t(`plan_select`) }} <span class="star">*</span></p>
         <div class="plan-type">
@@ -85,24 +86,33 @@
           class="btn-primary"
           key="add Room"
           type="primary"
-          @click="createRoom()"
+          @click="checkPublic()"
         >
           + {{ $t(`add_room`) }}
         </a-button>
       </div>
+    </div>
+    <div v-show="next_page" id="add-second-stage">
+      <AddRoomPublic 
+        @setPublic="() => this.next_page=false"
+        @addPublicDetail="(val) => addPublicDetail(val)"/>
+    </div>
     </a-modal>
   </div>
 </template>
 <script>
 import DropDown from "./DropDown";
 import api from "../api";
+import AddRoomPublic from "../components/AddRoomPublic";
 export default {
   components: {
     DropDown,
+    AddRoomPublic
   },
   props: { visible: { type: Boolean, default: false } },
   data() {
     return {
+      next_page: false,
       select: {
         serviceId: -1,
         platforms: "Platforms",
@@ -113,6 +123,8 @@ export default {
         peoplecnt: 1,
         max_count: 1,
         public: false,
+        matching_deadline:"",
+        message:""
       },
       isSelect: false,
       isVisible: false,
@@ -149,6 +161,20 @@ export default {
     };
   },
   methods: {
+    addPublicDetail(val){
+      console.log(val)
+      this.select.matching_deadline = val.deadline,
+      this.select.message = val.message
+      this.createRoom();
+    },
+    checkPublic(){
+      if(this.select.public == true){
+        this.next_page = true;
+      }
+      else{
+        this.createRoom();
+      }
+    },
     selectPeople(val) {
       if (val < this.select.max_count) {
         this.select.peoplecnt = val;
@@ -231,7 +257,7 @@ export default {
         max_count: this.select.peoplecnt,
         service_id: this.select.serviceId,
         plan_name: this.select.plans,
-        is_public: this.select.public,
+        next_page: this.select.public,
       };
       if (this.select.serviceId > -1) {
         fetch(api + "/rooms", {

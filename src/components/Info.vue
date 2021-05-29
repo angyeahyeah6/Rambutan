@@ -267,6 +267,7 @@ export default {
   },
   data() {
     return {
+      isRoomStart: true,
       user,
       isSettingDisabled: false, // default should be false
       isNewRoundDisabled: false, // default should be true
@@ -456,6 +457,9 @@ export default {
       const email = localStorage.getItem("email");
       if (email == data.admin.email) {
         this.isAdmin = true;
+      }
+      if(data.is_public){
+        this.isRoomStart
       }
       this.serviceId = data.service_id;
       this.serviceName = data.service_name;
