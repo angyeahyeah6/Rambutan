@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Nav class="app-nav" />
+    <Nav :currentPage="currentPage" class="app-nav" />
     <div class="main-container">
       <router-view />
     </div>
@@ -19,6 +19,7 @@ export default {
       islogin: false,
       hasaccout: true,
       isRouterAlive: true,
+      currentPage: "",
     };
   },
   methods: {
@@ -26,6 +27,17 @@ export default {
       this.isRouterAlive = false;
       this.$nextTick(() => (this.isRouterAlive = true));
     },
+  },
+  updated() {
+    if (this.$route.name) {
+      this.currentPage = this.$route.name;
+    }
+    // console.log("updated", this.$route.name);
+  },
+  mounted() {
+    if (this.$route.name) {
+      this.currentPage = this.$route.name;
+    }
   },
 };
 </script>
