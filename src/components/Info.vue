@@ -53,33 +53,57 @@
             </div>
             <div class="info-plan-date-container">
               <div class="info-plan-date">
-                {{ this.timelineBoard.paymentDeadline }}
+                {{ timelineBoard.paymentDeadline }}
+                <!-- 2020-02-02 -->
               </div>
               <div class="info-plan-date">
-                {{ this.timelineBoard.interval }}
+                {{ timelineBoard.interval }}
+                <!-- 2020-02-02 - 2020-01-02 -->
               </div>
               <div class="info-plan-date">
-                {{ this.timelineBoard.date }}
+                {{ timelineBoard.date }}
+                <!-- 2021-01-02 -->
               </div>
             </div>
           </div>
           <div class="info-plan-detail-mobile">
             <div class="info-plan-detail">
               <div class="info-plan-label">{{ $t(`payment_deadline`) }}</div>
-              <div class="info-plan-date">
-                {{ this.timelineBoard.paymentDeadline }}
+              <div
+                class="info-plan-date"
+                v-html="
+                  timelineBoard.paymentDeadline != '-'
+                    ? timelineBoard.paymentDeadline
+                    : mobileBorad.paymentDeadline
+                "
+              >
+                <!-- {{ timelineBoard.paymentDeadline }} -->
               </div>
             </div>
             <div class="info-plan-detail">
               <div class="info-plan-label">{{ $t(`interval`) }}</div>
-              <div class="info-plan-date">
-                {{ this.timelineBoard.interval }}
+              <div
+                class="info-plan-date"
+                v-html="
+                  timelineBoard.interval != '-'
+                    ? timelineBoard.interval
+                    : mobileBorad.interval
+                "
+              >
+                <!-- {{ timelineBoard.interval }} -->
               </div>
             </div>
             <div class="info-plan-detail">
               <div class="info-plan-label">{{ $t(`date`) }}</div>
-              <div class="info-plan-date">
-                {{ this.timelineBoard.date }}
+              <div
+                class="info-plan-date"
+                v-html="
+                  timelineBoard.date != '-'
+                    ? timelineBoard.date
+                    : mobileBorad.date
+                "
+              >
+                <!-- {{ timelineBoard.date }} -->
               </div>
             </div>
           </div>
@@ -286,6 +310,11 @@ export default {
       roundInfo: {},
       memberList: [],
       admin: {},
+      mobileBorad: {
+        paymentDeadline: '<div style="padding-left: 85px;">-</div>',
+        interval: '<div style="padding-left: 150px;">-</div>',
+        date: '<div style="padding-left: 168px;">-</div>',
+      },
       timelineBoard: {
         paymentDeadline: "-",
         interval: "-",
@@ -535,13 +564,14 @@ export default {
     justify-content: flex-start;
     align-items: center;
     .info-service-name {
+      white-space: nowrap;
       font-weight: 700;
       font-size: 30px;
-      margin-right: 40px;
+      margin-right: 8%;
     }
     .info-level {
       font-size: 30px;
-      margin-right: 40px;
+      margin-right: 8%;
       font-weight: 400;
     }
     .anticon {
@@ -602,12 +632,13 @@ export default {
     align-items: flex-start;
 
     .info-plan-label-container {
-      margin-right: 130px;
+      margin-right: 70%;
     }
 
     .info-plan-label,
     .info-plan-date {
-      margin-top: 30px;
+      margin-top: 20px;
+      white-space: nowrap;
     }
   }
 }
@@ -708,6 +739,7 @@ export default {
   }
 }
 .info-table {
+  width: 100%;
   margin-top: 40px;
   .info-table-user {
     img {
@@ -733,7 +765,39 @@ export default {
     margin-right: 15px;
   }
 }
-@media screen and (max-width: 720px) {
+@media screen and (min-width: 768px) and (max-width: 915px) {
+  .info-container {
+    height: 350px;
+    .info-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      .info-main {
+        height: 50%;
+        .info-title {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+        .info-setting-btn {
+          margin-top: 25px;
+        }
+      }
+
+      .info-plan {
+        height: 50%;
+        margin-top: 0;
+        .info-plan-label-container {
+          margin-right: 50%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
   #info {
     display: flex;
     flex-direction: column;
@@ -750,6 +814,9 @@ export default {
     justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: nowrap;
+    .info-title {
+      flex-wrap: wrap;
+    }
 
     .info-plan-detail-container {
       display: none;
