@@ -76,7 +76,10 @@ export default {
       this.$router.push("/");
     },
     goToHomePage() {
-      this.$router.push("/Main");
+      if(localStorage.getItem("token")){
+        this.$router.push("/Main");
+      }
+      
     },
     goToProfilePage() {
       this.$router.push("/Profile");
@@ -99,7 +102,7 @@ export default {
       this.$router.push("/Login");
     },
     signup() {
-      this.router.push("/SignUp");
+      this.$router.push("/SignUp");
     },
   },
 };

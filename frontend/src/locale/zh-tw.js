@@ -90,4 +90,5 @@ export default {
   accepted: "已接受申請",
   logout: "登出",
   waiting_for_new_friends_to_join: "等待申請",
+  login_failed: "帳號或密碼有錯誤"
 };

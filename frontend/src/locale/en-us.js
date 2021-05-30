@@ -90,4 +90,5 @@ export default {
   accepted: "Accepted",
   logout: "Logout",
   waiting_for_new_friends_to_join: "Waiting for new friends to join!",
+  login_failed: "The email or password is incorrect!"
 };

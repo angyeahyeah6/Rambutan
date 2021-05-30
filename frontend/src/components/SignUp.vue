@@ -1,5 +1,6 @@
 <template>
   <a-modal
+    @cancel="goToGate()"
     v-model="visible"
     :closable="false"
     :footer="false"
@@ -121,6 +122,9 @@ export default {
     },
     goToMain() {
       this.$router.push("/Main");
+    },
+    goToGate() {
+      this.$router.push("/");
     },
     async getName(){
       const axiosClient = axios.create({

@@ -1,5 +1,6 @@
 <template>
   <a-modal
+    @cancel="goToGate()"
     v-model="visible"
     :closable="false"
     :footer="false"
@@ -60,6 +61,7 @@
             </a-input>
           </a-form-item>
         </div>
+        <p v-if="showWarning" class="l-warning">{{ $t(`login_failed`) }}</p>
         <div class="l-center-container">
           <p style="color:#1890FF">
             {{ $t(`forgot_password`) }}
@@ -101,6 +103,7 @@ export default {
       token: "",
       visible: true,
       form: this.$form.createForm(this),
+      showWarning:false,
     };
   },
   methods: {
@@ -109,6 +112,9 @@ export default {
     },
     goToMain() {
       this.$router.push("/Main");
+    },
+    goToGate() {
+      this.$router.push("/");
     },
     postLogin() {
       const that = this
@@ -119,7 +125,18 @@ export default {
           body: JSON.stringify(values),
         };
         fetch(api + "/auth/signin", requestOptions)
-          .then((response) => response.json())
+          .then((response) => {
+            if(response.status == 200){
+              return response.json()
+            }
+            else if(response.status == 401){
+              this.showWarning = true;
+              throw "error";
+            }
+            else{
+              that.goToSignUp();
+            }
+          })
           .then((response) => {
             localStorage.setItem("token", response.token);
             localStorage.setItem("email", values.email);
@@ -127,8 +144,7 @@ export default {
           .then(() => this.getName())
           .then(() => this.goToMain())
           .catch((error) => {
-            console.log(error);
-            that.goToSignUp();
+            console.log(error)
           });
       });
     },
@@ -200,6 +216,10 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
+.l-warning {
+  margin-top: 10px;
+  color: red;
+}
 .l-block-container {
   width: 395px;
   height: 479px;
