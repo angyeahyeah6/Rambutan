@@ -47,7 +47,7 @@
       </span>
 
       <span slot="cost" slot-scope="text" class="online-table-user">
-        NT$ {{ text.cost}} / month
+        NT$ {{ text.cost}} / {{ $t(`month`) }}
       </span>
 
       <span slot="mem" slot-scope="text" class="online-table-user">

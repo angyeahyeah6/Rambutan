@@ -273,7 +273,13 @@ export default {
         })
           .then((response) => response.json())
           .then((res) => {
-            this.$router.push("/Info/" + res.room_id.toString());
+            console.log(this.select)
+            if(this.select.public){
+              this.$router.push("/ApplyInfo/" + res.room_id.toString());
+            }
+            else{
+              this.$router.push("/Info/" + res.room_id.toString());
+            }  
           })
           .catch((err) => {
             console.log(err);

@@ -60,17 +60,20 @@ export default {
       this.$router.push("/Info");
     },
     joinRoom() {
+
       fetch(api + "/rooms/join", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
+          "Authorization": "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify({ invitation_code: this.roomNumber }),
       })
+        .then(response => console.log(response))
         .then((response) => response.json())
         .then((res) => {
-          if (res) {
+          console.log(res.status)
+          if (res.status == 200) {
             this.$router.push("/Info/" + res.room_id);
           } else {
             this.showWarning = true;

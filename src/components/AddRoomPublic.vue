@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="ard-block-container">
-    <p>The room will be public</p>
+    <p>{{ $t(`the_room_will_be_public`) }}</p>
     </div>
     <div class="ard-block-container">
-      <p>Matching Deadline<span class="star">*</span></p>
+      <p>{{ $t(`matching_deadline`) }}<span class="star">*</span></p>
       <a-date-picker class="date-picker" @change="handleDatePicker" />
     </div>
     <div class="ard-block-container">
-      <p>Message</p>
+      <p>{{ $t(`message`) }}</p>
       <textarea v-model="message"/>
     </div>
     <div class="ard-button-container">
@@ -18,7 +18,7 @@
           type="default"
           @click="goBack()"
         >
-          Back
+          {{ $t(`back`) }} 
       </a-button>
       <a-button
         class="btn-primary"
@@ -26,7 +26,7 @@
         type="primary"
         @click="submit()"
       >
-        Submit
+        {{ $t(`submit`) }}
       </a-button>
       
     </div>

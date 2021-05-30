@@ -80,5 +80,15 @@ export default {
   apply: "Apply",
   enter: "Enter",
   find: "Find",
-  find_memebers_online: "Find Members Online"
+  find_memebers_online: "Find Members Online",
+  the_room_will_be_public: "The room will be public",
+  matching_deadline: "Matching Deadline",
+  back: "Back",
+  submit: "Submit",
+  go:"Go",
+  application_date: "Application Date",
+  accept: "Accept",
+  accepted: "Accepted",
+  pending: "Pending",
+  logout: "Logout"
 };

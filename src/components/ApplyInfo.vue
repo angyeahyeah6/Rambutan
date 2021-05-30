@@ -15,16 +15,16 @@
               :disabled="!(this.memberCount == this.maxCount)"
               @click="startRoom()"
             >
-              Go
+              {{ $t(`go`) }}
             </a-button>
           </div>
         </div>
         <div class="info-plan">
           <div class="info-plan-detail-container">
             <div class="info-plan-label-container">
-              <div class="info-plan-label"> Matching Deadline</div>
-              <div class="info-plan-label"> Plan Price</div>
-              <div class="info-plan-label"> Member</div>
+              <div class="info-plan-label"> {{ $t(`matching_deadline`) }}</div>
+              <div class="info-plan-label"> {{ $t(`plan_price`) }}</div>
+              <div class="info-plan-label"> {{ $t(`member`) }}</div>
             </div>
             <div class="info-plan-date-container">
               <div class="info-plan-date">
@@ -49,7 +49,7 @@
         :locale="emptyText"
       >
         <span slot="customUser">{{ $t(`user`) }}</span>
-        <span slot="customDate">Application Date</span>
+        <span slot="customDate">{{ $t(`application_date`) }}</span>
         <span slot="customAction">{{ $t(`action`) }}</span>
 
         <span slot="user_name" slot-scope="text" class="info-table-user">
@@ -65,23 +65,27 @@
               class="btn-action"
               @click="applyAccept(record.user_id)"
             >
-              <a-icon type="user-add" /> Accept
+              <a-icon type="user-add" /> {{ $t(`accept`) }}
             </a-button>
 
             <a-button
               v-else
-              v-show="isAdmin"
               type="primary"
               class="btn-action"
               disabled>
-              <a-icon type="user-add" /> Accepted
+              <a-icon type="user-add" />  {{ $t(`accepted`) }}
             </a-button>
+
+            <div 
+            v-show="!record.is_accepted && !isAdmin" > 
+            {{ $t(`pending`) }} </div>
 
             <a-button
               v-show="isAdmin"
               type="default"
               class="btn-action"
               :disabled="record.is_accepted"
+              @click="openRemoveDialog(record)"
               ><a-icon type="delete" />{{ $t(`remove`) }}</a-button
             >
           </div>
@@ -92,6 +96,7 @@
       v-if="serviceId"
       :visible="isRemoveDialogOpen"
       :roomId="roomId"
+      :userState="selectedUserState"
       @close="closeRemoveDialog()"
       @removeUser="removeUser"
     />
@@ -108,7 +113,8 @@ const axiosClient = axios.create({
   timeout: 1000,
   headers: {
     "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
+    "Authorization": "Bearer " + localStorage.getItem("token"),
+    "accept": "application/json"
   },
 });
 export default {
@@ -123,7 +129,8 @@ export default {
         emptyText: this.$t(`go_to_settings_to_add_members`),
       },
       roomId: "",
-      isAdmin: true,
+      selectedUserState: {},
+      isAdmin: false,
       serviceId: 0,
       serviceName: "",
       planName: "",
@@ -164,8 +171,9 @@ export default {
     startRoom(){
       const response = axiosClient.post(`/rooms/${this.roomId}/start`)
       if(response.status == 201){
-        this.$router.push(`/Info/${this.roomId}`);
+        console.log(this.roomId)
       }
+      this.$router.push(`/Info/${this.roomId}`);
     },
     applyAccept(userId){
       if(this.memberCount == this.maxCount){
@@ -176,15 +184,13 @@ export default {
           if(ele.user_id == userId){
             ele.is_accepted = true
           }
-        })
-        console.log({
-          "room_id": Number(this.roomId), "user_id": userId
         });
         const { data } = axiosClient.post(`/application/accept`, {
-          "room_id": this.roomId, "user_id": userId
+          room_id: parseInt(this.roomId), user_id: userId
         })
         if(data){
           console.log(data)
+          this.memberCount += 1;
         }
       }
       

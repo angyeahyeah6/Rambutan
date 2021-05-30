@@ -149,9 +149,10 @@ export default {
           .then((response) => response.json())
           .then((response) => {
             localStorage.setItem("token", response.token);
+            localStorage.setItem("email", values.email);
           })
-          .then(() => {
-            this.getName(); 
+          .then(async () => {
+            await this.getName(); 
           })
           .then(() => this.goToMain())
           .catch((error) => {

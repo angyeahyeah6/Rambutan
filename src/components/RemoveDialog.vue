@@ -79,12 +79,25 @@ export default {
       this.$emit("close", this.isVisible);
     },
     async removeUser() {
-      const res = await axiosClient.delete(`/participant`, {
-        data: {
-          user_id: this.userState.user_id,
+      var res;
+      if(this.$route.name == "ApplyInfo"){
+        console.log({
           room_id: parseInt(this.roomId),
-        },
-      });
+          user_id: this.userState.user_id,
+        })
+        res = await axiosClient.delete(`/application/delete`,{
+          room_id: parseInt(this.roomId),
+          user_id: this.userState.user_id,
+        });
+      }
+      else{
+        res = await axiosClient.delete(`/participant`, {
+          data: {
+            user_id: this.userState.user_id,
+            room_id: parseInt(this.roomId),
+          },
+        });
+      }
       // console.log(res);
       if (res) {
         this.isVisible = false;

@@ -86,7 +86,7 @@
               <p>{{ item.plan_name }}</p>
             </div>
           </a-space>
-          <p v-if="item.payment_status == 'unpaid'">
+          <p v-if="item.payment_status == 'unpaid' && item.cost != undefined">
             {{ $t(`owe`) }} NT$ {{ item.cost }}
           </p>
         </a-card>

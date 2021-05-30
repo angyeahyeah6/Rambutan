@@ -16,7 +16,17 @@
         />
       </svg>
       <div v-if="currentPage != '/'" class="nav-profile-btn">
-        <img :src="user" @click="goToProfilePage()" />
+        <a-dropdown>
+          <img :src="user"/>
+          <a-menu slot="overlay">
+            <a-menu-item>
+              <a @click="goToProfilePage()">{{ $t(`settings`) }}</a>
+            </a-menu-item>
+            <a-menu-item>
+              <a @click="logout()">{{ $t(`logout`) }}</a>
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </div>
       <div v-else class="nav-auth-btn">
         <div class="btn-auth btn-login" @click="login()">
@@ -46,6 +56,10 @@ export default {
     };
   },
   methods: {
+    logout(){
+      localStorage.clear();
+      this.$router.push("/");
+    },
     goToHomePage() {
       this.$router.push("/Main");
     },

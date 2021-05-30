@@ -80,5 +80,16 @@ export default {
   apply: "申請",
   enter: "加入",
   find: "尋找",
-  find_memebers_online: "線上尋找你的組員"
+  find_memebers_online: "線上尋找你的組員",
+  the_room_will_be_public: "此房間會公開招募組員",
+  matching_deadline: "媒合最終期限",
+  back: "前一頁",
+  submit: "繳交",
+  go:"前往",
+  application_date: "申請時間",
+  accept: "接受申請",
+  accepted: "已接受申請",
+  pending: "處理中",
+  logout: "登出"
 };
+  
