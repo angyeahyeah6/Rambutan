@@ -86,9 +86,10 @@ export default {
           user_id: this.userState.user_id,
         })
         res = await axiosClient.delete(`/application/delete`,{
+          data: {
           room_id: parseInt(this.roomId),
           user_id: this.userState.user_id,
-        });
+        }});
       }
       else{
         res = await axiosClient.delete(`/participant`, {
