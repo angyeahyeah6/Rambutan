@@ -581,7 +581,7 @@ export default {
   }
   .info-setting-btn {
     width: 100%;
-    margin-top: 30px;
+    margin-top: 20px;
     white-space: nowrap;
   }
   .btn-setting {
