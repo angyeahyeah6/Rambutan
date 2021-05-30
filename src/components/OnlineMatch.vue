@@ -1,7 +1,7 @@
 <template>
-<div id="online">
-  <div class="online-button-container">
-    <a-button
+  <div id="online">
+    <div class="online-button-container">
+      <a-button
         type="primary"
         class="addroom-btn btn-primary"
         @click="openAddRoomModal()"
@@ -11,62 +11,72 @@
           :visible="addModalVisible"
           @closeAddModal="closeAddRoomModal()"
         />
-    </a-button>
-    <a-input-search placeholder="Search Plan" style="width: 200px"/>
-  </div>
-  <div class="online-table">
-    <a-table
-      :columns="columns"
-      :data-source="rooms"
-      rowKey="room_id"
-    >
-      <span slot="customAdmin">{{ $t(`admin_title`) }}</span>
-      <span slot="customPlan">{{ $t(`plan_title`) }}</span>
-      <span slot="customPrice">{{ $t(`plan_price`) }}</span>
-      <span slot="customDeadline">{{ $t(`matching_deadline`) }}</span>
-      <span slot="customMembers">{{ $t(`members`) }}</span>
-      <span slot="customMessage">{{ $t(`message`) }}</span>
-      <span slot="customAction">{{ $t(`action`) }}</span>
+      </a-button>
+      <div class="online-search">
+        <a-icon
+          slot="prefix"
+          type="search"
+          class="input-icon"
+          style="font-size:18px; margin-right: 12px"
+        />
+        <input
+          class="online-input"
+          placeholder="  Search Plan"
+          style="width: 200px; border: none;"
+        />
+      </div>
+    </div>
+    <div class="online-table">
+      <a-table :columns="columns" :data-source="rooms" rowKey="room_id">
+        <span slot="customAdmin">{{ $t(`admin_title`) }}</span>
+        <span slot="customPlan">{{ $t(`plan_title`) }}</span>
+        <span slot="customPrice">{{ $t(`plan_price`) }}</span>
+        <span slot="customDeadline">{{ $t(`matching_deadline`) }}</span>
+        <span slot="customMembers">{{ $t(`members`) }}</span>
+        <span slot="customMessage">{{ $t(`message`) }}</span>
+        <span slot="customAction">{{ $t(`action`) }}</span>
 
+        <span slot="admin_name" slot-scope="text" class="online-table-user">
+          <a-space align="center">
+            <img :src="user" />
+            <a-space direction="vertical">
+              {{ text.admin_name }}
+              <div>
+                {{ text.admin_rating }}
+                <a-icon type="star" theme="twoTone" two-tone-color="#F2C94C" />
+              </div>
+            </a-space>
+          </a-space>
+        </span>
 
-      <span slot="admin_name" slot-scope="text" class="online-table-user">
-        <a-space  align="center">
-        <img :src="user" />
-        <a-space direction="vertical">
-        {{ text.admin_name }} 
-        <div>
-        {{ text.admin_rating }}
-        <a-icon type="star" theme="twoTone" two-tone-color="#F2C94C" />
-        </div>
-        </a-space>
-        </a-space>
-      </span>
+        <span slot="plan_name" slot-scope="text" class="online-table-user">
+          {{ text.service_name }} - {{ text.plan_name }}
+        </span>
 
-      <span slot="plan_name" slot-scope="text" class="online-table-user">
-        {{ text.service_name}} - {{ text.plan_name}}
-      </span>
+        <span slot="cost" slot-scope="text" class="online-table-user">
+          NT$ {{ text.cost }} / {{ $t(`month`) }}
+        </span>
 
-      <span slot="cost" slot-scope="text" class="online-table-user">
-        NT$ {{ text.cost}} / {{ $t(`month`) }}
-      </span>
+        <span slot="mem" slot-scope="text" class="online-table-user">
+          {{ text.member_count }} / {{ text.max_count }}
+        </span>
 
-      <span slot="mem" slot-scope="text" class="online-table-user">
-        {{ text.member_count }} / {{ text.max_count }} 
-      </span>
-
-      <span slot="action" slot-scope="text" class="online-table-action">
-        <a-button
-          type="primary"
-          class="btn-action"
-          :disabled="text.isApply || text.member_count==text.max_count || 
-          text.admin_name == userName"
-          @click="() => applyJoinRoom(text.room_id)">
-          {{ $t(`apply`) }}
-        </a-button
-        >
-      </span>
-    </a-table>
-  </div>
+        <span slot="action" slot-scope="text" class="online-table-action">
+          <a-button
+            type="primary"
+            class="btn-action"
+            :disabled="
+              text.isApply ||
+                text.member_count == text.max_count ||
+                text.admin_name == userName
+            "
+            @click="() => applyJoinRoom(text.room_id)"
+          >
+            {{ $t(`apply`) }}
+          </a-button>
+        </span>
+      </a-table>
+    </div>
   </div>
 </template>
 <script>
@@ -89,8 +99,8 @@ export default {
   },
   data() {
     return {
-      userName:localStorage.getItem("name"),
-      publicRoom:[],
+      userName: localStorage.getItem("name"),
+      publicRoom: [],
       user,
       addModalVisible: false,
       // data,
@@ -148,12 +158,12 @@ export default {
     },
   },
   watch: {
-    publicRoom:{
-      handler (){
-        console.log("watch")
+    publicRoom: {
+      handler() {
+        console.log("watch");
       },
       deep: true,
-    }
+    },
   },
   methods: {
     openAddRoomModal() {
@@ -172,30 +182,30 @@ export default {
       })
         .then((response) => response.json())
         .then((response) => {
-          response.data.forEach((ele) =>  {
-            console.log(ele)
-              let roomObj = {
-                "room_id": ele.room_id,
-                "admin_name": ele.admin_name,
-                "admin_rating": ele.admin_rating,
-                "service_name": ele.service_name,
-                "plan_name": ele.plan_name,
-                "cost": ele.cost,
-                "max_count": ele.max_count,
-                "member_count": ele.member_count,
-                "isApply": ele.is_applied,
-                "public_message": ele.public_message,
-                "matching_deadline": ele.matching_deadline
-              };
-              this.publicRoom.push(roomObj);
+          response.data.forEach((ele) => {
+            console.log(ele);
+            let roomObj = {
+              room_id: ele.room_id,
+              admin_name: ele.admin_name,
+              admin_rating: ele.admin_rating,
+              service_name: ele.service_name,
+              plan_name: ele.plan_name,
+              cost: ele.cost,
+              max_count: ele.max_count,
+              member_count: ele.member_count,
+              isApply: ele.is_applied,
+              public_message: ele.public_message,
+              matching_deadline: ele.matching_deadline,
+            };
+            this.publicRoom.push(roomObj);
           });
         });
     },
-    async applyJoinRoom(roomId){
+    async applyJoinRoom(roomId) {
       const res = await axiosClient.post(`/rooms/${roomId}/application`, {
-        "application_message": "let me in plz"
+        application_message: "let me in plz",
       });
-      if(res.status == 200){
+      if (res.status == 200) {
         let roomIdx;
         this.publicRoom.forEach((room, id) => {
           if (room.room_id == roomId) {
@@ -204,22 +214,70 @@ export default {
         });
         this.publicRoom[roomIdx].isApply = true;
       }
-    }
+    },
   },
-  mounted: function(){
+  mounted: function() {
     this.getPublicRoom();
-  }
+  },
 };
 </script>
 <style lang="less" scoped>
 #online {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
-.online-button-container{
-  margin-bottom: 40px;
+.online-button-container {
+  width: 50%;
+  margin-bottom: 0px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
+
+  .addroom-btn {
+    margin-right: 15%;
+  }
+
+  .online-search {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #c4c4c4;
+    .online-input {
+      margin-right: 20px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border: none;
+      outline: none;
+      color: black;
+      .ant-input {
+        border: none;
+      }
+
+      .input-icon {
+        margin-right: 12px;
+        width: 18px;
+      }
+    }
+    ::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #c4c4c4;
+      opacity: 1; /* Firefox */
+    }
+
+    :-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: #c4c4c4;
+    }
+
+    ::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: #c4c4c4;
+    }
+  }
 }
 .online-container {
   width: 100%;
@@ -227,7 +285,7 @@ export default {
 }
 .online-table {
   // background-color: green;
-  margin-top: 40px;
+  margin-top: 20px;
   .online-table-user {
     img {
       width: 50px;
@@ -244,7 +302,7 @@ export default {
     border-radius: 50px;
     width: 130px;
     margin: 5px 0;
-    margin-right: 15px;
+    // margin-right: 15px;
   }
 }
 .btn-primary {
@@ -253,5 +311,26 @@ export default {
   border-radius: 50px;
   color: black;
   font-weight: bold;
+  margin-right: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+@media screen and (max-width: 720px) {
+  .online-table {
+    .online-table-user {
+      img {
+        display: none;
+      }
+    }
+  }
+  .online-table {
+    .btn-action {
+      padding: 20px 10px;
+      width: auto;
+      height: auto;
+      white-space: normal;
+      // margin-right: 0;
+    }
+  }
 }
 </style>

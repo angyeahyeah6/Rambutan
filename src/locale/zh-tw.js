@@ -74,7 +74,7 @@ export default {
   none: "無",
   announce: "發佈",
   admin_title: "擁有者",
-  plan_title:"方案",
+  plan_title: "方案",
   message: "訊息",
   apply: "申請",
   enter: "加入",
@@ -84,10 +84,10 @@ export default {
   matching_deadline: "媒合最終期限",
   back: "前一頁",
   submit: "繳交",
-  go:"前往",
+  go: "前往",
   application_date: "申請時間",
   accept: "接受申請",
   accepted: "已接受申請",
-  logout: "登出"
+  logout: "登出",
+  waiting_for_new_friends_to_join: "等待申請",
 };
-  
