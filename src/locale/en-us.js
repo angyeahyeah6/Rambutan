@@ -74,7 +74,7 @@ export default {
   none: "None",
   announce: "Save",
   admin_title: "Admin",
-  plan_title:"Plan",
+  plan_title: "Plan",
   message: "Message",
   apply: "Apply",
   enter: "Enter",
@@ -84,9 +84,10 @@ export default {
   matching_deadline: "Matching Deadline",
   back: "Back",
   submit: "Submit",
-  go:"Go",
+  go: "Go",
   application_date: "Application Date",
   accept: "Accept",
   accepted: "Accepted",
-  logout: "Logout"
+  logout: "Logout",
+  waiting_for_new_friends_to_join: "Waiting for new friends to join!",
 };

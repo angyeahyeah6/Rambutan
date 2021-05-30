@@ -1,7 +1,7 @@
 <template>
   <div id="nav">
     <img :src="logo" @click="goToHomePage()" class="nav-home-btn" />
-    <div class="nav-right-container">
+    <div v-if="currentPage != '/'" class="nav-right-container">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="36px"
@@ -15,9 +15,9 @@
           d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-.61.08-1.21.21-1.78L8.99 15v1c0 1.1.9 2 2 2v1.93C7.06 19.43 4 16.07 4 12zm13.89 5.4c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.4z"
         />
       </svg>
-      <div v-if="currentPage != '/'" class="nav-profile-btn">
+      <div class="nav-profile-btn">
         <a-dropdown>
-          <img :src="user"/>
+          <img :src="user" />
           <a-menu slot="overlay">
             <a-menu-item>
               <a @click="goToProfilePage()">{{ $t(`settings`) }}</a>
@@ -28,7 +28,22 @@
           </a-menu>
         </a-dropdown>
       </div>
-      <div v-else class="nav-auth-btn">
+    </div>
+    <div v-else class="nav-right-auth-container">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="36px"
+        viewBox="0 0 24 24"
+        width="36px"
+        fill="#C4C4C4"
+        @click="changeLang()"
+      >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path
+          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-.61.08-1.21.21-1.78L8.99 15v1c0 1.1.9 2 2 2v1.93C7.06 19.43 4 16.07 4 12zm13.89 5.4c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.4z"
+        />
+      </svg>
+      <div class="nav-auth-btn">
         <div class="btn-auth btn-login" @click="login()">
           {{ $t(`log_in`) }}
         </div>
@@ -56,7 +71,7 @@ export default {
     };
   },
   methods: {
-    logout(){
+    logout() {
       localStorage.clear();
       this.$router.push("/");
     },
@@ -119,7 +134,8 @@ export default {
   /* margin-left: 130px; */
   font-size: 30px;
 }
-.nav-right-container {
+.nav-right-container,
+.nav-right-auth-container {
   width: 22%;
   min-width: 70px;
   margin-right: 8%;
@@ -130,12 +146,13 @@ export default {
   // background-color: black;
 
   svg {
+    width: 36px;
     cursor: pointer;
   }
 
   .nav-profile-btn,
   .nav-auth-btn {
-    width: 100%;
+    width: 90%;
     height: 30px;
     border-radius: 100%;
     // background-color: #e0e0e0;
@@ -150,6 +167,9 @@ export default {
       width: 32px;
       height: 32px;
     }
+  }
+  .nav-profile-btn {
+    width: 35px;
   }
   .nav-auth-btn {
     .btn-auth {
@@ -171,5 +191,9 @@ export default {
       border-color: @primary-color;
     }
   }
+}
+.nav-right-container {
+  width: 7%;
+  min-width: 75px;
 }
 </style>
