@@ -3,14 +3,14 @@ version: '3.1'
 services:
   nginx:
     build: ./nginx
-    container_name: billsgate-frontend-nginx
+    container_name: nginx
     ports:
       - 80:80
     restart: always
 
   frontend:
     build: ./frontend
-    container_name: billsgate-frontend
+    container_name: frontend
     restart: always
     expose:
       - 8080
