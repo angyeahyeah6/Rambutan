@@ -75,7 +75,6 @@ export default {
   announce: "Save",
   admin_title: "Admin",
   plan_title:"Plan",
-  matching_deadline: "Matching Deadline",
   message: "Message",
   apply: "Apply",
   enter: "Enter",
@@ -89,6 +88,5 @@ export default {
   application_date: "Application Date",
   accept: "Accept",
   accepted: "Accepted",
-  pending: "Pending",
   logout: "Logout"
 };

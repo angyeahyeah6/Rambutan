@@ -75,7 +75,6 @@ export default {
   announce: "發佈",
   admin_title: "擁有者",
   plan_title:"方案",
-  matching_deadline: "媒合期限",
   message: "訊息",
   apply: "申請",
   enter: "加入",
@@ -89,7 +88,6 @@ export default {
   application_date: "申請時間",
   accept: "接受申請",
   accepted: "已接受申請",
-  pending: "處理中",
   logout: "登出"
 };
   
