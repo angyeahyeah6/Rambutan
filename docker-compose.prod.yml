@@ -28,4 +28,4 @@ services:
     container_name: billsgate-frontend
     restart: always
     expose:
-      - 8080
+      - 80

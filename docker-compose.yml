@@ -13,4 +13,4 @@ services:
     container_name: frontend
     restart: always
     expose:
-      - 8080
+      - 80
