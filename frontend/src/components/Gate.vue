@@ -35,12 +35,6 @@ export default {
     this.$nextTick(() => {
       this.isShow = true;
     });
-    if (localStorage.getItem("reloaded")) {
-      localStorage.removeItem("reloaded");
-    } else {
-      localStorage.setItem("reloaded", "1");
-      location.reload();
-    }
   },
 };
 </script>

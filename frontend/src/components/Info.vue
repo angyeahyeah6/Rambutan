@@ -38,7 +38,7 @@
               class="btn-primary"
               type="primary"
               v-else
-              :disabled="!(members.length == maxCount-1 && !isInRound)"
+              :disabled="!(members.length == maxCount - 1 && !isInRound)"
               @click="openNewRoundModal()"
             >
               {{ $t(`new_round`) }}
@@ -166,13 +166,16 @@
           <img :src="user" />
           <span>{{ text == "You" ? $t(`you`) : text }}</span></span
         >
-        <span slot="payment_status" slot-scope="record" class="info-table-state"
-          >
-          <div v-if="record=='confirmed'">
-          {{ $t(`paid`) }}
+        <span
+          slot="payment_status"
+          slot-scope="record"
+          class="info-table-state"
+        >
+          <div v-if="record == 'confirmed'">
+            {{ $t(`paid`) }}
           </div>
           <div v-else>
-            {{ $t(`owe_you`) }} {{ paymentFee/members.length}}
+            {{ $t(`owe_you`) }} {{ paymentFee / members.length }}
           </div>
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
@@ -180,7 +183,9 @@
             v-show="isAdmin || record.user_name == 'You'"
             type="primary"
             class="btn-action"
-            :disabled="isSettleUpDisabled"
+            :disabled="
+              isSettleUpDisabled || record.payment_status == 'confirmed'
+            "
             @click="openSettleUpDialog(record)"
           >
             <a-icon type="dollar" />{{ $t(`settle_up`) }}</a-button
@@ -211,7 +216,7 @@
     </div>
     <DoubleCheckDialog
       :visible="isDoubleCheckModalOpen"
-      delteObject="this Round"
+      delteObject="round"
       @doYes="deleteRound()"
       @close="closeDoubleCheckModal()"
     />
@@ -459,6 +464,7 @@ export default {
           this.memberList[id].payment_status = newUserStatus.status;
         }
       });
+      window.location.reload();
     },
     removeUser(userId) {
       this.isRemoveDialogOpen = !this.isRemoveDialogOpen;
@@ -506,8 +512,8 @@ export default {
       this.memberList = data.members;
       this.originalAnnouncement = data.announcement;
       this.announcement = data.announcement;
-      this.paymentFee = data.payment_fee
-      console.log("payment" + this.paymentFee)
+      this.paymentFee = data.payment_fee;
+      console.log("payment" + this.paymentFee);
 
       if (data.round.payment_deadline != "") {
         this.isInRound = true;

@@ -1,12 +1,13 @@
 <template>
-  <a-modal
+  <!-- <a-modal
     @cancel="goToGate()"
     v-model="visible"
     :closable="false"
     :footer="false"
     :width="495"
-    :body-style="{ padding: '50px', paddingTop: '50px', height: '600px' }"
-  >
+    :body-style="{  }"
+  > -->
+  <div id="sign-up">
     <div class="su-block-container">
       <a-button class="google-login" block @click="googleSignUp()">
         <a-icon type="google" />
@@ -103,7 +104,8 @@
         </div>
       </a-form>
     </div>
-  </a-modal>
+    <!-- </a-modal> -->
+  </div>
 </template>
 <script>
 import api from "../api";
@@ -126,7 +128,7 @@ export default {
     goToGate() {
       this.$router.push("/");
     },
-    async getName(){
+    async getName() {
       const axiosClient = axios.create({
         baseURL: api,
         timeout: 1000,
@@ -136,7 +138,7 @@ export default {
         },
       });
       const { data } = await axiosClient.get(`/user`);
-      if(data){
+      if (data) {
         localStorage.setItem("name", data.name);
         console.log(data);
       }
@@ -156,7 +158,7 @@ export default {
             localStorage.setItem("email", values.email);
           })
           .then(async () => {
-            await this.getName(); 
+            await this.getName();
           })
           .then(() => this.goToMain())
           .catch((error) => {
@@ -197,6 +199,14 @@ export default {
 };
 </script>
 <style scoped>
+#sign-up {
+  padding: 50px;
+  padding-top: 50px;
+  height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .su-block-container {
   width: 395px;
   height: 479px;

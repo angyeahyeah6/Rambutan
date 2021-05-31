@@ -9,32 +9,32 @@
       :width="480"
       :body-style="{ padding: '40px', paddingTop: '40px', height: '542px' }"
     >
-    <div v-show="!next_page" id="add-first-stage">
-      <div class="ard-block-container">
-        <p>{{ $t(`plan_select`) }} <span class="star">*</span></p>
-        <div class="plan-type">
-          <DropDown
-            class="dropdown"
-            :title="this.select.platforms"
-            :menulist="platforms"
-            @selectValue="selectPlatform"
-          />
-          <DropDown class="dropdown" v-if="!isSelect" disabled />
-          <DropDown
-            class="dropdown"
-            v-else
-            :title="this.select.plans"
-            :menulist="plans"
-            @selectValue="selectPlan"
-          />
+      <div v-show="!next_page" id="add-first-stage">
+        <div class="ard-block-container">
+          <p>{{ $t(`plan_select`) }} <span class="star">*</span></p>
+          <div class="plan-type">
+            <DropDown
+              class="dropdown"
+              :title="this.select.platforms"
+              :menulist="platforms"
+              @selectValue="selectPlatform"
+            />
+            <DropDown class="dropdown" v-if="!isSelect" disabled />
+            <DropDown
+              class="dropdown"
+              v-else
+              :title="this.select.plans"
+              :menulist="plans"
+              @selectValue="selectPlan"
+            />
+          </div>
         </div>
-      </div>
-      <div class="ard-block-container">
-        <p>{{ $t(`plan_price`) }}</p>
-        <div class="plan-type plan-price">
-          <a-space :size="15" align="baseline">
-          <p class="ard-text"> NT </p>
-          <!-- <DropDown
+        <div class="ard-block-container">
+          <p>{{ $t(`plan_price`) }}</p>
+          <div class="plan-type plan-price">
+            <a-space :size="15" align="baseline">
+              <p class="ard-text">NT</p>
+              <!-- <DropDown
             disabled
             class="dropdown currency"
             title="NT"
@@ -45,15 +45,15 @@
               }
             "
           /> -->
-          <a-input-number
-            class="input"
-            disabled
-            v-model="this.select.price"
-            :min="0"
-          />
-          <p>/</p>
-          <p> month </p>
-          <!-- <DropDown
+              <a-input-number
+                class="input"
+                disabled
+                v-model="this.select.price"
+                :min="0"
+              />
+              <p>/</p>
+              <p>month</p>
+              <!-- <DropDown
             class="dropdown time"
             :title="$t(`${this.select.timeSlot}`)"
             :menulist="timeSlot"
@@ -63,45 +63,46 @@
               }
             "
           /> -->
+            </a-space>
+          </div>
+        </div>
+        <div class="ard-block-container">
+          <p>{{ $t(`split`) }}</p>
+          <a-space :size="15" align="baseline">
+            <a-input-number
+              v-model="this.select.peoplecnt"
+              :min="1"
+              :max="this.select.max_count"
+              @change="selectPeople"
+            />
+            <p>{{ $t(`people`) }}</p>
           </a-space>
         </div>
+        <div style="margin-top:40px;">
+          <a-checkbox
+            :checked="this.select.public"
+            @change="(val) => (this.select.public = !this.select.public)"
+          >
+            {{ $t(`find_memebers_online`) }}
+          </a-checkbox>
+        </div>
+        <div class="ard-button-container">
+          <a-button
+            class="btn-primary"
+            key="add Room"
+            type="primary"
+            @click="checkPublic()"
+          >
+            + {{ $t(`add_room`) }}
+          </a-button>
+        </div>
       </div>
-      <div class="ard-block-container">
-        <p>{{ $t(`split`) }}</p>
-        <a-space :size="15" align="baseline">
-          <a-input-number
-            v-model="this.select.peoplecnt"
-            :min="1"
-            :max="this.select.max_cnt"
-            @change="selectPeople"
-          />
-          <p>{{ $t(`people`) }}</p>
-        </a-space>
+      <div v-show="next_page" id="add-second-stage">
+        <AddRoomPublic
+          @setPublic="() => (this.next_page = false)"
+          @addPublicDetail="(val) => addPublicDetail(val)"
+        />
       </div>
-      <div style="margin-top:40px;">
-        <a-checkbox
-          :checked="this.select.public"
-          @change="(val) => (this.select.public = !this.select.public)"
-        >
-          {{ $t(`find_memebers_online`) }}  </a-checkbox
-        >
-      </div>
-      <div class="ard-button-container">
-        <a-button
-          class="btn-primary"
-          key="add Room"
-          type="primary"
-          @click="checkPublic()"
-        >
-          + {{ $t(`add_room`) }}
-        </a-button>
-      </div>
-    </div>
-    <div v-show="next_page" id="add-second-stage">
-      <AddRoomPublic 
-        @setPublic="() => this.next_page=false"
-        @addPublicDetail="(val) => addPublicDetail(val)"/>
-    </div>
     </a-modal>
   </div>
 </template>
@@ -112,7 +113,7 @@ import AddRoomPublic from "../components/AddRoomPublic";
 export default {
   components: {
     DropDown,
-    AddRoomPublic
+    AddRoomPublic,
   },
   props: { visible: { type: Boolean, default: false } },
   data() {
@@ -128,8 +129,8 @@ export default {
         peoplecnt: 1,
         max_count: 1,
         public: false,
-        matching_deadline:"",
-        message:""
+        matching_deadline: "",
+        message: "",
       },
       isSelect: false,
       isVisible: false,
@@ -166,17 +167,16 @@ export default {
     };
   },
   methods: {
-    addPublicDetail(val){
-      console.log(val)
-      this.select.matching_deadline = val.deadline,
-      this.select.message = val.message
+    addPublicDetail(val) {
+      console.log(val);
+      (this.select.matching_deadline = val.deadline),
+        (this.select.message = val.message);
       this.createRoom();
     },
-    checkPublic(){
-      if(this.select.public == true){
+    checkPublic() {
+      if (this.select.public == true) {
         this.next_page = true;
-      }
-      else{
+      } else {
         this.createRoom();
       }
     },
@@ -264,10 +264,10 @@ export default {
         plan_name: this.select.plans,
         is_public: this.select.public,
         matching_deadline: this.select.matching_deadline,
-        message: this.select.message
+        message: this.select.message,
       };
       if (this.select.serviceId > -1) {
-        console.log(result)
+        console.log(result);
         fetch(api + "/rooms", {
           method: "POST",
           headers: {
@@ -278,13 +278,12 @@ export default {
         })
           .then((response) => response.json())
           .then((res) => {
-            console.log(this.select)
-            if(this.select.public){
+            console.log(this.select);
+            if (this.select.public) {
               this.$router.push("/ApplyInfo/" + res.room_id.toString());
-            }
-            else{
+            } else {
               this.$router.push("/Info/" + res.room_id.toString());
-            }  
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -304,7 +303,7 @@ export default {
 };
 </script>
 <style scoped>
-.ard-text{
+.ard-text {
   height: 32px;
   margin-right: 10px;
 }

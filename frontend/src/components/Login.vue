@@ -1,16 +1,5 @@
 <template>
-  <a-modal
-    @cancel="goToGate()"
-    v-model="visible"
-    :closable="false"
-    :footer="false"
-    :width="495"
-    :body-style="{
-      padding: '50px',
-      paddingTop: '50px',
-      height: '550px',
-    }"
-  >
+  <div id="login">
     <div class="l-block-container">
       <a-button class="google-login" block @click="googleLogin()">
         <a-icon type="google" />
@@ -91,7 +80,7 @@
         </div>
       </a-form>
     </div>
-  </a-modal>
+  </div>
 </template>
 <script>
 import api from "../api";
@@ -103,7 +92,7 @@ export default {
       token: "",
       visible: true,
       form: this.$form.createForm(this),
-      showWarning:false,
+      showWarning: false,
     };
   },
   methods: {
@@ -117,23 +106,21 @@ export default {
       this.$router.push("/");
     },
     postLogin() {
-      const that = this
+      const that = this;
       this.form.validateFields((err, values) => {
         const requestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json"},
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         };
         fetch(api + "/auth/signin", requestOptions)
           .then((response) => {
-            if(response.status == 200){
-              return response.json()
-            }
-            else if(response.status == 401){
+            if (response.status == 200) {
+              return response.json();
+            } else if (response.status == 401) {
               this.showWarning = true;
               throw "error";
-            }
-            else{
+            } else {
               that.goToSignUp();
             }
           })
@@ -144,22 +131,22 @@ export default {
           .then(() => this.getName())
           .then(() => this.goToMain())
           .catch((error) => {
-            console.log(error)
+            console.log(error);
           });
       });
     },
-    async getName(){
+    async getName() {
       const axiosClient = axios.create({
         baseURL: api,
         timeout: 1000,
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token"),
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       console.log(axiosClient);
       const { data } = await axiosClient.get(`/user`);
-      if(data){
+      if (data) {
         localStorage.setItem("name", data.name);
         console.log(data);
       }
@@ -216,6 +203,14 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
+#login {
+  padding: 50px;
+  padding-top: 50px;
+  height: 550px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .l-warning {
   margin-top: 10px;
   color: red;

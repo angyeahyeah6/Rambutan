@@ -56,16 +56,20 @@
       </div>
 
       <div class="web-visible">
-        <a-button type="default" class="btn-primary find-plan-btn"
-        @click="goToOnlinePage()">{{
-          $t(`find_plan_online`)
-        }}</a-button>
+        <a-button
+          type="default"
+          class="btn-primary find-plan-btn"
+          @click="goToOnlinePage()"
+          >{{ $t(`find_plan_online`) }}</a-button
+        >
       </div>
       <div class="mobile-visible">
-        <a-button type="default" class="btn-primary find-plan-btn"
-        @click="goToOnlinePage()">{{
-          $t(`find`)
-        }}</a-button>
+        <a-button
+          type="default"
+          class="btn-primary find-plan-btn"
+          @click="goToOnlinePage()"
+          >{{ $t(`find`) }}</a-button
+        >
       </div>
     </div>
 
@@ -155,12 +159,11 @@ export default {
     goToInfoPage(room_id) {
       this.$router.push(`/Info/${room_id}`); // should be automatically route to the new id
     },
-    goToOnlinePage(){
+    goToOnlinePage() {
       this.$router.push(`/onlinematch`);
-      
     },
-    goToApplyInfoPage(room_id){
-      this.$router.push(`/ApplyInfo/${room_id}`); 
+    goToApplyInfoPage(room_id) {
+      this.$router.push(`/ApplyInfo/${room_id}`);
     },
     getRooms() {
       fetch(api + "/rooms", {
@@ -179,16 +182,6 @@ export default {
   },
   created() {
     this.getRooms();
-  },
-
-  mounted() {
-    // work around
-    if (localStorage.getItem("reloaded")) {
-      localStorage.removeItem("reloaded");
-    } else {
-      localStorage.setItem("reloaded", "1");
-      location.reload();
-    }
   },
 };
 </script>

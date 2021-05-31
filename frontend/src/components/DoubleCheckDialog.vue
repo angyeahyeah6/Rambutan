@@ -9,7 +9,8 @@
   >
     <div class="content">
       <div>
-        {{ $t(`are_you_sure_you_want_to_remove`) }}  {{ delteObject }}
+        {{ $t(`are_you_sure_you_want_to_remove`) }}{{ $t(`this`)
+        }}{{ $t(`${delteObject}`) }} ?
       </div>
 
       <div class="btn-container">
@@ -65,7 +66,7 @@ export default {
     },
   },
   methods: {
-    doYes(){
+    doYes() {
       this.$emit("doYes");
       this.close();
     },

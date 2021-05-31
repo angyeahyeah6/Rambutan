@@ -44,7 +44,7 @@ export default {
   action: "Action",
   unpaid: "Unpaid",
   pendings: "Pending",
-  confirmed: "Comfirmed",
+  confirmed: "Paid",
   settle_up: "Settle up",
   remind: "Remind",
   rate: "Rate",
@@ -91,5 +91,8 @@ export default {
   logout: "Logout",
   waiting_for_new_friends_to_join: "Waiting for new friends to join!",
   login_failed: "The email or password is incorrect!",
-  owe_you: "Owe You NT$"
+  owe_you: "Owe You NT$",
+  round: "round",
+  room: "room",
+  this: "this",
 };

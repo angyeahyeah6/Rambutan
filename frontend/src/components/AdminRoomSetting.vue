@@ -166,13 +166,19 @@
             class="btn-primary btn-delete"
             type="danger"
             ghost
-            @click="deleteRoom()"
+            @click="openDoubleCheckDialog()"
           >
             {{ $t(`delete_room`) }}
           </a-button>
         </div>
       </div>
     </div>
+    <DoubleCheckDialog
+      :visible="isDeleteDialogOpen"
+      delteObject="room"
+      @doYes="deleteRoom()"
+      @close="closeDoubleCheckModal()"
+    />
   </a-modal>
 </template>
 
@@ -183,6 +189,7 @@ import question from "../assets/question.png";
 import axios from "axios";
 import api from "../api";
 // import _ from "lodash";
+import DoubleCheckDialog from "./DoubleCheckDialog";
 
 const planData = ["Youtube", "Netflix"];
 const planLevelData = {
@@ -202,9 +209,10 @@ const axiosClient = axios.create({
 export default {
   components: {
     CopyToClipboard,
+    DoubleCheckDialog,
   },
   props: {
-    isPublic: { type: Boolean, default: false},
+    isPublic: { type: Boolean, default: false },
     visible: { type: Boolean, default: false },
     roomId: { type: String, default: "0" },
     isAdmin: { type: Boolean, default: false },
@@ -266,6 +274,8 @@ export default {
       isSaved: false,
       isChanged: false,
       settingData: {},
+
+      isDeleteDialogOpen: false,
     };
   },
   watch: {
@@ -347,6 +357,10 @@ export default {
       this.isVisible = false;
       this.$emit("close", this.isVisible);
     },
+    async deleteRoom() {
+      await axiosClient.delete(`/rooms/${this.roomId}`);
+      this.$router.push("/Main");
+    },
     handleSettingState(e) {
       this.selectedItem = e.key;
     },
@@ -370,9 +384,8 @@ export default {
       const pin = newPin.code;
       this.pinCodes.unshift(pin);
     },
-    async deleteRoom() {
-      await axiosClient.delete(`/rooms/${this.roomId}`);
-      this.$router.push("/Main");
+    async openDoubleCheckDialog() {
+      this.isDeleteDialogOpen = true;
     },
   },
   async mounted() {
@@ -397,7 +410,7 @@ export default {
 
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
-span{
+span {
   font-size: 16px;
   margin: 0;
 }
@@ -440,9 +453,7 @@ span{
 }
 .content-item {
   margin-bottom: 30px;
-  .red {
-    color: #ff4d4f;
-  }
+
   span {
     font-size: 16px;
     margin: 0 15px;

@@ -30,6 +30,15 @@
 </template>
 <script>
 import api from "../api";
+import axios from "axios";
+const axiosClient = axios.create({
+  baseURL: api,
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + localStorage.getItem("token"),
+  },
+});
 export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
@@ -56,30 +65,12 @@ export default {
       this.isVisible = false;
       this.$emit("closeEnterModal", this.isVisible);
     },
-    goToInfoPage() {
-      this.$router.push("/Info");
-    },
-    joinRoom() {
-
-      fetch(api + "/rooms/join", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("token"),
-        },
-        body: JSON.stringify({ invitation_code: this.roomNumber }),
-      })
-        .then(response => console.log(response))
-        .then((response) => response.json())
-        .then((res) => {
-          console.log(res.status)
-          if (res.status == 200) {
-            this.$router.push("/Info/" + res.room_id);
-          } else {
-            this.showWarning = true;
-          }
-        })
-        .catch((err) => console.log(err));
+    async joinRoom() {
+      const { data } = await axiosClient.post("/rooms/join", {
+        invitation_code: this.roomNumber,
+      });
+      console.log("data", data);
+      this.$router.push(`/Info/${data.room_id}`);
     },
   },
 };
