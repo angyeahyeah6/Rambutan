@@ -107,7 +107,7 @@ export default {
       columns: [
         {
           key: "admin_name",
-          width: "16%",
+          width: "18%",
           slots: { title: "customAdmin" },
           scopedSlots: { customRender: "admin_name" },
         },
