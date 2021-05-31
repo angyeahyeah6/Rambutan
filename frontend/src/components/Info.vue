@@ -26,8 +26,9 @@
             <a-button
               v-show="isAdmin"
               v-if="isInRound"
-              class="btn-primary"
-              type="primary"
+              class="btn-primary btn-danger"
+              type="danger"
+              ghost
               @click="openDoubleCheckModal()"
             >
               {{ $t(`delete_round`) }}
@@ -37,7 +38,7 @@
               class="btn-primary"
               type="primary"
               v-else
-              :disabled="!(members.length >= 1 && !isInRound)"
+              :disabled="!(members.length == maxCount-1 && !isInRound)"
               @click="openNewRoundModal()"
             >
               {{ $t(`new_round`) }}
@@ -166,7 +167,13 @@
           <span>{{ text == "You" ? $t(`you`) : text }}</span></span
         >
         <span slot="payment_status" slot-scope="record" class="info-table-state"
-          >{{ $t(`${record}`) }}
+          >
+          <div v-if="record=='confirmed'">
+          {{ $t(`paid`) }}
+          </div>
+          <div v-else>
+            {{ $t(`owe_you`) }} {{ paymentFee/members.length}}
+          </div>
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
@@ -210,6 +217,7 @@
     />
     <AdminRoomSetting
       v-if="serviceId"
+      :isPublic="isPublic"
       :visible="isSettingRoomModalOpen"
       :roomId="roomId"
       :isAdmin="isAdmin"
@@ -354,6 +362,7 @@ export default {
       isRemindDialogOpen: false,
       isRateDialogOpen: false,
       isRemoveDialogOpen: false,
+      paymentFee: 0,
     };
   },
   computed: {
@@ -497,6 +506,8 @@ export default {
       this.memberList = data.members;
       this.originalAnnouncement = data.announcement;
       this.announcement = data.announcement;
+      this.paymentFee = data.payment_fee
+      console.log("payment" + this.paymentFee)
 
       if (data.round.payment_deadline != "") {
         this.isInRound = true;

@@ -46,7 +46,7 @@
         <div class="l-form-item">
           <p>{{ $t(`password`) }}</p>
           <a-form-item>
-            <a-input
+            <a-input-password
               v-decorator="[
                 'password',
                 {
@@ -58,7 +58,7 @@
                 },
               ]"
             >
-            </a-input>
+            </a-input-password>
           </a-form-item>
         </div>
         <p v-if="showWarning" class="l-warning">{{ $t(`login_failed`) }}</p>

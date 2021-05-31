@@ -64,7 +64,7 @@
         <div class="su-form-item">
           <p>{{ $t(`password`) }}</p>
           <a-form-item>
-            <a-input
+            <a-input-password
               v-decorator="[
                 'password',
                 {
@@ -77,7 +77,7 @@
                 },
               ]"
             >
-            </a-input>
+            </a-input-password>
           </a-form-item>
         </div>
         <div class="su-center-container">

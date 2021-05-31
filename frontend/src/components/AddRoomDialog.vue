@@ -32,7 +32,10 @@
       <div class="ard-block-container">
         <p>{{ $t(`plan_price`) }}</p>
         <div class="plan-type plan-price">
-          <DropDown
+          <a-space :size="15" align="baseline">
+          <p class="ard-text"> NT </p>
+          <!-- <DropDown
+            disabled
             class="dropdown currency"
             title="NT"
             :menulist="currency"
@@ -41,7 +44,7 @@
                 this.select.currency = val.value;
               }
             "
-          />
+          /> -->
           <a-input-number
             class="input"
             disabled
@@ -49,7 +52,8 @@
             :min="0"
           />
           <p>/</p>
-          <DropDown
+          <p> month </p>
+          <!-- <DropDown
             class="dropdown time"
             :title="$t(`${this.select.timeSlot}`)"
             :menulist="timeSlot"
@@ -58,7 +62,8 @@
                 this.select.timeSlot = val.value;
               }
             "
-          />
+          /> -->
+          </a-space>
         </div>
       </div>
       <div class="ard-block-container">
@@ -299,6 +304,10 @@ export default {
 };
 </script>
 <style scoped>
+.ard-text{
+  height: 32px;
+  margin-right: 10px;
+}
 .ard-input {
   height: 32px;
   width: 109px;

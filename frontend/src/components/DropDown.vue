@@ -15,7 +15,7 @@
 </template>
 <script>
 export default {
-  props: ["title", "menulist"],
+  props: ["title", "menulist", "disabled"],
   data() {
     return {
       iconType: "user",

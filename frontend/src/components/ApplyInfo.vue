@@ -17,6 +17,14 @@
             >
               {{ $t(`go`) }}
             </a-button>
+            <a-button
+              class="btn-primary btn-setting"
+              style="{width:214px;}"
+              v-show="isAdmin"
+              @click="deleteRoom()"
+            >
+              {{ $t(`delete_room`) }}
+            </a-button>
           </div>
         </div>
         <div class="info-plan">
@@ -170,6 +178,10 @@ export default {
     };
   },
   methods: {
+    async deleteRoom() {
+      await axiosClient.delete(`/rooms/${this.roomId}`);
+      this.$router.push("/Main");
+    },
     startRoom() {
       const response = axiosClient.post(`/rooms/${this.roomId}/start`);
       if (response.status == 201) {

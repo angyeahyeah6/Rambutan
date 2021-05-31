@@ -72,7 +72,7 @@
             </a-select>
           </div>
           <div class="content-item">
-            <div class="content-title red">{{ $t(`plan_price`) }}</div>
+            <div class="content-title">{{ $t(`plan_price`) }}</div>
             <a-select
               v-model="currencySelected"
               :default-value="currencyData[0]"
@@ -92,8 +92,9 @@
             <span> / </span>
             <a-select
               v-model="periodSelected"
-              :default-value="periodData[0]"
+              :default-value="periodData[1]"
               class="price-select"
+              disabled
             >
               <a-select-option v-for="ele in periodData" :key="ele">
                 {{ ele }}
@@ -101,7 +102,7 @@
             </a-select>
           </div>
           <div class="content-item">
-            <div class="content-title red">{{ $t(`split`) }}</div>
+            <div class="content-title">{{ $t(`split`) }}</div>
             <a-input
               placeholder="0"
               v-model="selectedMaxCnt"
@@ -110,13 +111,15 @@
             <span> {{ $t(`people`) }} </span>
           </div>
           <div>
-            <a-checkbox
+            <!-- <a-checkbox
               style="font-size: 16px"
               :checked="isRoomPublic"
               @change="handleRoomPublic"
             >
               {{ $t(`make_this_room_public`) }}
-            </a-checkbox>
+            </a-checkbox> -->
+            <span v-if="isPublic"> The room is public </span>
+            <span v-else> The room is private </span>
           </div>
           <div class="btn-container">
             <a-button
@@ -201,6 +204,7 @@ export default {
     CopyToClipboard,
   },
   props: {
+    isPublic: { type: Boolean, default: false},
     visible: { type: Boolean, default: false },
     roomId: { type: String, default: "0" },
     isAdmin: { type: Boolean, default: false },
@@ -253,7 +257,7 @@ export default {
       currencyData,
       periodData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
       currencySelected: currencyData[0],
-      periodSelected: this.$t(`${periodData[0]}`),
+      periodSelected: this.$t(`${periodData[1]}`),
       people: 0,
       isRoomPublic: false,
 
@@ -379,6 +383,7 @@ export default {
     this.plans = plans.data;
     this.planLevels = plans.data[this.serviceId - 1].plans;
     this.planNameDft = this.planName;
+
     if (this.isAdmin) {
       const { data } = await axiosClient.get(
         `/rooms/${this.roomId}/invitation`
@@ -392,6 +397,10 @@ export default {
 
 <style lang="less" scoped>
 @import "../../ant-design-vue/dist/antd.less";
+span{
+  font-size: 16px;
+  margin: 0;
+}
 .admin-room {
   display: flex;
   flex-direction: row;

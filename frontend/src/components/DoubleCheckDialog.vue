@@ -22,12 +22,13 @@
           {{ $t(`cancel`) }}
         </a-button>
         <a-button
-          class="btn-primary"
-          key="settleUp"
-          type="primary"
+          class="btn-primary btn-danger"
+          key="remove"
+          type="danger"
           @click="doYes()"
+          ghost
         >
-          {{ $t(`yes`) }}
+          {{ $t(`remove`) }}
         </a-button>
       </div>
     </div>
@@ -129,6 +130,9 @@ export default {
 
     .btn-cancel {
       margin-right: 20px;
+    }
+    .btn-danger {
+      color: #ff4d4f;
     }
   }
 }

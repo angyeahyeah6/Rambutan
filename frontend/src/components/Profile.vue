@@ -68,38 +68,17 @@
           <p>{{ $t(`bank_info`) }}</p>
           <a-form-item>
             <template v-for="info in data.bankinfo">
-              <a-input
-                :key="info.id"
-                v-model="info.value"
-                v-decorator="[
-                  'userName',
-                  {
-                    rules: [
-                      {
-                        required: true,
-                        message: $t(`account_is_required`),
-                      },
-                    ],
-                  },
-                ]"
-                block
-              >
+              <a-space :key="info.id">
+              <a-input class="pro-input"
+                v-model="info.value">
               </a-input>
+              <a-icon type="minus-circle-o" @click="removeItem(info.id)"></a-icon>
+              </a-space>
             </template>
             <a-button
               type="dashed"
               v-model="add"
-              v-decorator="[
-                'userName',
-                {
-                  rules: [
-                    {
-                      required: true,
-                      message: $t(`account_is_required`),
-                    },
-                  ],
-                },
-              ]"
+              @click="addItem()"
               block
             >
               <a-icon type="plus" /> {{ $t(`add`) }}
@@ -136,21 +115,22 @@ export default {
       data: {
         name: "",
         email: "",
-        rating: 3,
+        rating: 0,
         bankinfo: [
-          {
-            id: 1,
-            value: "(812) 1234-567890",
-          },
-          {
-            id: 2,
-            value: "Line Pay",
-          },
         ],
       },
     };
   },
   methods: {
+    addItem() {
+      this.data.bankinfo.push({
+        id: this.data.bankinfo.length + 1,
+        value: ""
+      })
+    },
+    removeItem(id){
+      this.data.bankinfo.splice(id-1, 1);
+    },
     getUser() {
       fetch(api + "/user", {
         method: "GET",
@@ -161,9 +141,10 @@ export default {
       })
         .then((response) => response.json())
         .then((response) => {
+          console.log(response)
           this.data.name = response.name;
           this.data.email = response.email;
-          this.data.rating = 2.5;
+          this.data.rating = response.rating;
         });
     },
     patchUser() {
@@ -210,6 +191,9 @@ export default {
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+}
+.pro-input{
+  width: 310px;
 }
 .pro-form-item {
   margin-bottom: 50px;
