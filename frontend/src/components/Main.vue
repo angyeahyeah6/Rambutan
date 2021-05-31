@@ -109,7 +109,6 @@
               <p>{{ item.plan_name }}</p>
             </div>
           </a-space>
-          <p>New Application</p>
         </a-card>
       </div>
     </div>
