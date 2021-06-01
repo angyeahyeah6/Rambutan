@@ -14,11 +14,11 @@
           <span class="user-name">{{ userState.user_name }}</span>
         </div>
         <div class="state">
-          {{ $t(`paid`) }} NT${{ userState.price }}
+          {{ $t(`paid`) }}  NT${{ userState.price * interval }}   
           {{ $t(`to`) }}
         </div>
         <div class="content-detail">
-          <img :src="user" /> <span>{{ $t(`you`) }}</span>
+          <img :src="user" /> <span>{{ $t(`admin_title`) }}</span>
         </div>
       </div>
 
@@ -58,6 +58,7 @@ export default {
         return { user_id: 0, user_name: "", payment_status: "", price: 0 };
       },
     },
+    interval:{type: Number, default: 1},
     // paymentFee: { type: Number, default: 0 },
     roomId: { type: String, default: "" },
   },

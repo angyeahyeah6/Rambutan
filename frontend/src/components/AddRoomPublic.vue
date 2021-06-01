@@ -51,9 +51,10 @@ export default {
       this.$emit("setPublic");
     },
     submit(){
+      console.log(String(this.message))
       this.$emit("addPublicDetail", {
         "deadline": this.deadline,
-        "message": this.message
+        "message": String(this.message)
       });
     }
   },

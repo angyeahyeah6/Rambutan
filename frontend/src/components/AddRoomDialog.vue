@@ -169,8 +169,9 @@ export default {
   methods: {
     addPublicDetail(val) {
       console.log(val);
-      (this.select.matching_deadline = val.deadline),
-        (this.select.message = val.message);
+      this.select.matching_deadline = val.deadline,
+      this.select.message = val.message;
+      console.log(this.select.message);
       this.createRoom();
     },
     checkPublic() {
@@ -264,7 +265,7 @@ export default {
         plan_name: this.select.plans,
         is_public: this.select.public,
         matching_deadline: this.select.matching_deadline,
-        message: this.select.message,
+        public_message: this.select.message,
       };
       if (this.select.serviceId > -1) {
         console.log(result);

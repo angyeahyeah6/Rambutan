@@ -169,7 +169,7 @@
             {{ $t(`paid`) }}
           </div>
           <div v-if="record != 'confirmed' && isInRound">
-            {{ $t(`owe_admin`) }} {{ paymentFee / (members.length + 1) }}
+            {{ $t(`owe_admin`) }} {{ paymentFee / (members.length + 1) * interval}} 
           </div>
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
@@ -192,7 +192,7 @@
             ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
-            v-show="isAdmin || record.user_name.toLowerCase() == 'You'.toLowerCase()"
+            v-show="(isAdmin && !record.user_name.toLowerCase() == 'You'.toLowerCase()) || record.user_name.toLowerCase() == 'You'.toLowerCase()"
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
@@ -242,6 +242,7 @@
       :visible="isSettleUpDialogOpen"
       :roomId="roomId"
       :userState="selectedUserState"
+      :interval="interval"
       @close="closeSettleUpDialog()"
       @settleUp="settleUp"
     />
@@ -294,7 +295,6 @@ export default {
       isRoomStart: true,
       user,
       isSettingDisabled: false, // default should be false
-      isNewRoundDisabled: false, // default should be true
       isSettleUpDisabled: false, // default should be true
       isInRound: false,
       emptyText: {
@@ -355,6 +355,7 @@ export default {
       isRateDialogOpen: false,
       isRemoveDialogOpen: false,
       paymentFee: 0,
+      interval: 1,
     };
   },
   computed: {
@@ -412,6 +413,8 @@ export default {
       const res = await axiosClient.delete(`/rooms/${this.roomId}/round`);
       if (res.status == 200) {
         this.isInRound = false;
+        this.isSettingDisabled =  false, // default should be false
+        this.isSettleUpDisabled = false, // default should be true
         this.setTimelineBoard();
       }
     },
@@ -543,6 +546,7 @@ export default {
 
       if (data.round.payment_deadline != "") {
         this.isInRound = true;
+        this.interval = Number(data.round.round_interval)
         this.timelineBoard.paymentDeadline = data.round.payment_deadline;
         this.timelineBoard.interval = data.round.round_interval + " month";
         this.timelineBoard.date =

@@ -12,11 +12,23 @@
               class="btn-primary btn-setting"
               style="{width:214px;}"
               v-show="isAdmin"
-              :disabled="!(this.memberCount == this.maxCount)"
+              v-if="!(this.memberCount == this.maxCount)"
+              disabled
+            >
+              {{ $t(`go`) }}
+            </a-button>
+
+            <a-button
+              v-else
+              class="btn-primary btn-setting"
+              style="{width:214px;}"
+              type="primary"
+              v-show="isAdmin"
               @click="startRoom()"
             >
               {{ $t(`go`) }}
             </a-button>
+
             <a-button
               class="btn-primary btn-setting"
               style="{width:214px;}"

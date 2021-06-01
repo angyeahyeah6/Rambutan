@@ -174,8 +174,6 @@ export default {
             this.bufferRoom.push(ele)
           }
         })
-        console.log(this.publicRoom)
-        console.log(this.bufferRoom)
       }
     }
   },
@@ -197,7 +195,7 @@ export default {
         .then((response) => response.json())
         .then((response) => {
           response.data.forEach((ele) => {
-            console.log(ele);
+            console.log(ele)
             let roomObj = {
               room_id: ele.room_id,
               admin_name: ele.admin_name,
