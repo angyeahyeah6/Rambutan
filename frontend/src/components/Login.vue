@@ -52,9 +52,9 @@
         </div>
         <p v-if="showWarning" class="l-warning">{{ $t(`login_failed`) }}</p>
         <div class="l-center-container">
-          <p style="color:#1890FF">
+          <!-- <p style="color:#1890FF">
             {{ $t(`forgot_password`) }}
-          </p>
+          </p> -->
         </div>
         <div class="l-center-container">
           <a-space algin="baseline">
