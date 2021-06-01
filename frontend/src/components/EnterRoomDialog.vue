@@ -14,7 +14,9 @@
         class="erd-room"
         style="width: 100%"
       />
-      <p v-if="showWarning" class="erd-warning">{{ $t(`pin_is_incorrect`) }}</p>
+      <p v-if="showWarning || roomError != ''" class="erd-warning">
+        {{ showWarning ? $t(`pin_is_incorrect`) : $t(`room_error`) }}
+      </p>
       <div class="erd-btn-container">
         <a-button
           class="btn-primary"
@@ -31,14 +33,6 @@
 <script>
 import api from "../api";
 import axios from "axios";
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
 export default {
   props: { visible: { type: Boolean, default: false } },
   data() {
@@ -46,6 +40,7 @@ export default {
       isVisible: false,
       roomNumber: "",
       showWarning: false,
+      roomError: "",
     };
   },
   watch: {
@@ -66,11 +61,28 @@ export default {
       this.$emit("closeEnterModal", this.isVisible);
     },
     async joinRoom() {
-      const { data } = await axiosClient.post("/rooms/join", {
-        invitation_code: this.roomNumber,
+      console.log("room num", this.roomNumber);
+      const axiosClient = axios.create({
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
       });
-      console.log("data", data);
-      this.$router.push(`/Info/${data.room_id}`);
+      try {
+        const { data } = await axiosClient.post(`${api}/rooms/join`, {
+          invitation_code: this.roomNumber,
+        });
+        this.$router.push(`/Info/${data.room_id}`);
+      } catch (error) {
+        // console.log("err", error);
+        this.roomError = error.response.data;
+      }
+
+      // console.log("data", data);
+      // if (data)
+      // this.$router.push(`/Info/${data.room_id}`);
     },
   },
 };

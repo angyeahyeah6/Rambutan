@@ -9,13 +9,6 @@
           </div>
           <div class="info-setting-btn">
             <a-button
-              class="btn-primary-long btn-setting"
-              style="{width:214px;}"
-              v-show="!isAdmin"
-            >
-              {{ $t(`add_to_google_calendar`) }}
-            </a-button>
-            <a-button
               v-show="isAdmin"
               class="btn-primary btn-setting"
               :type="members.length < 1 ? 'primary' : 'default'"
@@ -26,9 +19,8 @@
             <a-button
               v-show="isAdmin"
               v-if="isInRound"
-              class="btn-primary btn-danger"
-              type="danger"
-              ghost
+              class="btn-primary btn-setting"
+              type="default"
               @click="openDoubleCheckModal()"
             >
               {{ $t(`delete_round`) }}
@@ -147,7 +139,9 @@
             </div>
           </div>
           <div class="info-import-btn-container">
-            <div class="info-import-btn">{{ $t(`import_bank_info`) }}</div>
+            <!-- <a-button type="default" class="btn-primary btn-import-info">{{
+              $t(`save`)
+            }}</a-button> -->
           </div>
         </div>
       </div>
@@ -171,11 +165,11 @@
           slot-scope="record"
           class="info-table-state"
         >
-          <div v-if="record == 'confirmed'">
+          <div v-if="record == 'confirmed' && isInRound">
             {{ $t(`paid`) }}
           </div>
-          <div v-else>
-            {{ $t(`owe_you`) }} {{ paymentFee / members.length }}
+          <div v-if="record != 'confirmed' && isInRound">
+            {{ $t(`owe_admin`) }} {{ paymentFee / (members.length + 1) }}
           </div>
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
@@ -284,14 +278,7 @@ import RemindDialog from "./RemindDialog";
 import RateDialog from "./RateDialog";
 import RemoveDialog from "./RemoveDialog";
 import DoubleCheckDialog from "./DoubleCheckDialog";
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
+
 export default {
   components: {
     AdminRoomSetting,
@@ -379,7 +366,17 @@ export default {
   },
   methods: {
     async setTimelineBoard() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
+      console.log("setTimeline", data);
       if (data) {
         const email = localStorage.getItem("email");
         if (email == data.admin.email) {
@@ -388,7 +385,7 @@ export default {
         if (data.round.payment_deadline != "") {
           this.isInRound = true;
           this.timelineBoard.paymentDeadline = data.round.payment_deadline;
-          this.timelineBoard.interval = data.round.round_interval + "  year";
+          this.timelineBoard.interval = data.round.round_interval + "  month";
           this.timelineBoard.date =
             data.round.starting_time + "  ->  " + data.round.ending_time;
         } else {
@@ -403,6 +400,15 @@ export default {
       return record.name;
     },
     async deleteRound() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const res = await axiosClient.delete(`/rooms/${this.roomId}/round`);
       if (res.status == 200) {
         this.isInRound = false;
@@ -430,7 +436,9 @@ export default {
       this.isNewRoundModalOpen = !this.isNewRoundModalOpen;
     },
     openSettleUpDialog(user) {
+      user.price = this.paymentFee / (this.members.length + 1);
       this.selectedUserState = user;
+      console.log("user", user);
       this.isSettleUpDialogOpen = !this.isSettleUpDialogOpen;
     },
     closeSettleUpDialog() {
@@ -479,6 +487,15 @@ export default {
     async handleAnnouncement() {
       console.log(this.announcement);
       if (this.originalAnnouncement == this.announcement) return;
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       await axiosClient.patch(`/rooms/${this.roomId}`, {
         max_count: this.maxCount,
         service_id: this.serviceId,
@@ -495,6 +512,15 @@ export default {
     console.log("router id", this.$route.params);
     this.roomId = this.$route.params.id;
     // console.log("roomid", this.roomId);
+    const axiosClient = axios.create({
+      baseURL: api,
+      timeout: 5000,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        accept: "application/json",
+      },
+    });
     const { data } = await axiosClient.get(`/rooms/${this.roomId}`);
     console.log("original data", data);
     if (data) {
@@ -518,7 +544,7 @@ export default {
       if (data.round.payment_deadline != "") {
         this.isInRound = true;
         this.timelineBoard.paymentDeadline = data.round.payment_deadline;
-        this.timelineBoard.interval = data.round.round_interval + "  year";
+        this.timelineBoard.interval = data.round.round_interval + " month";
         this.timelineBoard.date =
           data.round.starting_time + "  ->  " + data.round.ending_time;
       }
@@ -530,8 +556,8 @@ export default {
         let idx;
         this.memberList.forEach((member, id) => {
           console.log("member", member.user_id);
-          console.log("id", localStorage.getItem("id"));
-          if (member.user_id == localStorage.getItem("id")) {
+          console.log("userId in storage", localStorage.getItem("userId"));
+          if (member.user_id == localStorage.getItem("userId")) {
             idx = id;
           }
         });
@@ -540,9 +566,8 @@ export default {
         const youData = this.memberList[idx];
         this.memberList.splice(idx, 1);
         this.memberList.unshift(youData);
+        console.log("list", this.memberList);
       }
-
-      // console.log("list", this.members);
     }
   },
 };
@@ -649,7 +674,7 @@ export default {
     align-items: flex-start;
 
     .info-plan-label-container {
-      margin-right: 70%;
+      margin-right: 30%;
     }
 
     .info-plan-label,
@@ -697,19 +722,9 @@ export default {
       justify-content: flex-end;
       align-items: center;
 
-      .info-import-btn {
-        font-size: 14px;
-        color: #000000;
-        width: 132px;
-        height: 32px;
-        border: #d9d9d9 solid 1px;
+      .btn-import-info {
         border-radius: 50px;
-        cursor: pointer;
-
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
+        margin: 5px 0;
       }
     }
   }
@@ -807,7 +822,7 @@ export default {
         height: 50%;
         margin-top: 0;
         .info-plan-label-container {
-          margin-right: 50%;
+          margin-right: 10%;
         }
       }
     }

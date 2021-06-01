@@ -16,7 +16,8 @@
       <div class="item">
         <div class="label">{{ $t(`interval`) }}</div>
         <a-input placeholder="0" v-model="interval" class="item-input" />
-        <a-select
+        {{ $t(`a_month`) }}
+        <!-- <a-select
           v-model="intervalUnit"
           :default-value="intervalUnitData[0]"
           class="item-input"
@@ -24,13 +25,14 @@
           <a-select-option v-for="ele in intervalUnitData" :key="ele">
             {{ ele }}
           </a-select-option>
-        </a-select>
+        </a-select> -->
       </div>
 
       <div class="item">
         <div class="label">Payment Deadline</div>
         <a-input placeholder="0" v-model="deadline" class="item-input" />
-        <a-select
+        {{ $t(`a_month`) }}
+        <!-- <a-select
           v-model="deadlineUnit"
           :default-value="deadlineUnitData[0]"
           class="item-input"
@@ -38,17 +40,13 @@
           <a-select-option v-for="ele in deadlineUnitData" :key="ele">
             {{ ele }}
           </a-select-option>
-        </a-select>
+        </a-select> -->
         <span class="text">{{ $t(`before_start`) }}</span>
       </div>
 
-      <a-checkbox
-        style="font-size: 16px"
-        :checked="isAddedToGoogleCalendar"
-        @change="handleGoogleCalendar"
-      >
-        {{ $t(`add_to_google_calendar`) }}
-      </a-checkbox>
+      <div>
+        {{ $t(`the_system_will_email_you_the_new_round_information`) }}
+      </div>
 
       <div class="btn-container">
         <a-button
@@ -85,11 +83,11 @@ export default {
       isVisible: false, // default should be false
       date: "",
       interval: 1,
-      intervalUnit: this.$t(`week`),
-      intervalUnitData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
+      // intervalUnit: this.$t(`week`),
+      // intervalUnitData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
       deadline: 1,
-      deadlineUnit: this.$t(`week`),
-      deadlineUnitData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
+      // deadlineUnit: this.$t(`week`),
+      // deadlineUnitData: [this.$t(`year`), this.$t(`month`), this.$t(`week`)],
       isAddedToGoogleCalendar: false,
     };
   },
@@ -117,7 +115,6 @@ export default {
         payment_deadline: this.deadline,
         is_add_calendar: this.isAddedToGoogleCalendar,
       };
-      console.log(new_round);
       fetch(api + "/rooms/" + this.roomId + "/round", {
         method: "POST",
         headers: {

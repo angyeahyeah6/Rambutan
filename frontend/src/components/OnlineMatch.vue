@@ -84,14 +84,7 @@ import user from "../assets/user.png";
 import api from "../api";
 import AddRoomDialog from "./AddRoomDialog";
 import axios from "axios";
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
+
 export default {
   name: "Main",
   components: {
@@ -202,6 +195,15 @@ export default {
         });
     },
     async applyJoinRoom(roomId) {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const res = await axiosClient.post(`/rooms/${roomId}/application`, {
         application_message: "let me in plz",
       });

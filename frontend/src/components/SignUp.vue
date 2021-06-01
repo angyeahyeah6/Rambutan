@@ -131,7 +131,7 @@ export default {
     async getName() {
       const axiosClient = axios.create({
         baseURL: api,
-        timeout: 1000,
+        timeout: 5000,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -156,6 +156,7 @@ export default {
           .then((response) => {
             localStorage.setItem("token", response.token);
             localStorage.setItem("email", values.email);
+            localStorage.setItem("userId", response.id);
           })
           .then(async () => {
             await this.getName();
@@ -187,6 +188,7 @@ export default {
             .then((response) => {
               localStorage.setItem("token", response.token);
               localStorage.setItem("email", result.user.email);
+              localStorage.setItem("userId", response.user.id);
             })
             .then(() => that.$router.push("/Main"))
             .catch((err) => {

@@ -14,7 +14,7 @@
           <span class="user-name">{{ userState.user_name }}</span>
         </div>
         <div class="state">
-          {{ $t(`paid`) }} NT${{ userState.state ? userState.state[1] : 0 }}
+          {{ $t(`paid`) }} NT${{ userState.price }}
           {{ $t(`to`) }}
         </div>
         <div class="content-detail">
@@ -49,23 +49,16 @@ import axios from "axios";
 import api from "../api";
 import user from "../assets/user.png";
 
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
 export default {
   props: {
     visible: { type: Boolean, default: false },
     userState: {
       type: Object,
       default: function() {
-        return { user_id: 0, user_name: "", payment_status: "" };
+        return { user_id: 0, user_name: "", payment_status: "", price: 0 };
       },
     },
+    // paymentFee: { type: Number, default: 0 },
     roomId: { type: String, default: "" },
   },
   data() {
@@ -85,6 +78,15 @@ export default {
       this.$emit("close", this.isVisible);
     },
     async settleUp() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const res = await axiosClient.patch(`/participant/status`, {
         user_id: this.userState.user_id,
         room_id: parseInt(this.roomId),

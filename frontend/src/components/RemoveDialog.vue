@@ -43,14 +43,6 @@ import user from "../assets/user.png";
 import axios from "axios";
 import api from "../api";
 
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
 export default {
   props: {
     visible: { type: Boolean, default: false },
@@ -80,18 +72,27 @@ export default {
     },
     async removeUser() {
       var res;
-      if(this.$route.name == "ApplyInfo"){
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
+      if (this.$route.name == "ApplyInfo") {
         console.log({
           room_id: parseInt(this.roomId),
           user_id: this.userState.user_id,
-        })
-        res = await axiosClient.delete(`/application/delete`,{
+        });
+        res = await axiosClient.delete(`/application/delete`, {
           data: {
-          room_id: parseInt(this.roomId),
-          user_id: this.userState.user_id,
-        }});
-      }
-      else{
+            room_id: parseInt(this.roomId),
+            user_id: this.userState.user_id,
+          },
+        });
+      } else {
         res = await axiosClient.delete(`/participant`, {
           data: {
             user_id: this.userState.user_id,

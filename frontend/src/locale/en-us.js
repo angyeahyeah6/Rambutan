@@ -23,6 +23,7 @@ export default {
   plan_price: "Plan Price",
   year: "year",
   month: "month",
+  a_month: "month",
   week: "week",
   day: "day",
   split: "Split",
@@ -30,6 +31,7 @@ export default {
   make_this_room_public: "Make this room public",
   room_pin: " Room PIN",
   pin_is_incorrect: "The Pin is incorrect.",
+  room_error: "Room is full or pin code invalid",
   room_number: "Room number",
   settings: "Settings",
   new_round: "New round",
@@ -54,6 +56,10 @@ export default {
   delete: "Delete",
   save: "Save",
   copy: "Copy",
+  new_features_are_available_on_next_generation_platform:
+    "New features are available on next generation platform.",
+  the_system_will_email_you_the_new_round_information:
+    "The system will email you the new round information",
   add_to_google_calendar: "Add to Google Calendar",
   delete_room: "Delete Room",
   go_to_settings_to_add_members: "Go to Settings to add members !",
@@ -63,7 +69,10 @@ export default {
   cancel: "Cancel",
   send: "Send",
   send_payment_reminder_email_to: "Send payment reminder email to",
-  are_you_sure_you_want_to_remove: "Are you sure you want to remove",
+  are_you_sure_you_want_to_remove_this_round:
+    "Are you sure you want to remove this round?",
+  are_you_sure_you_want_to_remove_this_room:
+    "Are you sure you want to remove this room?",
   account_is_required: "Account is required.",
   bank_info: "Bank Info",
   add: "Add",
@@ -91,7 +100,7 @@ export default {
   logout: "Logout",
   waiting_for_new_friends_to_join: "Waiting for new friends to join!",
   login_failed: "The email or password is incorrect!",
-  owe_you: "Owe You NT$",
+  owe_admin: "Owe Admin NT$",
   round: "round",
   room: "room",
   this: "this",

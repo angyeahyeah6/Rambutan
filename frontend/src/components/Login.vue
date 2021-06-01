@@ -125,8 +125,10 @@ export default {
             }
           })
           .then((response) => {
+            console.log("login", response);
             localStorage.setItem("token", response.token);
             localStorage.setItem("email", values.email);
+            localStorage.setItem("userId", response.id);
           })
           .then(() => this.getName())
           .then(() => this.goToMain())
@@ -138,7 +140,7 @@ export default {
     async getName() {
       const axiosClient = axios.create({
         baseURL: api,
-        timeout: 1000,
+        timeout: 2500,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -152,7 +154,7 @@ export default {
       }
     },
     googleLogin() {
-      const that = this;
+      // const that = this;
       var provider = new firebase.auth.GoogleAuthProvider();
       firebase
         .auth()
@@ -172,11 +174,12 @@ export default {
             .then((response) => {
               localStorage.setItem("token", response.token);
               localStorage.setItem("email", result.user.email);
+              localStorage.setItem("userId", response.id);
             })
             .then(() => this.getName())
             .then(() => this.goToMain())
             .catch(() => {
-              that.$router.push("/SignUp");
+              // that.$router.push("/SignUp");
             });
         })
         .catch((err) => console.log(err));
@@ -194,7 +197,7 @@ export default {
         .then((response) => response.json())
         .then((response) => {
           // console.log("response", response);
-          localStorage.setItem("id", response.id);
+          localStorage.setItem("userId", response.id);
         });
       this.goToMain();
     }
@@ -217,10 +220,10 @@ export default {
 }
 .l-block-container {
   width: 395px;
-  height: 479px;
+  // height: 479px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .l-center-container {
   text-align: center;

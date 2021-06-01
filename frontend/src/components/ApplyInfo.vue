@@ -179,6 +179,15 @@ export default {
   },
   methods: {
     async deleteRoom() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       await axiosClient.delete(`/rooms/${this.roomId}`);
       this.$router.push("/Main");
     },
@@ -232,6 +241,15 @@ export default {
   async mounted() {
     console.log("router id", this.$route.params);
     this.roomId = this.$route.params.id;
+    const axiosClient = axios.create({
+      baseURL: api,
+      timeout: 5000,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        accept: "application/json",
+      },
+    });
     var { data } = await axiosClient.get(`/rooms/${this.roomId}/application`);
     if (data) {
       console.log(data);

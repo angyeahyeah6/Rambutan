@@ -9,8 +9,11 @@
   >
     <div class="content">
       <div>
-        {{ $t(`are_you_sure_you_want_to_remove`) }}{{ $t(`this`)
-        }}{{ $t(`${delteObject}`) }} ?
+        {{
+          delteObject == "round"
+            ? $t(`are_you_sure_you_want_to_remove_this_round`)
+            : $t(`are_you_sure_you_want_to_remove_this_room`)
+        }}
       </div>
 
       <div class="btn-container">
@@ -41,14 +44,6 @@ import axios from "axios";
 import api from "../api";
 import user from "../assets/user.png";
 
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
 export default {
   props: {
     visible: { type: Boolean, default: false },
@@ -75,6 +70,15 @@ export default {
       this.$emit("close", this.isVisible);
     },
     async settleUp() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const res = await axiosClient.patch(`/participant/status`, {
         user_id: this.userState.user_id,
         room_id: parseInt(this.roomId),

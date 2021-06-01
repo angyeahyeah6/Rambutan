@@ -157,9 +157,7 @@
           </div>
         </div>
         <div v-if="selectedItem == '3'">
-          <button class="btn-google-calendar">
-            {{ $t(`add_to_google_calendar`) }}
-          </button>
+          {{ $t(`new_features_are_available_on_next_generation_platform`) }}
         </div>
         <div v-if="selectedItem == '4'">
           <a-button
@@ -198,14 +196,6 @@ const planLevelData = {
 };
 const currencyData = ["NT", "US"];
 const periodData = ["year", "month", "week"];
-const axiosClient = axios.create({
-  baseURL: api,
-  timeout: 1000,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: "Bearer " + localStorage.getItem("token"),
-  },
-});
 export default {
   components: {
     CopyToClipboard,
@@ -319,7 +309,10 @@ export default {
         (planLevel) => planLevel.plan_name.toLowerCase() == val.toLowerCase()
       )[0];
       this.price = selectedPlan.cost;
-      this.selectedMaxCnt = selectedPlan.max_count;
+      console.log("dft");
+      if (val != this.planName) {
+        this.selectedMaxCnt = Math.min(selectedPlan.max_count, this.maxCount);
+      }
     },
     serviceId: function(val) {
       // console.log("sercie", val);
@@ -341,10 +334,20 @@ export default {
   methods: {
     async saveSettings() {
       this.settingData = {
-        selectedServiceId: this.selectedServiceId,
+        selectedServiceId: this.selectedServiceId + 1,
         planNameDft: this.planNameDft,
         maxCount: this.selectedMaxCnt,
       };
+      // console.log("this.settingData", this.settingData);
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       await axiosClient.patch(`/rooms/${this.roomId}`, {
         max_count: parseInt(this.settingData.maxCount),
         service_id: this.settingData.selectedServiceId,
@@ -358,6 +361,15 @@ export default {
       this.$emit("close", this.isVisible);
     },
     async deleteRoom() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       await axiosClient.delete(`/rooms/${this.roomId}`);
       this.$router.push("/Main");
     },
@@ -366,6 +378,7 @@ export default {
     },
     handlePlanChange(val) {
       // this.plan = planLevelData[value];
+      console.log("handle change");
       const value = val - 1;
       this.planLevels = this.planList[value].plans;
       this.selectedServiceId = this.planList[value].id;
@@ -378,6 +391,15 @@ export default {
       console.log(result);
     },
     async generateNewPin() {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const { data: newPin } = await axiosClient.post(
         `/rooms/${this.roomId}/invitation`
       );
@@ -390,14 +412,32 @@ export default {
   },
   async mounted() {
     // console.log("id", this.roomId);
-
+    const axiosClient = axios.create({
+      baseURL: api,
+      timeout: 5000,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+        accept: "application/json",
+      },
+    });
     const { data: plans } = await axiosClient.get("/services");
     // console.log("plans", plans.data);
     this.plans = plans.data;
     this.planLevels = plans.data[this.serviceId - 1].plans;
     this.planNameDft = this.planName;
+    this.selectedMaxCnt = this.maxCount;
 
     if (this.isAdmin) {
+      const axiosClient = axios.create({
+        baseURL: api,
+        timeout: 5000,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          accept: "application/json",
+        },
+      });
       const { data } = await axiosClient.get(
         `/rooms/${this.roomId}/invitation`
       );
