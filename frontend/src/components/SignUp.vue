@@ -173,29 +173,40 @@ export default {
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then(function(result) {
+        .then(async (result) => {
+          // console.log("google result", result);
           const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              name: result.user.displayName,
-              email: result.user.email,
-              password: result.user.uid,
-            }),
+            // method: "POST",
+            // headers: { "Content-Type": "application/json" },
+            // body: JSON.stringify({
+            name: result.user.displayName,
+            email: result.user.email,
+            password: result.user.uid,
+            // }),
           };
-          fetch(api + "/auth/signup", requestOptions)
-            .then((response) => response.json())
-            .then((response) => {
-              localStorage.setItem("token", response.token);
+          const axiosClient = axios.create({
+            timeout: 5000,
+            headers: {
+              "Content-Type": "application/json",
+              accept: "application/json",
+            },
+          });
+          try {
+            const { data } = await axiosClient.post(
+              `${api}/auth/signup`,
+              requestOptions
+            );
+            // console.log("sign up", data);
+            if (data) {
+              localStorage.setItem("token", data.token);
               localStorage.setItem("email", result.user.email);
-              localStorage.setItem("userId", response.user.id);
-            })
-            .then(() => that.$router.push("/Main"))
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => console.log(err));
+              localStorage.setItem("userId", data.id);
+              that.$router.push("/Main");
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        });
     },
   },
 };
