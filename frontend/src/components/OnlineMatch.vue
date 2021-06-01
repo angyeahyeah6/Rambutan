@@ -21,6 +21,7 @@
         />
         <input
           class="online-input"
+          v-model="searchText"
           placeholder="  Search Plan"
           style="width: 200px; border: none;"
         />
@@ -92,6 +93,8 @@ export default {
   },
   data() {
     return {
+      bufferRoom:[],
+      searchText:"",
       userName: localStorage.getItem("name"),
       publicRoom: [],
       user,
@@ -100,25 +103,25 @@ export default {
       columns: [
         {
           key: "admin_name",
-          width: "18%",
+          width: "15%",
           slots: { title: "customAdmin" },
           scopedSlots: { customRender: "admin_name" },
         },
         {
           key: "plan_name",
-          width: "16%",
+          width: "15%",
           slots: { title: "customPlan" },
           scopedSlots: { customRender: "plan_name" },
         },
         {
           key: "cost",
-          width: "16%",
+          width: "15%",
           slots: { title: "customPrice" },
           scopedSlots: { customRender: "cost" },
         },
         {
           key: "time",
-          width: "16%",
+          width: "15%",
           dataIndex: "matching_deadline",
           slots: { title: "customDeadline" },
           scopedSlots: { customRender: "time" },
@@ -131,14 +134,14 @@ export default {
         },
         {
           key: "mes",
-          width: "21%",
+          width: "15%",
           dataIndex: "public_message",
           slots: { title: "customMessage" },
           scopedSlots: { customRender: "mes" },
         },
         {
           key: "action",
-          width: "55%",
+          width: "15%",
           slots: { title: "customAction" },
           scopedSlots: { customRender: "action" },
         },
@@ -157,6 +160,24 @@ export default {
       },
       deep: true,
     },
+    searchText:{
+      handler(){
+        let allRoom = this.publicRoom.concat(this.bufferRoom)
+        this.publicRoom = []
+        this.bufferRoom = []
+        allRoom.forEach(ele => {
+          if(ele.plan_name.toLowerCase().includes(this.searchText.toLowerCase()) || 
+            ele.service_name.toLowerCase().includes(this.searchText)){
+            this.publicRoom.push(ele)
+          }
+          else{
+            this.bufferRoom.push(ele)
+          }
+        })
+        console.log(this.publicRoom)
+        console.log(this.bufferRoom)
+      }
+    }
   },
   methods: {
     openAddRoomModal() {
@@ -287,6 +308,7 @@ export default {
 }
 .online-table {
   // background-color: green;
+  width: 1200px;
   margin-top: 20px;
   .online-table-user {
     img {
