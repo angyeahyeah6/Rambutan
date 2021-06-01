@@ -19,7 +19,7 @@
       </div>
       <div class="nav-profile-btn">
         <a-dropdown
-          :disabled="currentPage == '/Login' || currentPage == '/SignUp'"
+          :disabled="currentPage.toLowerCase() == '/Login'.toLowerCase() || currentPage.toLowerCase() == '/SignUp'.toLowerCase()"
         >
           <img :src="user" />
           <a-menu slot="overlay">
@@ -100,7 +100,7 @@ export default {
     changeLang() {
       const lang = localStorage.getItem("lang");
       let newLang = "enUS";
-      if (lang == null || lang == "enUS") {
+      if (lang == null || lang.toLowerCase() == "enUS".toLowerCase()) {
         newLang = "zhTW";
       }
       this.$i18n.locale = newLang;

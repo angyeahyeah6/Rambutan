@@ -76,7 +76,7 @@
     <div v-if="rooms && rooms.length" class="room-card-container">
       <div v-for="item in rooms" :key="item.room_id" class="card-container">
         <a-card
-          v-show="item.room_status == 'start'"
+          v-show="item.room_status.toLowerCase() == 'start'.toLowerCase()"
           class="card-home"
           @click="goToInfoPage(item.room_id)"
         >
@@ -90,12 +90,12 @@
               <p>{{ item.plan_name }}</p>
             </div>
           </a-space>
-          <p v-if="item.payment_status == 'unpaid' && item.cost != undefined">
+          <p v-if="item.payment_status.toLowerCase() == 'unpaid'.toLowerCase() && item.cost != undefined">
             {{ $t(`owe`) }} NT$ {{ item.cost }}
           </p>
         </a-card>
         <a-card
-          v-show="item.room_status == 'created'"
+          v-show="item.room_status.toLowerCase() == 'created'.toLowerCase()"
           class="card-home"
           @click="goToApplyInfoPage(item.room_id)"
         >

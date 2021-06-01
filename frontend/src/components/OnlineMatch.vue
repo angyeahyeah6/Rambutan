@@ -69,7 +69,7 @@
             :disabled="
               text.isApply ||
                 text.member_count == text.max_count ||
-                text.admin_name == userName
+                text.admin_name.toLowerCase() == userName.toLowerCase()
             "
             @click="() => applyJoinRoom(text.room_id)"
           >

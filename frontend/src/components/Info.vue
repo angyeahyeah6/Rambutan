@@ -158,14 +158,14 @@
         <span slot="customAction">{{ $t(`action`) }}</span>
         <span slot="user_name" slot-scope="text" class="info-table-user">
           <img :src="user" />
-          <span>{{ text == "You" ? $t(`you`) : text }}</span></span
+          <span>{{ text.toLowerCase() == "You".toLowerCase() ? $t(`you`) : text }}</span></span
         >
         <span
           slot="payment_status"
           slot-scope="record"
           class="info-table-state"
         >
-          <div v-if="record == 'confirmed' && isInRound">
+          <div v-if="record.toLowerCase() == 'confirmed'.toLowerCase() && isInRound">
             {{ $t(`paid`) }}
           </div>
           <div v-if="record != 'confirmed' && isInRound">
@@ -174,11 +174,11 @@
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
-            v-show="isAdmin || record.user_name == 'You'"
+            v-show="isAdmin || record.user_name.toLowerCase() == 'You'.toLowerCase()"
             type="primary"
             class="btn-action"
             :disabled="
-              isSettleUpDisabled || record.payment_status == 'confirmed'
+              isSettleUpDisabled || record.payment_status.toLowerCase() == 'confirmed'.toLowerCase()
             "
             @click="openSettleUpDialog(record)"
           >
@@ -192,7 +192,7 @@
             ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
-            v-show="isAdmin || record.user_name == 'You'"
+            v-show="isAdmin || record.user_name.toLowerCase() == 'You'.toLowerCase()"
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
@@ -379,7 +379,7 @@ export default {
       console.log("setTimeline", data);
       if (data) {
         const email = localStorage.getItem("email");
-        if (email == data.admin.email) {
+        if (email.toLowerCase() == data.admin.email.toLowerCase()) {
           this.isAdmin = true;
         }
         if (data.round.payment_deadline != "") {
@@ -525,7 +525,7 @@ export default {
     console.log("original data", data);
     if (data) {
       const email = localStorage.getItem("email");
-      if (email == data.admin.email) {
+      if (email.toLowerCase() == data.admin.email.toLowerCase()) {
         this.isAdmin = true;
       }
       this.serviceId = data.service_id;
@@ -550,7 +550,7 @@ export default {
       }
 
       this.memberList = this.memberList.filter(
-        (member) => member.user_name != this.admin.name
+        (member) => member.user_name.toLowerCase() != this.admin.name.toLowerCase()
       );
       if (!this.isAdmin) {
         let idx;

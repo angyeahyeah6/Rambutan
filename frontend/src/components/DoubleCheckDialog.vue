@@ -10,7 +10,7 @@
     <div class="content">
       <div>
         {{
-          delteObject == "round"
+          delteObject.toLowerCase() == "round".toLowerCase()
             ? $t(`are_you_sure_you_want_to_remove_this_round`)
             : $t(`are_you_sure_you_want_to_remove_this_room`)
         }}

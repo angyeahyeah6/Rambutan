@@ -258,7 +258,7 @@ export default {
     data = await (await axiosClient.get(`/rooms/${this.roomId}`)).data;
     if (data) {
       const email = localStorage.getItem("email");
-      if (email == data.admin.email) {
+      if (email.toLowerCase() == data.admin.email.toLowerCase()) {
         this.isAdmin = true;
       }
       this.serviceId = data.service_id;

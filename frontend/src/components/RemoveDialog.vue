@@ -81,7 +81,7 @@ export default {
           accept: "application/json",
         },
       });
-      if (this.$route.name == "ApplyInfo") {
+      if (this.$route.name.toLowerCase() == "ApplyInfo".toLowerCase()) {
         console.log({
           room_id: parseInt(this.roomId),
           user_id: this.userState.user_id,
