@@ -206,7 +206,8 @@ export default {
           } catch (error) {
             console.log(error);
           }
-        });
+        })
+        .catch((err) => console.log(err));
     },
   },
 };

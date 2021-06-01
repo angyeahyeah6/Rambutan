@@ -154,33 +154,42 @@ export default {
       }
     },
     googleLogin() {
-      // const that = this;
+      const that = this;
       var provider = new firebase.auth.GoogleAuthProvider();
       firebase
         .auth()
         .signInWithPopup(provider)
-        .then(function(result) {
+        .then(async (result) => {
           const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: result.user.email,
-              password: result.user.uid,
-            }),
+            // method: "POST",
+            // headers: { "Content-Type": "application/json" },
+            // body: JSON.stringify({
+            email: result.user.email,
+            password: result.user.uid,
+            // }),
           };
-
-          fetch(api + "/auth/signin", requestOptions)
-            .then((response) => response.json())
-            .then((response) => {
-              localStorage.setItem("token", response.token);
+          const axiosClient = axios.create({
+            timeout: 5000,
+            headers: {
+              "Content-Type": "application/json",
+              accept: "application/json",
+            },
+          });
+          try {
+            const { data } = await axiosClient.post(
+              `${api}/auth/signin`,
+              requestOptions
+            );
+            // console.log("sign up", data);
+            if (data) {
+              localStorage.setItem("token", data.token);
               localStorage.setItem("email", result.user.email);
-              localStorage.setItem("userId", response.id);
-            })
-            .then(() => this.getName())
-            .then(() => this.goToMain())
-            .catch(() => {
-              // that.$router.push("/SignUp");
-            });
+              localStorage.setItem("userId", data.id);
+              that.$router.push("/Main");
+            }
+          } catch (error) {
+            console.log(error);
+          }
         })
         .catch((err) => console.log(err));
     },
