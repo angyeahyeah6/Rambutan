@@ -111,7 +111,7 @@ export default {
     createNewRound() {
       const new_round = {
         starting_time: this.date,
-        round_interval: this.interval,
+        round_interval: Number(this.interval),
         payment_deadline: this.deadline,
         is_add_calendar: this.isAddedToGoogleCalendar,
       };
