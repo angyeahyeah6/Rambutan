@@ -2,7 +2,7 @@
   <div id="gate">
     <div class="title-container">
       <transition name="slide1">
-        <div v-if="isShow" class="title">Split Money,</div>
+        <div v-if="isShow" class="title">Split Bill,</div>
       </transition>
       <transition name="slide2">
         <div v-if="isShow" class="title">Remind Interval,</div>
@@ -12,7 +12,7 @@
       </transition>
       <transition name="slide4">
         <div v-if="isShow" class="title pink">
-          for Group Plan on Digital Services
+          for Shared Plan on Digital Services
         </div>
       </transition>
     </div>
