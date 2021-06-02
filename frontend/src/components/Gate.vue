@@ -5,14 +5,14 @@
         <div v-if="isShow" class="title">Split Money,</div>
       </transition>
       <transition name="slide2">
-        <div v-if="isShow" class="title">Remind Inteval,</div>
+        <div v-if="isShow" class="title">Remind Interval,</div>
       </transition>
       <transition name="slide3">
         <div v-if="isShow" class="title">Match Members,</div>
       </transition>
       <transition name="slide4">
         <div v-if="isShow" class="title pink">
-          for Family Plan on Digital Services
+          for Group Plan on Digital Services
         </div>
       </transition>
     </div>
