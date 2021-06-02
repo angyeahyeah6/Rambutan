@@ -29,9 +29,9 @@
       </div>
 
       <div class="item">
-        <div class="label">Payment Deadline</div>
+        <div class="label">{{ $t(payment_deadline) }}</div>
         <a-input placeholder="0" v-model="deadline" class="item-input" />
-        {{ $t(`a_month`) }}
+        {{ $t(`week`) }}
         <!-- <a-select
           v-model="deadlineUnit"
           :default-value="deadlineUnitData[0]"

@@ -69,6 +69,8 @@ export default {
   cancel: "Cancel",
   send: "Send",
   send_payment_reminder_email_to: "Send payment reminder email to",
+  are_you_sure_you_want_to_remove:
+    "Are you sure you want to remove",
   are_you_sure_you_want_to_remove_this_round:
     "Are you sure you want to remove this round?",
   are_you_sure_you_want_to_remove_this_room:
