@@ -69,7 +69,7 @@
             :disabled="
               text.isApply ||
                 text.member_count == text.max_count ||
-                text.admin_name.toLowerCase() == userName.toLowerCase()
+                 String(text.admin_name).toLowerCase() == String(userName).toLowerCase()
             "
             @click="() => applyJoinRoom(text.room_id)"
           >
@@ -167,7 +167,7 @@ export default {
         this.bufferRoom = []
         allRoom.forEach(ele => {
           if(ele.plan_name.toLowerCase().includes(this.searchText.toLowerCase()) || 
-            ele.service_name.toLowerCase().includes(this.searchText)){
+            ele.service_name.toLowerCase().includes(this.searchText.toLowerCase())){
             this.publicRoom.push(ele)
           }
           else{
