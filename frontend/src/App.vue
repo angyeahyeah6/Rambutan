@@ -43,6 +43,15 @@ export default {
 </script>
 
 <style>
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 #app {
   width: 100vw;
   height: 100vh;

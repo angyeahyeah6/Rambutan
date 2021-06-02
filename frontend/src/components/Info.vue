@@ -158,27 +158,37 @@
         <span slot="customAction">{{ $t(`action`) }}</span>
         <span slot="user_name" slot-scope="text" class="info-table-user">
           <img :src="user" />
-          <span>{{ text.toLowerCase() == "You".toLowerCase() ? $t(`you`) : text }}</span></span
+          <span>{{
+            text.toLowerCase() == "You".toLowerCase() ? $t(`you`) : text
+          }}</span></span
         >
         <span
           slot="payment_status"
           slot-scope="record"
           class="info-table-state"
         >
-          <div v-if="record.toLowerCase() == 'confirmed'.toLowerCase() && isInRound">
+          <div
+            v-if="
+              record.toLowerCase() == 'confirmed'.toLowerCase() && isInRound
+            "
+          >
             {{ $t(`paid`) }}
           </div>
           <div v-if="record != 'confirmed' && isInRound">
-            {{ $t(`owe_admin`) }} {{ paymentFee / (members.length + 1) * interval}} 
+            {{ $t(`owe_admin`) }}
+            {{ (paymentFee / (members.length + 1)) * interval }}
           </div>
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
           <a-button
-            v-show="isAdmin || record.user_name.toLowerCase() == 'You'.toLowerCase()"
+            v-show="
+              isAdmin || record.user_name.toLowerCase() == 'You'.toLowerCase()
+            "
             type="primary"
             class="btn-action"
             :disabled="
-              isSettleUpDisabled || record.payment_status.toLowerCase() == 'confirmed'.toLowerCase()
+              isSettleUpDisabled ||
+                record.payment_status.toLowerCase() == 'confirmed'.toLowerCase()
             "
             @click="openSettleUpDialog(record)"
           >
@@ -192,7 +202,11 @@
             ><a-icon type="mail" />{{ $t(`remind`) }}</a-button
           >
           <a-button
-            v-show="(isAdmin && !record.user_name.toLowerCase() == 'You'.toLowerCase()) || record.user_name.toLowerCase() == 'You'.toLowerCase()"
+            v-show="
+              (isAdmin &&
+                !record.user_name.toLowerCase() == 'You'.toLowerCase()) ||
+                !record.user_name.toLowerCase() == 'You'.toLowerCase()
+            "
             type="default"
             class="btn-action"
             @click="openRateDialog(record)"
@@ -413,9 +427,9 @@ export default {
       const res = await axiosClient.delete(`/rooms/${this.roomId}/round`);
       if (res.status == 200) {
         this.isInRound = false;
-        this.isSettingDisabled =  false, // default should be false
-        this.isSettleUpDisabled = false, // default should be true
-        this.setTimelineBoard();
+        (this.isSettingDisabled = false), // default should be false
+          (this.isSettleUpDisabled = false), // default should be true
+          this.setTimelineBoard();
       }
       this.$router.go();
     },
@@ -547,7 +561,7 @@ export default {
 
       if (data.round.payment_deadline != "") {
         this.isInRound = true;
-        this.interval = Number(data.round.round_interval)
+        this.interval = Number(data.round.round_interval);
         this.timelineBoard.paymentDeadline = data.round.payment_deadline;
         this.timelineBoard.interval = data.round.round_interval + " month";
         this.timelineBoard.date =
@@ -555,7 +569,8 @@ export default {
       }
 
       this.memberList = this.memberList.filter(
-        (member) => member.user_name.toLowerCase() != this.admin.name.toLowerCase()
+        (member) =>
+          member.user_name.toLowerCase() != this.admin.name.toLowerCase()
       );
       if (!this.isAdmin) {
         let idx;
