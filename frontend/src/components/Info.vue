@@ -452,11 +452,12 @@ export default {
     },
     closeNewRoundModal() {
       this.isNewRoundModalOpen = !this.isNewRoundModalOpen;
+      window.location.reload();
     },
     openSettleUpDialog(user) {
       user.price = this.paymentFee / (this.members.length + 1);
       this.selectedUserState = user;
-      console.log("user", user);
+      // console.log("user", user);
       this.isSettleUpDialogOpen = !this.isSettleUpDialogOpen;
     },
     closeSettleUpDialog() {
