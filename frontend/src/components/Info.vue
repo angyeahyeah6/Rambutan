@@ -169,7 +169,7 @@
             {{ $t(`paid`) }}
           </div>
           <div v-if="record != 'confirmed' && isInRound">
-            {{ $t(`owe_admin`) }} {{ paymentFee }} 
+            {{ $t(`owe_admin`) }} {{ paymentFee / (members.length + 1) * interval}} 
           </div>
         </span>
         <span slot="action" slot-scope="record" class="info-table-action">
@@ -417,6 +417,7 @@ export default {
         this.isSettleUpDisabled = false, // default should be true
         this.setTimelineBoard();
       }
+      this.$router.go();
     },
     openDoubleCheckModal() {
       this.isDoubleCheckModalOpen = !this.isDoubleCheckModalOpen;
